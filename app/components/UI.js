@@ -32,7 +32,7 @@ export function Header() {
 
     return () => window.removeEventListener('hashchange', updateActive);
   }, []);
-  const pages = ['Home', 'Leadership', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About'];
+  const pages = ['Home', 'Leadership', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
     const hrefs = {
     Home: '/',
     Leadership: '#leadership',
@@ -53,8 +53,43 @@ export function Header() {
           </div>
         </a>
         <nav className="hidden gap-2 md:flex">
-          {pages.map((p) => <a key={p} href={hrefs[p]} className={`btn ${active === p ? 'btn-gold' : 'btn-ghost'}`}>{p}</a>)}
-        </nav>
+  {pages.map((p) =>
+    p === "Seasons" ? (
+      <div key={p} className="relative group flex items-center">
+        <a
+          href="#seasons"
+          className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
+        >
+          Seasons
+        </a>
+
+        <div className="absolute left-0 top-full z-50 hidden min-w-[260px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
+          <a
+            href="#seasons"
+            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
+          >
+            Seasons Overview
+          </a>
+
+          <a
+            href="#schedule2026"
+            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
+          >
+            2026 Season Schedule
+          </a>
+        </div>
+      </div>
+    ) : (
+      <a
+        key={p}
+        href={hrefs[p]}
+        className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
+      >
+        {p}
+      </a>
+    )
+  )}
+</nav>
       </div>
     </header>
   );

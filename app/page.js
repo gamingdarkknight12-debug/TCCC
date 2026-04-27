@@ -8,6 +8,8 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 
 export default function Home() {
   const [season, setSeason] = useState('All-Time');
+  const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
+
   const allTime = useMemo(() => {
     const batting = {};
     [...stats2025.batting, ...stats2024.batting].forEach((p) => {
@@ -29,6 +31,8 @@ export default function Home() {
   const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
   const emergingPlayer = { name: 'Kapil', runs: 62, wickets: 11 };
 
+  
+
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
@@ -39,6 +43,7 @@ export default function Home() {
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Cricket Club Canada</div>
             <h1 className="text-5xl font-black leading-tight md:text-7xl">Beyond the Pitch, <span className="text-amber-300">We Unite.</span></h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
+            <NextMatchCard />
             <div className="mt-8 flex flex-wrap gap-3">
   <a className="btn btn-gold" href="#stats">View Player Stats</a>
 
@@ -130,6 +135,50 @@ export default function Home() {
 
       <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6"><InfoCard title="2024 Season" text="TCCC/Titans played both BEDCL and HDCL. In BEDCL standings, GTA Legends finished Division E Conference A with 25 points." /><InfoCard title="2025 Season" text="TCCC/Titans again played both BEDCL and HDCL. GTA Legends finished Division F Conference B with 70 points." /><InfoCard title="2026 Season" text="TCCC/Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
       <PageWrap
+  id="schedule2026"
+  title="2026 Season Schedule"
+  subtitle="Select BEDCL or MCPL schedule."
+>
+  <div className="mb-6 flex flex-wrap gap-3">
+    <button
+      onClick={() => setSelectedSchedule("BEDCL")}
+      className={`btn ${selectedSchedule === "BEDCL" ? "btn-gold" : "btn-ghost"}`}
+    >
+      BEDCL Schedule
+    </button>
+
+    <button
+      onClick={() => setSelectedSchedule("MCPL")}
+      className={`btn ${selectedSchedule === "MCPL" ? "btn-gold" : "btn-ghost"}`}
+    >
+      MCPL Schedule
+    </button>
+  </div>
+
+  <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+    {schedule2026
+      .filter((m) => m.league === selectedSchedule)
+      .map((m, i) => (
+        <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+          <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+            {m.league}
+          </div>
+
+          <h3 className="text-2xl font-black text-amber-300">
+            Telugu Titans vs {m.opponent}
+          </h3>
+
+          <div className="mt-4 space-y-2 text-white/75">
+            <p><span className="text-amber-300">Date:</span> {m.day}, {m.date}</p>
+            <p><span className="text-amber-300">Time:</span> {m.time}</p>
+            <p><span className="text-amber-300">Home/Away:</span> {m.homeAway}</p>
+            <p><span className="text-amber-300">Ground:</span> {m.ground}</p>
+          </div>
+        </div>
+      ))}
+  </div>
+</PageWrap>
+      <PageWrap
   id="players"
   title="Players"
   subtitle="Meet the Telugu Titans squad under TCCC banner."
@@ -193,4 +242,74 @@ export default function Home() {
 
 function Standing({ title, rows }) {
   return <StatTable title={title} headers={['Conference','Team','GP','W','L','NR','Pts']} rows={rows} />;
+}
+
+const schedule2026 = [
+  // BEDCL
+  { league: "BEDCL", opponent: "Brampton Strikers", date: "2026-05-03", day: "Sunday", time: "11:35 AM", ground: "Dixie-407 - C (North-West)", homeAway: "Home" },
+  { league: "BEDCL", opponent: "CricKnights", date: "2026-05-17", day: "Sunday", time: "3:40 PM", ground: "Dixie-407 - A (North-East)", homeAway: "Home" },
+  { league: "BEDCL", opponent: "GTA Sultans", date: "2026-05-24", day: "Sunday", time: "7:30 AM", ground: "Keele West", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Jaguar B", date: "2026-05-31", day: "Sunday", time: "7:30 AM", ground: "Dixie-407 - C (North-West)", homeAway: "Away" },
+  { league: "BEDCL", opponent: "GTA Sultans", date: "2026-06-14", day: "Sunday", time: "7:30 AM", ground: "Creditview - C", homeAway: "Home" },
+  { league: "BEDCL", opponent: "CricKnights", date: "2026-06-20", day: "Saturday", time: "7:30 AM", ground: "Humber College Ground", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Brampton Browns", date: "2026-06-27", day: "Saturday", time: "11:35 AM", ground: "Torbram Ground", homeAway: "Home" },
+  { league: "BEDCL", opponent: "Meadowvale Mustangs", date: "2026-07-04", day: "Saturday", time: "7:30 AM", ground: "BSP - Artificial", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Avengers B", date: "2026-07-11", day: "Saturday", time: "7:30 AM", ground: "Creditview - A", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Northern Warriors", date: "2026-07-19", day: "Sunday", time: "7:30 AM", ground: "Keele West", homeAway: "Home" },
+  { league: "BEDCL", opponent: "6ixers", date: "2026-08-02", day: "Sunday", time: "7:30 AM", ground: "Creditview - A", homeAway: "Home" },
+  { league: "BEDCL", opponent: "Meadowvale Mustangs", date: "2026-08-09", day: "Sunday", time: "3:40 PM", ground: "Humber College Ground", homeAway: "Home" },
+  { league: "BEDCL", opponent: "Avengers B", date: "2026-08-22", day: "Saturday", time: "7:30 AM", ground: "Humber College Ground", homeAway: "Home" },
+  { league: "BEDCL", opponent: "Brampton Browns", date: "2026-08-30", day: "Sunday", time: "7:30 AM", ground: "BSP - Artificial", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Golden United", date: "2026-09-06", day: "Sunday", time: "7:30 AM", ground: "Dixie-407 - C (North-West)", homeAway: "Away" },
+  { league: "BEDCL", opponent: "Kanada Sports Team", date: "2026-09-19", day: "Saturday", time: "11:35 AM", ground: "BSP - Artificial", homeAway: "Away" },
+
+  // MCPL
+  { league: "MCPL", opponent: "AKAAL XI", date: "2026-05-17", day: "Sunday", time: "3:45 PM", ground: "Mavis", homeAway: "Away" },
+  { league: "MCPL", opponent: "SuperNovas CC", date: "2026-05-23", day: "Saturday", time: "9:00 AM", ground: "Danville", homeAway: "Home" },
+  { league: "MCPL", opponent: "Toronto Lightning XI", date: "2026-05-31", day: "Sunday", time: "TBD", ground: "Aquinas", homeAway: "Away" },
+  { league: "MCPL", opponent: "Northern Lightning CC", date: "2026-06-07", day: "Sunday", time: "8:00 AM", ground: "Aquinas", homeAway: "Home" },
+  { league: "MCPL", opponent: "AKAAL XI", date: "2026-06-24", day: "Wednesday", time: "5:30 PM", ground: "Danville", homeAway: "Away" },
+  { league: "MCPL", opponent: "Predators CC B", date: "2026-06-28", day: "Sunday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
+  { league: "MCPL", opponent: "Toronto Pacers", date: "2026-07-01", day: "Wednesday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
+];
+function getNextMatch() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  return schedule2026
+    .map((m) => ({ ...m, matchDate: new Date(`${m.date}T00:00:00`) }))
+    .filter((m) => m.matchDate >= today)
+    .sort((a,b) => a.matchDate - b.matchDate)[0];
+}
+function NextMatchCard() {
+  const nextMatch = getNextMatch();
+
+  if (!nextMatch) return null;
+
+  const today = new Date();
+  const matchDate = new Date(`${nextMatch.date}T00:00:00`);
+  const diffDays = Math.ceil((matchDate - today) / (1000 * 60 * 60 * 24));
+
+  let reminderText = "Upcoming Match";
+  if (diffDays === 1) reminderText = "Reminder: Match Tomorrow";
+  if (diffDays === 0) reminderText = "Match Day";
+
+  return (
+    <div className="mt-6 rounded-3xl border border-amber-300/30 bg-amber-300/10 p-5">
+      <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
+        {reminderText}
+      </div>
+
+      <h3 className="mt-2 text-2xl font-black text-white">
+        Telugu Titans vs {nextMatch.opponent}
+      </h3>
+
+      <div className="mt-3 grid gap-2 text-white/75 sm:grid-cols-2">
+        <p><span className="text-amber-300">League:</span> {nextMatch.league}</p>
+        <p><span className="text-amber-300">Date:</span> {nextMatch.day}, {nextMatch.date}</p>
+        <p><span className="text-amber-300">Time:</span> {nextMatch.time}</p>
+        <p><span className="text-amber-300">Ground:</span> {nextMatch.ground}</p>
+      </div>
+    </div>
+  );
 }
