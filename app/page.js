@@ -72,31 +72,46 @@ export default function Home() {
   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
     {[
-  { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-  { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
-  { name: "Arun", role: "", skill: "Bowler", image: "/players/3.jpg" },
-  { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
-  { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper/Batter", image: "/players/5.jpeg" },
-  { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
-  { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
-  { name: "Manish Raj", skill: "Spin Bowling All rounder", image: "/players/8.png" },
-  { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
-  { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
-  { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
-  { name: "Nikhil Holagunda", skill: "All-rounder",  image: "/players/12.jpeg" },
-  { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
-  { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
-  { name: "STP", skill: "", skill: "Bowler", image: "/players/15.jpeg" },
-  { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
-  { name: "Vikas Tiwari", skill: "Bowler",  image: "/players/17.jpeg" },
-  { name: "Vikranth Nyalakonda", skill: "Wicket Keeper/Batter",  image: "/players/18.jpeg" }
+      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
+      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
+      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
+      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
+      { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper / Batter", image: "/players/5.jpeg" },
+      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
+      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
+      { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
+      { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
+      { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
+      { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
+      { name: "Nikhil Holagunda", skill: "All-rounder", image: "/players/12.jpeg" },
+      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
+      { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
+      { name: "STP", skill: "Bowler", image: "/players/15.jpeg" },
+      { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
+      { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
+      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" }
+    ].map((p) => (
+      <div
+        key={p.name}
+        className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+      >
+        <img
+          src={p.image}
+          alt={p.name}
+          className="h-72 w-full object-cover"
+          style={{ objectPosition: "50% 25%" }} 
+          />
 
-    ].map((p)=>(
-      <div key={p.name} className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-        <img src={p.img} className="h-72 w-full object-cover" />
         <div className="p-4">
           <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
-          <p className="text-white/70">{p.role}</p>
+
+          {p.role && (
+            <p className="text-sm font-semibold text-yellow-300">
+              {p.role}
+            </p>
+          )}
+
+          <p className="mt-1 text-white/70">{p.skill}</p>
         </div>
       </div>
     ))}

@@ -1,16 +1,46 @@
-import Image from 'next/image';
+'use client';
 
-export function Header({ active = 'Home' }) {
-  const pages = ['Home', 'About', 'Leadership', 'Players', 'Match Analysis', 'Player Stats', 'Seasons', 'Contact'];
-  const hrefs = {
-    Home:'/',
-    About:'#about',
-    Leadership:'#leadership',
-    Players:'#players',
-    'Match Analysis':'#analysis',
-    'Player Stats':'#stats',
-    Seasons:'#seasons',
-    Contact:'#contact'
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+export function Header() {
+  const [active, setActive] = useState('Home');
+
+  useEffect(() => {
+    const updateActive = () => {
+      const hash = window.location.hash;
+
+      if (!hash) {
+        setActive('Home');
+      } else if (hash === '#leadership') {
+        setActive('Leadership');
+      } else if (hash === '#analysis') {
+        setActive('Match Analysis');
+      } else if (hash === '#stats') {
+        setActive('Player Stats');
+      } else if (hash === '#seasons') {
+        setActive('Seasons');
+      } else if (hash === '#players') {
+        setActive('Players');
+      } else if (hash === '#about') {
+        setActive('About');
+      }
+    };
+
+    updateActive();
+    window.addEventListener('hashchange', updateActive);
+
+    return () => window.removeEventListener('hashchange', updateActive);
+  }, []);
+  const pages = ['Home', 'Leadership', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About'];
+    const hrefs = {
+    Home: '/',
+    Leadership: '#leadership',
+    'Match Analysis': '#analysis',
+    'Player Stats': '#stats',
+    Seasons: '#seasons',
+    Players: '#players',
+    About: '#about'
   };
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/90 backdrop-blur">
