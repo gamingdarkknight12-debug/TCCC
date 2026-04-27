@@ -78,7 +78,7 @@ export default function Home() {
   { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
   { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
   { name: "Nikhil Holagunda", skill: "All-rounder",  image: "/players/12.jpeg" },
-  { name: "Sai", skill: "Impact Bowler", image: "/players/13.jpeg" },
+  { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
   { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
   { name: "STP", skill: "", skill: "Bowler", image: "/players/15.jpeg" },
   { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
