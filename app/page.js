@@ -39,9 +39,15 @@ export default function Home() {
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Cricket Club Canada</div>
             <h1 className="text-5xl font-black leading-tight md:text-7xl">Beyond the Pitch, <span className="text-amber-300">We Unite.</span></h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
-            <div className="mt-8 flex flex-wrap gap-3"><a className="btn btn-gold" href="#stats">View Player Stats</a><a className="btn btn-ghost" href="#leadership">Meet Captains</a></div>
-          </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+  <a className="btn btn-gold" href="#stats">View Player Stats</a>
+
+  <a className="btn btn-ghost" href="#leadership">Meet Captains</a>
+
+  <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
+</div>          </div>
           <div className="flex justify-center"><div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10"><Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
+        
         </div>
       </section>
 
