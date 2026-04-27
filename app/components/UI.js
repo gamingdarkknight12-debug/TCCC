@@ -1,12 +1,13 @@
 import Image from 'next/image';
 
 export function Header({ active = 'Home' }) {
-  const pages = ['Home', 'About', 'Leadership', 'Players', 'Player Stats', 'Seasons', 'Contact'];
+  const pages = ['Home', 'About', 'Leadership', 'Players', 'Match Analysis', 'Player Stats', 'Seasons', 'Contact'];
   const hrefs = {
     Home:'/',
     About:'#about',
     Leadership:'#leadership',
     Players:'#players',
+    'Match Analysis':'#analysis',
     'Player Stats':'#stats',
     Seasons:'#seasons',
     Contact:'#contact'
@@ -17,7 +18,7 @@ export function Header({ active = 'Home' }) {
         <a href="/" className="flex items-center gap-3">
           <Image src="/tccc-logo.png" alt="TCCC Logo" width={52} height={52} className="rounded-full object-contain" priority />
           <div>
-            <div className="text-lg font-bold tracking-wide text-amber-300">TCCC</div>
+            <div className="text-lg font-bold tracking-wide text-amber-300">Telugu Titans</div>
             <div className="text-xs text-white/70">Beyond the Pitch, We Unite</div>
           </div>
         </a>

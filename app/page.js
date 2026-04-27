@@ -66,24 +66,24 @@ export default function Home() {
   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
     {[
-  { name: "Amit Koul", skill: "All-rounder", image: "/players/Amit Koul.jpeg" },
-  { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/Anand Chaitanya.jpeg" },
-  { name: "Arun", role: "", skill: "Bowler", image: "/players/Arun.jpg" },
-  { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/Bhanu.jpg" },
-  { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper/Batter", image: "/players/Charan Teja.jpeg" },
-  { name: "Chari", skill: "All-rounder", image: "/players/Chari.jpeg" },
-  { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/KK.jpg" },
-  { name: "Manish Raj", skill: "Spin Bowling All rounder", image: "/players/manishraj.png" },
-  { name: "Martin Thandhara", skill: "To be updated", image: "/players/Martin Thandhara.jpg" },
-  { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/nagesh kowligi(1).jpg" },
-  { name: "Naveen Gajula", skill: "All-rounder", image: "/players/Naveen Gajula.jpeg" },
-  { name: "Nikhil Holagunda", skill: "All-rounder",  image: "/players/Nikhil Holagunda.jpeg" },
-  { name: "Sai", skill: "Impact Bowler", image: "/players/SAI.jpeg" },
-  { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/Shanthan Akkiraju.jpeg" },
-  { name: "STP", skill: "", skill: "Bowler", image: "/players/STP.jpeg" },
-  { name: "Varun Rambha", skill: "All-rounder", image: "/players/Varun.jpeg" },
-  { name: "Vikas Tiwari", skill: "Bowler",  image: "/players/Vikas Tiwari.jpeg" },
-  { name: "Vikranth Nyalakonda", skill: "Wicket Keeper/Batter",  image: "/players/Vikranth Nyalakonda.jpeg" }
+  { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
+  { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
+  { name: "Arun", role: "", skill: "Bowler", image: "/players/3.jpg" },
+  { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
+  { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper/Batter", image: "/players/5.jpeg" },
+  { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
+  { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
+  { name: "Manish Raj", skill: "Spin Bowling All rounder", image: "/players/8.png" },
+  { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
+  { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
+  { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
+  { name: "Nikhil Holagunda", skill: "All-rounder",  image: "/players/12.jpeg" },
+  { name: "Sai", skill: "Impact Bowler", image: "/players/13.jpeg" },
+  { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
+  { name: "STP", skill: "", skill: "Bowler", image: "/players/15.jpeg" },
+  { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
+  { name: "Vikas Tiwari", skill: "Bowler",  image: "/players/17.jpeg" },
+  { name: "Vikranth Nyalakonda", skill: "Wicket Keeper/Batter",  image: "/players/18.jpeg" }
 
     ].map((p)=>(
       <div key={p.name} className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
@@ -98,6 +98,66 @@ export default function Home() {
   </div>
 </PageWrap>
 
+<PageWrap
+  id="analysis"
+  title="Match Analysis"
+  subtitle="Upcoming clash: Telugu Titans vs Brampton Strikers | Next Sunday"
+>
+  <div className="grid gap-6 md:grid-cols-2">
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h3 className="mb-4 text-2xl font-bold text-amber-300">
+        Opponent Snapshot
+      </h3>
+
+      <ul className="space-y-3 text-white/80">
+        <li>• Strong batting unit with aggressive top order</li>
+        <li>• Capable of scoring fast in powerplay</li>
+        <li>• Bowling attack becomes dangerous if defending 170+</li>
+        <li>• Pressure builds when early wickets fall</li>
+      </ul>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h3 className="mb-4 text-2xl font-bold text-amber-300">
+        Players To Watch (Brampton Strikers)
+      </h3>
+
+      <div className="space-y-3 text-white/80">
+        <p>🔥 Ali Shah – Top scorer in previous clash (64)</p>
+        <p>🔥 Ravi Patil – Finisher + wicket taker</p>
+        <p>🔥 Hamza Talal – Impact batting + fielding</p>
+        <p>🔥 Hafiz Asim Ali – Dangerous middle overs hitter</p>
+      </div>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h3 className="mb-4 text-2xl font-bold text-amber-300">
+        Titans Strategy
+      </h3>
+
+      <ul className="space-y-3 text-white/80">
+        <li>• Get Ali Shah early</li>
+        <li>• Tight powerplay bowling first 6 overs</li>
+        <li>• Varun / Charan anchor chase smartly</li>
+        <li>• Nipun/ Anand can accelerate the scoring</li>
+        <li>• Save wickets till final 8 overs while chasing</li>
+      </ul>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h3 className="mb-4 text-2xl font-bold text-amber-300">
+        Prediction
+      </h3>
+
+      <p className="leading-7 text-white/80">
+        If Titans remove Ali Shah early and keep extras under control,
+        this becomes a 50-50 contest. Score target range: 155–175.
+      </p>
+    </div>
+
+  </div>
+</PageWrap>
       <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
 
       <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6"><InfoCard title="2024 Season" text="TCCC/Titans played both BEDCL and HDCL. In BEDCL standings, GTA Legends finished Division E Conference A with 25 points." /><InfoCard title="2025 Season" text="TCCC/Titans again played both BEDCL and HDCL. GTA Legends finished Division F Conference B with 70 points." /><InfoCard title="2026 Season" text="TCCC/Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
