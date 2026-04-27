@@ -7,40 +7,50 @@ export function Header() {
   const [active, setActive] = useState('Home');
 
   useEffect(() => {
+    const sections = [
+      { id: "news", name: "News" },
+      { id: "analysis", name: "Match Analysis" },
+      { id: "stats", name: "Player Stats" },
+      { id: "seasons", name: "Seasons" },
+      { id: "schedule2026", name: "Seasons" },
+      { id: "players", name: "Players" },
+      { id: "about", name: "About" },
+    ];
+  
     const updateActive = () => {
-      const hash = window.location.hash;
-
-      if (!hash) {
-        setActive('Home');
-      } else if (hash === '#leadership') {
-        setActive('Leadership');
-      } else if (hash === '#analysis') {
-        setActive('Match Analysis');
-      } else if (hash === '#stats') {
-        setActive('Player Stats');
-      } else if (hash === '#seasons') {
-        setActive('Seasons');
-      } else if (hash === '#players') {
-        setActive('Players');
-      } else if (hash === '#about') {
-        setActive('About');
-      }
+      let current = "Home";
+  
+      sections.forEach((section) => {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 160) {
+            current = section.name;
+          }
+        }
+      });
+  
+      setActive(current);
     };
-
+  
     updateActive();
-    window.addEventListener('hashchange', updateActive);
-
-    return () => window.removeEventListener('hashchange', updateActive);
+    window.addEventListener("scroll", updateActive);
+    window.addEventListener("hashchange", updateActive);
+  
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("hashchange", updateActive);
+    };
   }, []);
-  const pages = ['Home', 'Leadership', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
+  const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
     const hrefs = {
     Home: '/',
-    Leadership: '#leadership',
+    News: '#news',
     'Match Analysis': '#analysis',
     'Player Stats': '#stats',
     Seasons: '#seasons',
     Players: '#players',
-    About: '#about'
+    'About Us': '#about'
   };
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/90 backdrop-blur">

@@ -47,8 +47,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
   <a className="btn btn-gold" href="#stats">View Player Stats</a>
 
-  <a className="btn btn-ghost" href="#leadership">Meet Captains</a>
-
+  <a className="btn btn-ghost" href="#players">Meet Players</a>
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
 </div>          </div>
           <div className="flex justify-center"><div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10"><Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
@@ -66,8 +65,197 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 py-12"><div className="mb-6"><h2 className="text-3xl font-black text-amber-300 md:text-4xl">Legends of Our Team</h2><p className="mt-2 text-white/65">Honouring players who helped build the team’s competitive identity.</p></div><div className="grid gap-6 md:grid-cols-2">{legends.map((l) => <div key={l.name} className="gold-card p-6"><div className="text-sm uppercase tracking-widest text-amber-300">{l.title}</div><h3 className="mt-3 text-3xl font-black">{l.name}</h3><div className="mt-3 rounded-2xl bg-black/30 p-4 text-lg font-bold text-amber-200">{l.stats}</div><p className="mt-4 leading-7 text-white/75">{l.note}</p></div>)}</div></section>
 
      
+      <PageWrap
+  id="news"
+  title="News"
+  subtitle="Latest Telugu Titans updates, player stories, and team highlights."
+>
+{/* Featured Player Carousel */}
+<div className="mb-10 overflow-x-auto pb-4">
+  <div className="flex gap-6">
 
-      <PageWrap id="leadership" title="Leadership" subtitle="Captains guiding Telugu Titans under the TCCC banner."><div className="grid gap-6 md:grid-cols-3">{captains.map((c) => <div key={c.name} className="card p-6"><div className="mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-amber-300 text-3xl font-black text-black">{c.name.split(' ').map((x) => x[0]).join('')}</div><h3 className="text-2xl font-bold text-amber-300">{c.name}</h3><p className="mt-1 text-sm text-white/60">{c.role}</p><p className="mt-4 leading-7 text-white/75">{c.note}</p></div>)}</div></PageWrap>
+    {/* Inder */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/22.jpeg"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          NEW SIGNING
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Welcome Inder</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          Telugu Titans welcomes Inder to the squad for the 2026 season.
+        </p>
+      </div>
+    </div>
+
+    {/* Dheeraj */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/23.jpeg"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          NEW SIGNING
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Welcome Dheeraj</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          Dheeraj joins Telugu Titans bringing fresh energy and commitment.
+        </p>
+      </div>
+    </div>
+
+    {/* Amit */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/1.jpeg"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          NEW SIGNING
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Welcome Amit</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          Amit joins Telugu Titans bringing his amazing round skills to the table.
+        </p>
+      </div>
+    </div>
+
+    {/* Varun */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/16.jpeg"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          PLAYER WATCH
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Varun – Rising Gem</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          After joining last season, Varun quickly became a valuable all-round option.
+        </p>
+      </div>
+    </div>
+
+    {/* Saikiran */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/13.JPG"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          WATCH OUT
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Saikiran Loading</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          Watch out for Saikiran who might be heading into his best season yet.
+        </p>
+      </div>
+    </div>
+
+    {/* Nipun */}
+    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+      <div className="relative h-80">
+        <img
+          src="/players/24.jpeg"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "50% 20%" }}
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
+          RED HOT
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-3xl font-black text-amber-300">Nipun On Fire</h3>
+        <p className="mt-3 leading-7 text-white/75">
+          Nipun was breathing fire during practice sessions and looks match ready.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+  {/* Modern News Flow */}
+  <div className="grid gap-6 lg:grid-cols-3">
+    <div className="lg:col-span-2 rounded-3xl border border-white/10 bg-gradient-to-br from-amber-300/15 to-white/5 p-8">
+      <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+        Season Focus
+      </div>
+      <h3 className="text-4xl font-black text-amber-300">
+        2026 Double League Challenge
+      </h3>
+      <p className="mt-4 max-w-3xl leading-8 text-white/75">
+        Telugu Titans are competing in both BEDCL and MCPL this season. Squad
+        rotation, availability, fitness, and consistency will be key to staying
+        competitive across both leagues.
+      </p>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+      <div className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-amber-300">
+        Performer
+      </div>
+      <h3 className="text-3xl font-black text-amber-300">
+        Best Performer: Charan
+      </h3>
+      <p className="mt-4 leading-7 text-white/75">
+        Charan was the standout performer last season with consistent batting
+        and leadership from the front.
+      </p>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+      <h3 className="text-2xl font-bold text-amber-300">
+        Bowling Unit Ready
+      </h3>
+      <p className="mt-4 leading-7 text-white/75">
+        Titans have strong options across pace, spin, and middle overs with
+        dependable wicket-taking depth.
+      </p>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+      <h3 className="text-2xl font-bold text-amber-300">
+        Match Alerts
+      </h3>
+      <p className="mt-4 leading-7 text-white/75">
+        Upcoming match details update automatically on the Home page with
+        opponent, date, time, and ground.
+      </p>
+    </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+      <h3 className="text-2xl font-bold text-amber-300">
+        Season Goal
+      </h3>
+      <p className="mt-4 leading-7 text-white/75">
+        Strong performances, playoff qualification, and silverware are the main
+        targets for the 2026 season.
+      </p>
+    </div>
+  </div>
+</PageWrap>
 
       
 
@@ -133,7 +321,10 @@ export default function Home() {
 </PageWrap>
       <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
 
-      <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6"><InfoCard title="2024 Season" text="TCCC/Titans played both BEDCL and HDCL. In BEDCL standings, GTA Legends finished Division E Conference A with 25 points." /><InfoCard title="2025 Season" text="TCCC/Titans again played both BEDCL and HDCL. GTA Legends finished Division F Conference B with 70 points." /><InfoCard title="2026 Season" text="TCCC/Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
+      <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6">
+        <InfoCard title="2024 Season" text="Titans played both BEDCL and HDCL. In BEDCL standings, Titans finished Division E Conference A with 25 points." />
+        <InfoCard title="2025 Season" text="Titans again played both BEDCL and HDCL. Titans finished Division F Conference B with 70 points." />
+        <InfoCard title="2026 Season" text="Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
       <PageWrap
   id="schedule2026"
   title="2026 Season Schedule"
@@ -186,24 +377,29 @@ export default function Home() {
   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
     {[
-      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
-      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
       { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
-      { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper / Batter", image: "/players/5.jpeg" },
+      { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
+      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/21.jpeg" },
+      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
+      { name: "Anand Chaitanya", skill: "Batter", image: "/players/2.jpeg" },
+      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
       { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
-      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
+      { name: "Kiran",  skill: "All-rounder", image: "/players/7.jpg" },
       { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
-      { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
-      { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
+      { name: "Martin Thandhara", skill: "Bowler", image: "/players/9.jpg" },
+      { name: "Nagesh Kowligi", skill: "Bowler", image: "/players/10.jpg" },
       { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
-      { name: "Nikhil Holagunda", skill: "All-rounder", image: "/players/12.jpeg" },
+      { name: "Nipun", skill: "Destructive Batter", image: "/players/24.jpeg" },
+      { name: "Nikhil Holagunda", skill: "Spin BowlingAll-rounder", image: "/players/12.jpeg" },
+      { name: "Prashanth", skill: "Spin Bowling All-rounder", image: "/players/20.jpg" },
       { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
       { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
-      { name: "STP", skill: "Bowler", image: "/players/15.jpeg" },
-      { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
+      { name: "Sai TP", skill: "Bowler", image: "/players/15.jpeg" },
+      { name: "Varun Rambha", skill: "Batter", image: "/players/16.jpeg" },
       { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
-      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" }
+      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" },
+      { name: "Dheeraj", skill: "Bowler", image: "/players/23.jpeg" },
+      { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" }
     ].map((p) => (
       <div
         key={p.name}
