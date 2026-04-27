@@ -58,6 +58,46 @@ export default function Home() {
 
       <PageWrap id="leadership" title="Leadership" subtitle="Captains guiding Telugu Titans under the TCCC banner."><div className="grid gap-6 md:grid-cols-3">{captains.map((c) => <div key={c.name} className="card p-6"><div className="mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-amber-300 text-3xl font-black text-black">{c.name.split(' ').map((x) => x[0]).join('')}</div><h3 className="text-2xl font-bold text-amber-300">{c.name}</h3><p className="mt-1 text-sm text-white/60">{c.role}</p><p className="mt-4 leading-7 text-white/75">{c.note}</p></div>)}</div></PageWrap>
 
+      <PageWrap
+  id="players"
+  title="Players"
+  subtitle="Meet the Telugu Titans squad under TCCC banner."
+>
+  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+    {[
+  { name: "Amit Koul", skill: "All-rounder", image: "/players/Amit Koul.jpeg" },
+  { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/Anand Chaitanya.jpeg" },
+  { name: "Arun", role: "", skill: "Bowler", image: "/players/Arun.jpg" },
+  { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/Bhanu.jpg" },
+  { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper/Batter", image: "/players/Charan Teja.jpeg" },
+  { name: "Chari", skill: "All-rounder", image: "/players/Chari.jpeg" },
+  { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/KK.jpg" },
+  { name: "Manish Raj", skill: "Spin Bowling All rounder", image: "/players/manishraj.png" },
+  { name: "Martin Thandhara", skill: "To be updated", image: "/players/Martin Thandhara.jpg" },
+  { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/nagesh kowligi(1).jpg" },
+  { name: "Naveen Gajula", skill: "All-rounder", image: "/players/Naveen Gajula.jpeg" },
+  { name: "Nikhil Holagunda", skill: "All-rounder",  image: "/players/Nikhil Holagunda.jpeg" },
+  { name: "Sai", skill: "Impact Bowler", image: "/players/SAI.jpeg" },
+  { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/Shanthan Akkiraju.jpeg" },
+  { name: "STP", skill: "", skill: "Bowler", image: "/players/STP.jpeg" },
+  { name: "Varun Rambha", skill: "All-rounder", image: "/players/Varun.jpeg" },
+  { name: "Vikas Tiwari", skill: "Bowler",  image: "/players/Vikas Tiwari.jpeg" },
+  { name: "Vikranth Nyalakonda", skill: "Wicket Keeper/Batter",  image: "/players/Vikranth Nyalakonda.jpeg" }
+
+    ].map((p)=>(
+      <div key={p.name} className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+        <img src={p.img} className="h-72 w-full object-cover" />
+        <div className="p-4">
+          <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
+          <p className="text-white/70">{p.role}</p>
+        </div>
+      </div>
+    ))}
+
+  </div>
+</PageWrap>
+
       <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
 
       <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6"><InfoCard title="2024 Season" text="TCCC/Titans played both BEDCL and HDCL. In BEDCL standings, GTA Legends finished Division E Conference A with 25 points." /><InfoCard title="2025 Season" text="TCCC/Titans again played both BEDCL and HDCL. GTA Legends finished Division F Conference B with 70 points." /><InfoCard title="2026 Season" text="TCCC/Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>

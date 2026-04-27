@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'TCCC | Telugu Cricket Club Canada',
+  title: 'Telugu Titans',
   description: 'Beyond the Pitch, We Unite',
 };
 
