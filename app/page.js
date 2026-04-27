@@ -60,64 +60,11 @@ export default function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-12"><div className="mb-6"><h2 className="text-3xl font-black text-amber-300 md:text-4xl">Legends of Our Team</h2><p className="mt-2 text-white/65">Honouring players who helped build the team’s competitive identity.</p></div><div className="grid gap-6 md:grid-cols-2">{legends.map((l) => <div key={l.name} className="gold-card p-6"><div className="text-sm uppercase tracking-widest text-amber-300">{l.title}</div><h3 className="mt-3 text-3xl font-black">{l.name}</h3><div className="mt-3 rounded-2xl bg-black/30 p-4 text-lg font-bold text-amber-200">{l.stats}</div><p className="mt-4 leading-7 text-white/75">{l.note}</p></div>)}</div></section>
 
-      <PageWrap id="about" title="About TCCC" subtitle="A cricket club built for community, competition, and growth."><div className="grid gap-6 md:grid-cols-2"><InfoCard title="Our Story" text="The club’s roots go back to Andhra Tycoons in 2008, later reformed as Telugu Cricket Club Canada in 2022." /><InfoCard title="Our Vision" text="Batting for a stronger South Asian community through cricket, while developing younger players and creating opportunities." /><InfoCard title="Competitive + Recreational" text="TCCC supports both serious competition and recreational cricket." /><InfoCard title="Future Roadmap" text="Multiple teams, international exposure, cricket leagues, and community-driven development." /></div></PageWrap>
+     
 
       <PageWrap id="leadership" title="Leadership" subtitle="Captains guiding Telugu Titans under the TCCC banner."><div className="grid gap-6 md:grid-cols-3">{captains.map((c) => <div key={c.name} className="card p-6"><div className="mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-amber-300 text-3xl font-black text-black">{c.name.split(' ').map((x) => x[0]).join('')}</div><h3 className="text-2xl font-bold text-amber-300">{c.name}</h3><p className="mt-1 text-sm text-white/60">{c.role}</p><p className="mt-4 leading-7 text-white/75">{c.note}</p></div>)}</div></PageWrap>
 
-      <PageWrap
-  id="players"
-  title="Players"
-  subtitle="Meet the Telugu Titans squad under TCCC banner."
->
-  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
-    {[
-      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
-      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
-      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
-      { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper / Batter", image: "/players/5.jpeg" },
-      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
-      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
-      { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
-      { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
-      { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
-      { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
-      { name: "Nikhil Holagunda", skill: "All-rounder", image: "/players/12.jpeg" },
-      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
-      { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
-      { name: "STP", skill: "Bowler", image: "/players/15.jpeg" },
-      { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
-      { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
-      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" }
-    ].map((p) => (
-      <div
-        key={p.name}
-        className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
-      >
-        <img
-          src={p.image}
-          alt={p.name}
-          className="h-72 w-full object-cover"
-          style={{ objectPosition: "50% 25%" }} 
-          />
-
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
-
-          {p.role && (
-            <p className="text-sm font-semibold text-yellow-300">
-              {p.role}
-            </p>
-          )}
-
-          <p className="mt-1 text-white/70">{p.skill}</p>
-        </div>
-      </div>
-    ))}
-
-  </div>
-</PageWrap>
+      
 
 <PageWrap
   id="analysis"
@@ -182,8 +129,63 @@ export default function Home() {
       <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
 
       <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6"><InfoCard title="2024 Season" text="TCCC/Titans played both BEDCL and HDCL. In BEDCL standings, GTA Legends finished Division E Conference A with 25 points." /><InfoCard title="2025 Season" text="TCCC/Titans again played both BEDCL and HDCL. GTA Legends finished Division F Conference B with 70 points." /><InfoCard title="2026 Season" text="TCCC/Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
+      <PageWrap
+  id="players"
+  title="Players"
+  subtitle="Meet the Telugu Titans squad under TCCC banner."
+>
+  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-      <PageWrap id="contact" title="Contact / Join TCCC" subtitle="For players, supporters, sponsors, and community members."><div className="card p-6"><h3 className="text-2xl font-bold text-amber-300">Coming Next</h3><p className="mt-4 leading-7 text-white/75">This section can include Instagram, YouTube, WhatsApp contact, sponsor inquiry, and player registration workflow.</p></div></PageWrap>
+    {[
+      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
+      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
+      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
+      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
+      { name: "Charan Teja", role: "Captain", skill: "Wicket Keeper / Batter", image: "/players/5.jpeg" },
+      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
+      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/7.jpg" },
+      { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
+      { name: "Martin Thandhara", skill: "To be updated", image: "/players/9.jpg" },
+      { name: "Nagesh Kowligi", skill: "All-rounder", image: "/players/10.jpg" },
+      { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
+      { name: "Nikhil Holagunda", skill: "All-rounder", image: "/players/12.jpeg" },
+      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
+      { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
+      { name: "STP", skill: "Bowler", image: "/players/15.jpeg" },
+      { name: "Varun Rambha", skill: "All-rounder", image: "/players/16.jpeg" },
+      { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
+      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" }
+    ].map((p) => (
+      <div
+        key={p.name}
+        className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+      >
+        <img
+          src={p.image}
+          alt={p.name}
+          className="h-72 w-full object-cover"
+          style={{ objectPosition: "50% 25%" }} 
+          />
+
+        <div className="p-4">
+          <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
+
+          {p.role && (
+            <p className="text-sm font-semibold text-yellow-300">
+              {p.role}
+            </p>
+          )}
+
+          <p className="mt-1 text-white/70">{p.skill}</p>
+        </div>
+      </div>
+    ))}
+
+  </div>
+</PageWrap>
+<PageWrap id="about" title="About TCCC" subtitle="A cricket club built for community, competition, and growth."><div className="grid gap-6 md:grid-cols-2"><InfoCard title="Our Story" text="The club’s roots go back to Andhra Tycoons in 2008, later reformed as Telugu Cricket Club Canada in 2022." /><InfoCard title="Our Vision" text="Batting for a stronger South Asian community through cricket, while developing younger players and creating opportunities." /><InfoCard title="Competitive + Recreational" text="TCCC supports both serious competition and recreational cricket." /><InfoCard title="Future Roadmap" text="Multiple teams, international exposure, cricket leagues, and community-driven development." /></div></PageWrap>
+
+      {/* <PageWrap id="contact" title="Contact / Join TCCC" subtitle="For players, supporters, sponsors, and community members."><div className="card p-6"><h3 className="text-2xl font-bold text-amber-300">Coming Next</h3><p className="mt-4 leading-7 text-white/75">This section can include Instagram, YouTube, WhatsApp contact, sponsor inquiry, and player registration workflow.</p></div></PageWrap> */}
       <footer className="border-t border-white/10 bg-black/40 px-4 py-8 text-center text-sm text-white/60">© 2026 Telugu Cricket Club Canada. Built for TCCC and Telugu Titans.</footer>
     </main>
   );
