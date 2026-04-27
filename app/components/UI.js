@@ -62,7 +62,7 @@ export function Header() {
             <div className="text-xs text-white/70">Beyond the Pitch, We Unite</div>
           </div>
         </a>
-        <nav className="hidden gap-2 md:flex">
+        <nav className="flex max-w-full gap-2 overflow-x-auto whitespace-nowrap px-2">
   {pages.map((p) =>
     p === "Seasons" ? (
       <div key={p} className="relative group flex items-center">
