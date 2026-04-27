@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+body { margin: 0; background: #090b10; color: white; }
+.card { border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.05); border-radius: 1.5rem; }
+.gold-card { border: 1px solid rgba(252,211,77,.25); background: linear-gradient(135deg, rgba(252,211,77,.12), rgba(255,255,255,.04)); border-radius: 1.5rem; }
+.btn { border-radius: .9rem; padding: .65rem 1rem; font-weight: 700; transition: all .15s ease; }
+.btn-gold { background: #fcd34d; color: #000; }
+.btn-ghost { background: rgba(255,255,255,.08); color: white; }
+.table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.10); border-radius: 1rem; }
+th, td { padding: .75rem; white-space: nowrap; }
+th { text-align: left; color: rgba(255,255,255,.85); background: rgba(255,255,255,.10); }
+td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); }
