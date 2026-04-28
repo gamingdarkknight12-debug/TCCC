@@ -38,14 +38,7 @@ export function FUCCHeader() {
             <a className="fucc-btn" href="#stats">Stats</a>
             <a className="fucc-btn" href="#schedule">Schedule</a>
 
-            <div className="ml-2 flex items-center gap-1 rounded-full border border-sky-400/20 bg-white/5 p-1">
-              <a href="/" className="rounded-full px-4 py-2 text-sm font-black text-white hover:bg-white/10">
-                TT
-              </a>
-              <span className="rounded-full bg-sky-400 px-4 py-2 text-sm font-black text-black">
-                FUCC
-              </span>
-            </div>
+
           </nav>
 
           {/* Mobile Hamburger */}
@@ -107,18 +100,6 @@ export function FUCCHeader() {
             </a>
           </div>
 
-          <div className="mt-8 flex items-center gap-1 rounded-full border border-sky-400/20 bg-white/5 p-1">
-            <a
-              href="/"
-              className="flex-1 rounded-full px-4 py-3 text-center text-sm font-black text-white"
-            >
-              TT
-            </a>
-
-            <span className="flex-1 rounded-full bg-sky-400 px-4 py-3 text-center text-sm font-black text-black">
-              FUCC
-            </span>
-          </div>
         </div>
       )}
     </>

@@ -8,6 +8,23 @@ export default function FUCCPage() {
       <FUCCHeader />
 
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
+        {/* Team Switcher */}
+<div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
+  <div className="inline-flex items-center gap-1 rounded-full border border-sky-400/20 bg-[#06111f]/80 p-1 backdrop-blur-xl shadow-xl">
+
+    <a
+      href="/"
+      className="rounded-full px-5 py-2 text-sm font-black text-white transition hover:bg-white/10"
+    >
+      TT
+    </a>
+
+    <span className="rounded-full bg-sky-400 px-5 py-2 text-sm font-black text-black">
+      FUCC
+    </span>
+
+  </div>
+</div>
         <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>
             <div className="mb-4 inline-flex rounded-full border border-emerald-700/20 bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-800">
