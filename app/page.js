@@ -37,36 +37,19 @@ export default function Home() {
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
-    {/* Mobile Team Switcher */}
-<div className="relative z-30 mb-8 flex justify-center md:hidden">
-  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/60 p-1 backdrop-blur">
+ {/* Team Switcher - Desktop + Mobile */}
+<div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
+  <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/60 p-1 backdrop-blur-xl">
     <span className="rounded-full bg-amber-300 px-5 py-2 text-sm font-black text-black">
       TT
     </span>
 
     <a
       href="/fucc"
-      className="rounded-full px-5 py-2 text-sm font-black text-white"
+      className="rounded-full px-5 py-2 text-sm font-black text-white transition hover:bg-white/10"
     >
       FUCC
     </a>
-  </div>
-</div> 
-
-<div className="mb-6 flex justify-center md:hidden">
-  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 p-2">
-    
-    <button className="rounded-full bg-amber-300 px-4 py-2 text-xs font-black text-black">
-      TT
-    </button>
-
-    <a
-      href="/fucc"
-      className="rounded-full px-4 py-2 text-xs font-black text-white"
-    >
-      FUCC
-    </a>
-
   </div>
 </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.22),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(30,64,175,0.2),transparent_35%)]" />
