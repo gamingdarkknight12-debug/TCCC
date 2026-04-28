@@ -409,7 +409,7 @@ export default function Home() {
   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
     {[
-      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder, energy, presence", image: "/players/4.jpg" },
+      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder", image: "/players/4.jpg" },
       { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
       { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/21.jpeg" },
       { name: "Dheeraj", skill: "All-rounder", image: "/players/25.jpg" },
