@@ -244,12 +244,12 @@ export function SponsorBanner() {
   const repeated = Array(8).fill(sponsors).flat();
 
   return (
-    <div className="relative overflow-hidden border-b border-white/10 bg-[#05070d] py-6 md:py-7">
+    <div className="relative overflow-hidden border-b border-white/10 bg-[#05070d] py-3 md:py-4">
       {/* fade edges */}
       <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-[#05070d] to-transparent" />
       <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-[#05070d] to-transparent" />
 
-      <div className="sponsor-track flex w-max items-center gap-20 md:gap-24">
+      <div className="sponsor-track flex w-max items-center gap-12 md:gap-16">
         {repeated.map((src, i) => (
           <img
             key={i}
