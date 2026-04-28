@@ -25,7 +25,7 @@ export default function FUCCPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-  <a href="#stats" className="fucc-btn fucc-btn-active">
+  <a href="#stats" className="fucc-btn">
     View Player Stats
   </a>
 
