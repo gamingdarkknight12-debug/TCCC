@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { FUCCHeader, FUCCPageWrap, FUCCCard } from "./FUCC_UI";
 import { fuccPlayers, fuccNews, fuccSchedule } from "./FUCC_data";
+import { SponsorBanner } from "../components/UI";
 
 
 export default function FUCCPage() {
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <FUCCHeader />
-
+<SponsorBanner />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
         {/* Team Switcher */}
 <div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
