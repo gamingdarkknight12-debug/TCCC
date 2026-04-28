@@ -37,36 +37,22 @@ export default function Home() {
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
-        {/* Mobile Team Switcher */}
-<div className="mb-6 flex justify-center md:hidden">
-  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur">
-    <span className="rounded-full bg-amber-300 px-4 py-2 text-xs font-black text-black">
-      TT
-    </span>
-
-    <a
-      href="/fucc"
-      className="rounded-full px-4 py-2 text-xs font-black text-white"
-    >
-      FUCC
-    </a>
-  </div>
-</div>
-{/* Desktop Team Switcher */}
-<div className="absolute right-8 top-8 z-20 hidden md:block">
-  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur-xl">
+    {/* Mobile Team Switcher */}
+<div className="relative z-30 mb-8 flex justify-center md:hidden">
+  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/60 p-1 backdrop-blur">
     <span className="rounded-full bg-amber-300 px-5 py-2 text-sm font-black text-black">
       TT
     </span>
 
     <a
       href="/fucc"
-      className="rounded-full px-5 py-2 text-sm font-black text-white transition hover:bg-white/10"
+      className="rounded-full px-5 py-2 text-sm font-black text-white"
     >
       FUCC
     </a>
   </div>
-</div>
+</div> 
+
 <div className="mb-6 flex justify-center md:hidden">
   <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 p-2">
     
