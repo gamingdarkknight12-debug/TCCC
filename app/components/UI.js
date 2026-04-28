@@ -99,50 +99,45 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile Sidebar */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-[999] md:hidden">
-          <div
-            className="absolute inset-0 bg-black/70"
-            onClick={() => setMenuOpen(false)}
-          />
-
-          <div className="absolute right-0 top-0 h-full w-[82%] max-w-sm border-l border-white/10 bg-[#090b10] p-6 shadow-2xl">
-            <div className="mb-8 flex items-center justify-between">
-              <div>
-                <div className="text-xl font-black text-amber-300">
-                  Telugu Titans
-                </div>
-                <div className="text-sm text-white/60">Menu</div>
-              </div>
-
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl bg-white/10 px-4 py-2 text-xl text-white"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {pages.map((p) => (
-                <a
-                  key={p}
-                  href={hrefs[p]}
-                  onClick={() => setMenuOpen(false)}
-                  className={`block rounded-2xl px-5 py-4 text-lg font-bold ${
-                    active === p
-                      ? 'bg-amber-300 text-black'
-                      : 'bg-white/10 text-white'
-                  }`}
-                >
-                  {p}
-                </a>
-              ))}
-            </div>
+{/* Mobile Sidebar */}
+{mobileOpen && (
+  <div className="fixed inset-0 z-[999] bg-black/80 md:hidden">
+    <div className="fixed right-0 top-0 h-screen w-[78%] max-w-xs bg-[#090b10] p-5 shadow-2xl">
+      <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-5">
+        <div>
+          <div className="text-xl font-black text-amber-300">
+            Telugu Titans
           </div>
+          <div className="text-sm text-white/60">Menu</div>
         </div>
-      )}
+
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="rounded-xl bg-white/10 px-4 py-2 text-xl text-white"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {pages.map((p) => (
+          <a
+            key={p}
+            href={hrefs[p]}
+            onClick={() => setMobileOpen(false)}
+            className={`rounded-2xl px-5 py-4 text-base font-bold ${
+              active === p
+                ? "bg-amber-300 text-black"
+                : "bg-white/10 text-white"
+            }`}
+          >
+            {p}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
     </header>
   );
 }
