@@ -14,6 +14,21 @@ th, td { padding: .75rem; white-space: nowrap; }
 th { text-align: left; color: rgba(255,255,255,.85); background: rgba(255,255,255,.10); }
 td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); }
 
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background: #fcd34d !important;
+  color: #000 !important;
+  transform: translateY(-2px);
+}
+
+.btn-gold:hover {
+  background: #fbbf24 !important;
+  color: #000 !important;
+  transform: translateY(-2px);
+}
 .fucc-btn {
   border-radius: 9999px;
   background: #e5e7eb;

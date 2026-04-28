@@ -37,13 +37,27 @@ export default function Home() {
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
-        {/* Team Switcher */}
-<div className="absolute right-8 top-8 z-20 hidden md:block">
-  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 p-2 backdrop-blur-xl">
-    
-    <button className="rounded-full bg-amber-300 px-5 py-2 text-sm font-black text-black shadow-lg">
+        {/* Mobile Team Switcher */}
+<div className="mb-6 flex justify-center md:hidden">
+  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur">
+    <span className="rounded-full bg-amber-300 px-4 py-2 text-xs font-black text-black">
       TT
-    </button>
+    </span>
+
+    <a
+      href="/fucc"
+      className="rounded-full px-4 py-2 text-xs font-black text-white"
+    >
+      FUCC
+    </a>
+  </div>
+</div>
+{/* Desktop Team Switcher */}
+<div className="absolute right-8 top-8 z-20 hidden md:block">
+  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur-xl">
+    <span className="rounded-full bg-amber-300 px-5 py-2 text-sm font-black text-black">
+      TT
+    </span>
 
     <a
       href="/fucc"
@@ -51,7 +65,6 @@ export default function Home() {
     >
       FUCC
     </a>
-
   </div>
 </div>
 <div className="mb-6 flex justify-center md:hidden">
@@ -78,7 +91,7 @@ export default function Home() {
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
             <NextMatchCard />
             <div className="mt-8 flex flex-wrap gap-3">
-  <a className="btn btn-gold" href="#stats">View Player Stats</a>
+  <a className="btn btn-ghost" href="#stats">View Player Stats</a>
 
   <a className="btn btn-ghost" href="#players">Meet Players</a>
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
