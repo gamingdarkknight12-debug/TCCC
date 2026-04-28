@@ -20,18 +20,25 @@ export function Header() {
   };
 
   useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
     const sections = [
-      { id: "news", name: "News" },
-      { id: "analysis", name: "Match Analysis" },
-      { id: "stats", name: "Player Stats" },
-      { id: "seasons", name: "Seasons" },
-      { id: "schedule2026", name: "Seasons" },
-      { id: "players", name: "Players" },
-      { id: "about", name: "About" },
+      { id: 'news', name: 'News' },
+      { id: 'analysis', name: 'Match Analysis' },
+      { id: 'stats', name: 'Player Stats' },
+      { id: 'seasons', name: 'Seasons' },
+      { id: 'schedule2026', name: 'Seasons' },
+      { id: 'players', name: 'Players' },
+      { id: 'about', name: 'About' },
     ];
 
     const updateActive = () => {
-      let current = "Home";
+      let current = 'Home';
 
       sections.forEach((section) => {
         const el = document.getElementById(section.id);
@@ -45,108 +52,125 @@ export function Header() {
     };
 
     updateActive();
-    window.addEventListener("scroll", updateActive);
-    window.addEventListener("hashchange", updateActive);
+    window.addEventListener('scroll', updateActive);
+    window.addEventListener('hashchange', updateActive);
 
     return () => {
-      window.removeEventListener("scroll", updateActive);
-      window.removeEventListener("hashchange", updateActive);
+      window.removeEventListener('scroll', updateActive);
+      window.removeEventListener('hashchange', updateActive);
     };
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <a href="/" className="flex items-center gap-3">
-          <Image
-            src="/tccc-logo.png"
-            alt="TCCC Logo"
-            width={52}
-            height={52}
-            className="rounded-full object-contain"
-            priority
-          />
+    <>
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <a href="/" className="flex items-center gap-3">
+            <Image
+              src="/tccc-logo.png"
+              alt="TCCC Logo"
+              width={52}
+              height={52}
+              className="rounded-full object-contain"
+              priority
+            />
 
-          <div>
-            <div className="text-lg font-bold tracking-wide text-amber-300">
+            <div>
+              <div className="text-lg font-bold tracking-wide text-amber-300">
+                Telugu Titans
+              </div>
+              <div className="text-xs text-white/70">
+                Beyond the Pitch, We Unite
+              </div>
+            </div>
+          </a>
+
+          {/* Desktop Menu */}
+          <nav className="hidden gap-2 md:flex">
+            {pages.map((p) => (
+              <a
+                key={p}
+                href={hrefs[p]}
+                className={`btn ${active === p ? 'btn-gold' : 'btn-ghost'}`}
+              >
+                {p}
+              </a>
+            ))}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/10 bg-white/5 md:hidden"
+            aria-label="Open menu"
+          >
+            <span className="h-0.5 w-6 rounded-full bg-amber-300" />
+            <span className="h-0.5 w-6 rounded-full bg-amber-300" />
+            <span className="h-0.5 w-6 rounded-full bg-amber-300" />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Full Screen Menu */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[9999] h-[100dvh] overflow-y-auto bg-[#090b10] px-5 py-6 md:hidden">
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/tccc-logo.png"
+                alt="TCCC Logo"
+                width={54}
+                height={54}
+                className="rounded-full object-contain"
+              />
+
+              <div>
+                <div className="text-2xl font-black text-amber-300">
+                  Telugu Titans
+                </div>
+                <div className="text-sm text-white/60">
+                  Main Menu
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-3xl text-white"
+              aria-label="Close menu"
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="grid gap-3">
+            {pages.map((p) => (
+              <a
+                key={p}
+                href={hrefs[p]}
+                onClick={() => setMenuOpen(false)}
+                className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+                  active === p
+                    ? 'bg-amber-300 text-black'
+                    : 'border border-white/10 bg-white/[0.06] text-white'
+                }`}
+              >
+                {p}
+              </a>
+            ))}
+          </div>
+
+          <div className="mt-8 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5">
+            <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
               Telugu Titans
             </div>
-            <div className="text-xs text-white/70">
-              Beyond the Pitch, We Unite
-            </div>
+            <p className="mt-2 text-white/70">
+              Beyond the Pitch, We Unite.
+            </p>
           </div>
-        </a>
-
-        {/* Desktop Menu */}
-        <nav className="hidden gap-2 md:flex">
-          {pages.map((p) => (
-            <a
-              key={p}
-              href={hrefs[p]}
-              className={`btn ${active === p ? 'btn-gold' : 'btn-ghost'}`}
-            >
-              {p}
-            </a>
-          ))}
-        </nav>
-
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-2xl font-black text-amber-300 md:hidden"
-        >
-          ☰
-        </button>
-      </div>
-
-      {/* Mobile Sidebar */}
-{/* Mobile Menu */}
-{menuOpen && (
-  <div className="fixed inset-0 z-[999] bg-[#090b10] px-5 py-6 md:hidden">
-    <div className="mb-8 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <Image
-          src="/tccc-logo.png"
-          alt="TCCC Logo"
-          width={48}
-          height={48}
-          className="rounded-full object-contain"
-        />
-        <div>
-          <div className="text-xl font-black text-amber-300">
-            Telugu Titans
-          </div>
-          <div className="text-xs text-white/60">Main Menu</div>
         </div>
-      </div>
-
-      <button
-        onClick={() => setMenuOpen(false)}
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white"
-      >
-        ×
-      </button>
-    </div>
-
-    <div className="grid gap-4">
-      {pages.map((p) => (
-        <a
-          key={p}
-          href={hrefs[p]}
-          onClick={() => setMenuOpen(false)}
-          className={`rounded-2xl px-5 py-4 text-xl font-black ${
-            active === p
-              ? "bg-amber-300 text-black"
-              : "bg-white/10 text-white"
-          }`}
-        >
-          {p}
-        </a>
-      ))}
-    </div>
-  </div>
-)}
-    </header>
+      )}
+    </>
   );
 }
 
