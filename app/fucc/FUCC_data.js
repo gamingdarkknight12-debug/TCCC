@@ -19,15 +19,6 @@ export const fuccNews = [
   },
 ];
 
-export const fuccSchedule = [
-  {
-    opponent: "To be updated",
-    date: "TBD",
-    time: "TBD",
-    ground: "TBD",
-    league: "TBD",
-  },
-];
 
 export const fuccStats = {
   batting: [],
