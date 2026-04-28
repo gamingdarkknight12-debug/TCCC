@@ -37,6 +37,39 @@ export default function Home() {
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
+        {/* Team Switcher */}
+<div className="absolute right-8 top-8 z-20 hidden md:block">
+  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 p-2 backdrop-blur-xl">
+    
+    <button className="rounded-full bg-amber-300 px-5 py-2 text-sm font-black text-black shadow-lg">
+      TT
+    </button>
+
+    <a
+      href="/fucc"
+      className="rounded-full px-5 py-2 text-sm font-black text-white transition hover:bg-white/10"
+    >
+      FUCC
+    </a>
+
+  </div>
+</div>
+<div className="mb-6 flex justify-center md:hidden">
+  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 p-2">
+    
+    <button className="rounded-full bg-amber-300 px-4 py-2 text-xs font-black text-black">
+      TT
+    </button>
+
+    <a
+      href="/fucc"
+      className="rounded-full px-4 py-2 text-xs font-black text-white"
+    >
+      FUCC
+    </a>
+
+  </div>
+</div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.22),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(30,64,175,0.2),transparent_35%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>

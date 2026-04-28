@@ -13,3 +13,31 @@ body { margin: 0; background: #090b10; color: white; }
 th, td { padding: .75rem; white-space: nowrap; }
 th { text-align: left; color: rgba(255,255,255,.85); background: rgba(255,255,255,.10); }
 td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); }
+
+.fucc-btn {
+  border-radius: 9999px;
+  background: #e5e7eb;
+  color: #111827;
+  padding: 0.75rem 1.25rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.fucc-btn:hover {
+  background: #047857;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.fucc-btn-active {
+  background: #047857;
+  color: white;
+}
+
+.fucc-btn-active:hover {
+  background: #065f46;
+  color: white;
+}
