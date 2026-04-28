@@ -5,6 +5,19 @@ import { useEffect, useState } from 'react';
 
 export function Header() {
   const [active, setActive] = useState('Home');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About'];
+
+  const hrefs = {
+    Home: '/',
+    News: '#news',
+    'Match Analysis': '#analysis',
+    'Player Stats': '#stats',
+    Seasons: '#seasons',
+    Players: '#players',
+    About: '#about',
+  };
 
   useEffect(() => {
     const sections = [
@@ -16,91 +29,120 @@ export function Header() {
       { id: "players", name: "Players" },
       { id: "about", name: "About" },
     ];
-  
+
     const updateActive = () => {
       let current = "Home";
-  
+
       sections.forEach((section) => {
         const el = document.getElementById(section.id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 160) {
-            current = section.name;
-          }
+          if (rect.top <= 160) current = section.name;
         }
       });
-  
+
       setActive(current);
     };
-  
+
     updateActive();
     window.addEventListener("scroll", updateActive);
     window.addEventListener("hashchange", updateActive);
-  
+
     return () => {
       window.removeEventListener("scroll", updateActive);
       window.removeEventListener("hashchange", updateActive);
     };
   }, []);
-  const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
-    const hrefs = {
-    Home: '/',
-    News: '#news',
-    'Match Analysis': '#analysis',
-    'Player Stats': '#stats',
-    Seasons: '#seasons',
-    Players: '#players',
-    'About Us': '#about'
-  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b10]/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <a href="/" className="flex items-center gap-3">
-          <Image src="/tccc-logo.png" alt="TCCC Logo" width={52} height={52} className="rounded-full object-contain" priority />
+          <Image
+            src="/tccc-logo.png"
+            alt="TCCC Logo"
+            width={52}
+            height={52}
+            className="rounded-full object-contain"
+            priority
+          />
+
           <div>
-            <div className="text-lg font-bold tracking-wide text-amber-300">Telugu Titans</div>
-            <div className="text-xs text-white/70">Beyond the Pitch, We Unite</div>
+            <div className="text-lg font-bold tracking-wide text-amber-300">
+              Telugu Titans
+            </div>
+            <div className="text-xs text-white/70">
+              Beyond the Pitch, We Unite
+            </div>
           </div>
         </a>
-        <nav className="flex max-w-full gap-2 overflow-x-auto whitespace-nowrap px-2">
-  {pages.map((p) =>
-    p === "Seasons" ? (
-      <div key={p} className="relative group flex items-center">
-        <a
-          href="#seasons"
-          className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
+
+        {/* Desktop Menu */}
+        <nav className="hidden gap-2 md:flex">
+          {pages.map((p) => (
+            <a
+              key={p}
+              href={hrefs[p]}
+              className={`btn ${active === p ? 'btn-gold' : 'btn-ghost'}`}
+            >
+              {p}
+            </a>
+          ))}
+        </nav>
+
+        {/* Mobile Hamburger */}
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-2xl font-black text-amber-300 md:hidden"
         >
-          Seasons
-        </a>
+          ☰
+        </button>
+      </div>
 
-        <div className="absolute left-0 top-full z-50 hidden min-w-[260px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
-          <a
-            href="#seasons"
-            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
-          >
-            Seasons Overview
-          </a>
+      {/* Mobile Sidebar */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[999] md:hidden">
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setMenuOpen(false)}
+          />
 
-          <a
-            href="#schedule2026"
-            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
-          >
-            2026 Season Schedule
-          </a>
+          <div className="absolute right-0 top-0 h-full w-[82%] max-w-sm border-l border-white/10 bg-[#090b10] p-6 shadow-2xl">
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <div className="text-xl font-black text-amber-300">
+                  Telugu Titans
+                </div>
+                <div className="text-sm text-white/60">Menu</div>
+              </div>
+
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="rounded-xl bg-white/10 px-4 py-2 text-xl text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {pages.map((p) => (
+                <a
+                  key={p}
+                  href={hrefs[p]}
+                  onClick={() => setMenuOpen(false)}
+                  className={`block rounded-2xl px-5 py-4 text-lg font-bold ${
+                    active === p
+                      ? 'bg-amber-300 text-black'
+                      : 'bg-white/10 text-white'
+                  }`}
+                >
+                  {p}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    ) : (
-      <a
-        key={p}
-        href={hrefs[p]}
-        className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
-      >
-        {p}
-      </a>
-    )
-  )}
-</nav>
-      </div>
+      )}
     </header>
   );
 }

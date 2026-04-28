@@ -40,7 +40,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.22),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(30,64,175,0.2),transparent_35%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>
-            <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Cricket Club Canada</div>
+            <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Titans</div>
             <h1 className="text-5xl font-black leading-tight md:text-7xl">Beyond the Pitch, <span className="text-amber-300">We Unite.</span></h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
             <NextMatchCard />
