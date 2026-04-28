@@ -99,42 +99,50 @@ export function Header() {
         </button>
       </div>
 
-{/* Mobile Sidebar */}
-{mobileOpen && (
-  <div className="fixed inset-0 z-[999] bg-black/80 md:hidden">
-    <div className="fixed right-0 top-0 h-screen w-[78%] max-w-xs bg-[#090b10] p-5 shadow-2xl">
-      <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-5">
+      {/* Mobile Sidebar */}
+{/* Mobile Menu */}
+{menuOpen && (
+  <div className="fixed inset-0 z-[999] bg-[#090b10] px-5 py-6 md:hidden">
+    <div className="mb-8 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Image
+          src="/tccc-logo.png"
+          alt="TCCC Logo"
+          width={48}
+          height={48}
+          className="rounded-full object-contain"
+        />
         <div>
           <div className="text-xl font-black text-amber-300">
             Telugu Titans
           </div>
-          <div className="text-sm text-white/60">Menu</div>
+          <div className="text-xs text-white/60">Main Menu</div>
         </div>
+      </div>
 
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="rounded-xl bg-white/10 px-4 py-2 text-xl text-white"
+      <button
+        onClick={() => setMenuOpen(false)}
+        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white"
+      >
+        ×
+      </button>
+    </div>
+
+    <div className="grid gap-4">
+      {pages.map((p) => (
+        <a
+          key={p}
+          href={hrefs[p]}
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black ${
+            active === p
+              ? "bg-amber-300 text-black"
+              : "bg-white/10 text-white"
+          }`}
         >
-          ✕
-        </button>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        {pages.map((p) => (
-          <a
-            key={p}
-            href={hrefs[p]}
-            onClick={() => setMobileOpen(false)}
-            className={`rounded-2xl px-5 py-4 text-base font-bold ${
-              active === p
-                ? "bg-amber-300 text-black"
-                : "bg-white/10 text-white"
-            }`}
-          >
-            {p}
-          </a>
-        ))}
-      </div>
+          {p}
+        </a>
+      ))}
     </div>
   </div>
 )}
