@@ -1,10 +1,15 @@
+'use client';
+
 import Image from "next/image";
+import { useState } from "react";
 import { FUCCHeader, FUCCPageWrap, FUCCCard } from "./FUCC_UI";
 import { fuccPlayers, fuccNews, fuccSchedule } from "./FUCC_data";
 import { SponsorBanner } from "../components/UI";
 
 
 export default function FUCCPage() {
+  const [scheduleTab, setScheduleTab] = useState("t25");
+const selectedSchedule = fuccSchedule[scheduleTab];
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <FUCCHeader />
@@ -127,35 +132,84 @@ export default function FUCCPage() {
           </p>
         </div>
       </FUCCPageWrap>
+<FUCCPageWrap
+  id="seasons"
+  title="FUCC Seasons"
+  subtitle="Friends United Cricket Club season journey under the TCCC umbrella."
+>
+  <div className="grid gap-6 md:grid-cols-3">
+    <FUCCCard
+      title="2024 Season"
+      text="FUCC past season details will be added here."
+    />
 
-      <FUCCPageWrap
-        id="schedule"
-        title="FUCC Schedule"
-        subtitle="Upcoming FUCC matches."
+    <FUCCCard
+      title="2025 Season"
+      text="FUCC previous season performance, league position, and highlights will be added here."
+    />
+
+    <FUCCCard
+      title="2026 Season"
+      text="FUCC are preparing for the upcoming season with a growing squad and stronger team direction."
+    />
+  </div>
+
+  <div className="mt-8 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
+    <h3 className="text-2xl font-bold text-amber-300">
+      FUCC Season Direction
+    </h3>
+
+    <p className="mt-4 leading-7 text-white/75">
+      FUCC are focused on building team chemistry, player availability,
+      consistent performances, and a strong foundation under TCCC.
+    </p>
+  </div>
+</FUCCPageWrap>
+<FUCCPageWrap
+  id="schedule"
+  title="2026 FUCC Season Schedule"
+  subtitle="Select T25 or T50 schedule."
+>
+  <div className="mb-6 flex flex-wrap gap-3">
+    <button
+      onClick={() => setScheduleTab("t25")}
+      className={`fucc-btn ${scheduleTab === "t25" ? "fucc-btn-active" : ""}`}
+    >
+      T25 Schedule
+    </button>
+
+    <button
+      onClick={() => setScheduleTab("t50")}
+      className={`fucc-btn ${scheduleTab === "t50" ? "fucc-btn-active" : ""}`}
+    >
+      T50 Schedule
+    </button>
+  </div>
+
+  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {selectedSchedule.map((m, i) => (
+      <div
+        key={i}
+        className="rounded-3xl border border-amber-300/20 bg-white/5 p-6 shadow-lg"
       >
-        <div className="grid gap-6 md:grid-cols-3">
-          {fuccSchedule.map((m, i) => (
-            <div
-              key={i}
-              className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg"
-            >
-              <div className="mb-3 inline-flex rounded-full bg-amber-300/10 px-3 py-1 text-xs font-bold text-amber-300">
-                {m.league}
-              </div>
-
-              <h3 className="text-2xl font-black text-amber-300">
-                FUCC vs {m.opponent}
-              </h3>
-
-              <div className="mt-4 space-y-2 text-white/70">
-                <p>Date: {m.date}</p>
-                <p>Time: {m.time}</p>
-                <p>Ground: {m.ground}</p>
-              </div>
-            </div>
-          ))}
+        <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-black text-black">
+          {m.league}
         </div>
-      </FUCCPageWrap>
+
+        <h3 className="text-2xl font-black text-amber-300">
+          FUCC vs {m.opponent}
+        </h3>
+
+        <div className="mt-4 space-y-2 text-white/75">
+          <p><span className="text-amber-300">Date:</span> {m.day}, {m.date}</p>
+          <p><span className="text-amber-300">Time:</span> {m.time}</p>
+          <p><span className="text-amber-300">Home/Away:</span> {m.homeAway}</p>
+          <p><span className="text-amber-300">Ground:</span> {m.ground}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</FUCCPageWrap>
     </main>
   );
 }

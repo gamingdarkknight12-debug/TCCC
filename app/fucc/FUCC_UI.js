@@ -37,7 +37,29 @@ const [activeMobileMenu, setActiveMobileMenu] = useState("Home");
             <a className="fucc-btn" href="#news">News</a>
             <a className="fucc-btn" href="#players">Players</a>
             <a className="fucc-btn" href="#stats">Stats</a>
-            <a className="fucc-btn" href="#schedule">Schedule</a>
+            <a className="fucc-btn" href="#stats">Stats</a>
+
+<div className="group relative">
+  <a className="fucc-btn" href="#seasons">Seasons</a>
+
+  <div className="absolute left-0 top-full z-50 hidden pt-2 group-hover:block">
+    <div className="min-w-[250px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl">
+      <a
+        href="#seasons"
+        className="block rounded-xl px-4 py-3 font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+      >
+        Seasons Overview
+      </a>
+
+      <a
+        href="#schedule"
+        className="block rounded-xl px-4 py-3 font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+      >
+        2026 Season Schedule
+      </a>
+    </div>
+  </div>
+</div>
 
 
           </nav>
@@ -89,6 +111,7 @@ const [activeMobileMenu, setActiveMobileMenu] = useState("Home");
     { name: "News", href: "#news" },
     { name: "Players", href: "#players" },
     { name: "Stats", href: "#stats" },
+    { name: "Seasons", href: "#seasons" },
     { name: "Schedule", href: "#schedule" },
   ].map((item) => (
     <a
