@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export function FUCCHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+const [activeMobileMenu, setActiveMobileMenu] = useState("Home");
 
   return (
     <>
@@ -82,23 +83,31 @@ export function FUCCHeader() {
             </button>
           </div>
 
-          <div className="grid gap-3">
-            <a onClick={() => setMenuOpen(false)} href="/fucc" className="rounded-2xl bg-sky-400 px-5 py-4 text-xl font-black text-black">
-              Home
-            </a>
-            <a onClick={() => setMenuOpen(false)} href="#news" className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-xl font-black text-white">
-              News
-            </a>
-            <a onClick={() => setMenuOpen(false)} href="#players" className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-xl font-black text-white">
-              Players
-            </a>
-            <a onClick={() => setMenuOpen(false)} href="#stats" className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-xl font-black text-white">
-              Stats
-            </a>
-            <a onClick={() => setMenuOpen(false)} href="#schedule" className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-xl font-black text-white">
-              Schedule
-            </a>
-          </div>
+<div className="grid gap-3">
+  {[
+    { name: "Home", href: "/fucc" },
+    { name: "News", href: "#news" },
+    { name: "Players", href: "#players" },
+    { name: "Stats", href: "#stats" },
+    { name: "Schedule", href: "#schedule" },
+  ].map((item) => (
+    <a
+      key={item.name}
+      href={item.href}
+      onClick={() => {
+        setActiveMobileMenu(item.name);
+        setMenuOpen(false);
+      }}
+      className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+        activeMobileMenu === item.name
+          ? "bg-amber-300 text-black"
+          : "border border-white/10 bg-white/[0.06] text-white hover:bg-amber-300 hover:text-black"
+      }`}
+    >
+      {item.name}
+    </a>
+  ))}
+</div>
 
         </div>
       )}
