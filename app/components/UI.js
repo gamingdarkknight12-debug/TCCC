@@ -255,7 +255,7 @@ export function SponsorBanner() {
             key={i}
             src={src}
             alt="Sponsor"
-            className="h-[80px] md:h-[95px] w-auto object-contain opacity-90 transition hover:opacity-100"
+            className="h-[70px] md:h-[85px] w-auto object-contain opacity-90 transition hover:opacity-100"
           />
         ))}
       </div>
