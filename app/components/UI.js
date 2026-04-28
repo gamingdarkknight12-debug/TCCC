@@ -234,11 +234,15 @@ export function StatTable({ title, headers, rows }) {
       </div>
     </div>
   );``
-}
-export function SponsorBanner() {
+}export function SponsorBanner() {
   const sponsors = [
     "/sponsors/sponsor1.png",
     "/sponsors/sponsor2.jpg",
+  ];
+
+  const links = [
+    "https://www.shahrealtor.ca/",
+    "https://www.divyaana.ca/",
   ];
 
   const repeated = Array(8).fill(sponsors).flat();
@@ -250,14 +254,25 @@ export function SponsorBanner() {
       <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-[#05070d] to-transparent" />
 
       <div className="sponsor-track flex w-max items-center gap-12 md:gap-16">
-        {repeated.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt="Sponsor"
-            className="h-[70px] md:h-[85px] w-auto object-contain opacity-90 transition hover:opacity-100"
-          />
-        ))}
+        {repeated.map((src, i) => {
+          const index = i % sponsors.length;
+
+          return (
+            <a
+              key={i}
+              href={links[index]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <img
+                src={src}
+                alt="Sponsor"
+                className="h-[70px] md:h-[85px] w-auto object-contain opacity-90 transition hover:opacity-100 hover:scale-105"
+              />
+            </a>
+          );
+        })}
       </div>
     </div>
   );
