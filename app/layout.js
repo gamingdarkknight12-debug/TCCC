@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Telugu Titans',
+  title: 'TCCC',
   description: 'Beyond the Pitch, We Unite',
 };
 
