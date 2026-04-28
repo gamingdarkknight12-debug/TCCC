@@ -321,10 +321,42 @@ export default function Home() {
 </PageWrap>
       <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
 
-      <PageWrap id="seasons" title="Seasons" subtitle="League participation, standings, and 2026 direction."><div className="grid gap-6 md:grid-cols-3 mb-6">
-        <InfoCard title="2024 Season" text="Titans played both BEDCL and HDCL. In BEDCL standings, Titans finished Division E Conference A with 25 points." />
-        <InfoCard title="2025 Season" text="Titans again played both BEDCL and HDCL. Titans finished Division F Conference B with 70 points." />
-        <InfoCard title="2026 Season" text="Telugu Titans are contenders in both BEDCL and MCPL." /></div><div className="grid gap-6 lg:grid-cols-2"><Standing title="2024 BEDCL Standing" rows={standings2024} /><Standing title="2025 BEDCL Standing" rows={standings2025} /></div></PageWrap>
+<PageWrap
+  id="seasons"
+  title="Seasons"
+  subtitle="Telugu Titans league journey across BEDCL, HDCL, and MCPL."
+>
+  <div className="grid gap-6 md:grid-cols-3">
+
+    <InfoCard
+      title="2024 Season"
+      text="BEDCL: Telugu Titans finished 6th in Division E - Conference A with 25 points. HDCL: Telugu Titans finished 8th in Group C with 30 points."
+    />
+
+    <InfoCard
+      title="2025 Season"
+      text="BEDCL: Telugu Titan finished 4th in Division F - Conference B with 70 points. HDCL: Telugu Titans finished 6th in Group A with 75 points."
+    />
+
+    <InfoCard
+      title="2026 Season"
+      text="Telugu Titans are competing in BEDCL and MCPL with a stronger squad, better depth, and bigger goals for the season."
+    />
+
+  </div>
+
+  <div className="mt-8 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
+    <h3 className="text-2xl font-bold text-amber-300">
+      Season Direction
+    </h3>
+
+    <p className="mt-4 leading-7 text-white/75">
+      From rebuilding years to a stronger 2026 squad, Telugu Titans are focused
+      on consistency, availability, stronger batting partnerships, controlled
+      bowling, and converting close matches into wins.
+    </p>
+  </div>
+</PageWrap>
       <PageWrap
   id="schedule2026"
   title="2026 Season Schedule"
