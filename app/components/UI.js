@@ -233,5 +233,33 @@ export function StatTable({ title, headers, rows }) {
         </table>
       </div>
     </div>
+  );``
+}
+export function SponsorBanner() {
+  const sponsors = [
+    "/sponsors/sponsor1.png",
+    "/sponsors/sponsor2.jpg",
+    
+  ];
+
+  // repeat more times → smooth infinite scroll
+  const repeated = [...sponsors, ...sponsors, ...sponsors];
+
+  return (
+    <div className="relative overflow-hidden border-b border-white/10 bg-[#05070d] py-6 md:py-7">
+      {/* fade edges (premium look) */}
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-[#05070d] to-transparent z-10" />
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-[#05070d] to-transparent z-10" />
+
+      <div className="flex sponsor-track items-center gap-16">
+        {repeated.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt="Sponsor"
+className="h-full max-h-[90px] md:max-h-[90px] w-auto object-contain opacity-80 hover:opacity-100 transition"          />
+        ))}
+      </div>
+    </div>
   );
 }

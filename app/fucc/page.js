@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { FUCCHeader, FUCCPageWrap, FUCCCard } from "./FUCC_UI";
 import { fuccPlayers, fuccNews, fuccSchedule } from "./FUCC_data";
+import { Header, PageWrap, SponsorBanner } from "./components/UI";
+
 
 export default function FUCCPage() {
   return (

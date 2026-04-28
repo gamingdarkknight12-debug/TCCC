@@ -47,3 +47,18 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   color: #000000;
   transform: translateY(-2px);
 }
+
+.sponsor-track {
+  display: flex;
+  width: max-content;
+  animation: sponsor-scroll 25s linear infinite;
+}
+
+@keyframes sponsor-scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

@@ -1,8 +1,8 @@
 'use client';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { Header, PageWrap, InfoCard, HighlightCard, StatTable } from './components/UI';
 import { stats2024, stats2025, stats2026, captains, legends, standings2024, standings2025 } from './data';
+import { Header, PageWrap, InfoCard, HighlightCard, StatTable, SponsorBanner } from './components/UI';
 
 function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 
@@ -36,6 +36,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
+      <SponsorBanner />
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
  {/* Team Switcher - Desktop + Mobile */}
 <div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
