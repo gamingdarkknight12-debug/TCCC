@@ -394,7 +394,6 @@ export default function Home() {
       { name: "Prashanth", skill: "Spin Bowling All-rounder", image: "/players/20.jpg" },
       { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
       { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
-      { name: "Sai TP", skill: "Bowler", image: "/players/15.jpeg" },
       { name: "Varun Rambha", skill: "Batter", image: "/players/16.jpeg" },
       { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
       { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" },
