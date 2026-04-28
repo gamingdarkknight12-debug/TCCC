@@ -76,7 +76,7 @@ const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Pla
 
             <div>
               <div className="text-lg font-bold tracking-wide text-amber-300">
-                Telugu Titans
+                TCCC
               </div>
               <div className="text-xs text-white/70">
                 Beyond the Pitch, We Unite
@@ -152,7 +152,7 @@ const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Pla
 
               <div>
                 <div className="text-2xl font-black text-amber-300">
-                  Telugu Titans
+                  TCCC
                 </div>
                 <div className="text-sm text-white/60">
                   Main Menu
@@ -188,7 +188,7 @@ const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Pla
 
           <div className="mt-8 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5">
             <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
-              Telugu Titans
+              TCCC
             </div>
             <p className="mt-2 text-white/70">
               Beyond the Pitch, We Unite.
