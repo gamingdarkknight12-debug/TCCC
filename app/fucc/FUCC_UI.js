@@ -22,10 +22,10 @@ export function FUCCHeader() {
 
             <div>
               <div className="text-lg font-black text-sky-300">
-                Friends United CC
+                TCCC
               </div>
               <div className="text-xs text-white/60">
-                Under TCCC Umbrella
+                Beyond the Pitch, We Unite
               </div>
             </div>
           </a>
