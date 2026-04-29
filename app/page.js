@@ -431,7 +431,7 @@ export default function Home() {
       { name: "Srikanth", skill: "All-rounder", image: "/players/26.jpeg" },
       { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
       { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-      { name: "Anand Chaitanya", skill: "Batter", image: "/players/2.jpeg" },
+      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
       { name: "Kiran",  skill: "All-rounder", image: "/players/7.jpg" },
       { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
       { name: "Martin Thandhara", skill: "Bowler", image: "/players/9.jpg" },
