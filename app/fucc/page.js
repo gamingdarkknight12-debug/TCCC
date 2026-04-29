@@ -119,9 +119,6 @@ const nextFuccMatch = useMemo(() => {
     Meet Players
   </a>
 
-  <a href="#schedule" className="fucc-btn">
-    Upcoming Match Analysis
-  </a>
             </div>
           </div>
 

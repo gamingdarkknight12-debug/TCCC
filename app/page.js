@@ -61,11 +61,10 @@ export default function Home() {
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
             <NextMatchCard />
             <div className="mt-8 flex flex-wrap gap-3">
-  <a className="btn btn-ghost" href="#stats">View Player Stats</a>
 
-  <a className="btn btn-ghost" href="#players">Meet Players</a>
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
-</div>          </div>
+</div>          
+</div>
           <div className="flex justify-center"><div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10"><Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
         
         </div>
