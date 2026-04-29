@@ -9,7 +9,72 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 export default function Home() {
   const [season, setSeason] = useState('All-Time');
   const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
-  const [teamHubTab, setTeamHubTab] = useState("Overview");
+const [teamHubTab, setTeamHubTab] = useState("Overview");
+
+const [polls, setPolls] = useState({
+  "Energy Booster of the Week": [],
+  "Player of the Week": [],
+  "Funniest Guy": [],
+  "Most Creative Player": [],
+  "Predicted Leading Run Scorer": [],
+  "Predicted Leading Wicket Taker": [],
+});
+
+const [pollInputs, setPollInputs] = useState({});
+const [lockerNote, setLockerNote] = useState("");
+const [lockerNotes, setLockerNotes] = useState([]);
+const [captainNote, setCaptainNote] = useState("");
+const [captainNotes, setCaptainNotes] = useState([]);
+const [nicknamePlayer, setNicknamePlayer] = useState("");
+const [nicknameText, setNicknameText] = useState("");
+const [nicknames, setNicknames] = useState([]);
+
+function addPollOption(pollName) {
+  const value = (pollInputs[pollName] || "").trim();
+  if (!value) return;
+
+  setPolls((prev) => ({
+    ...prev,
+    [pollName]: [...prev[pollName], { name: value, votes: 0 }],
+  }));
+
+  setPollInputs((prev) => ({ ...prev, [pollName]: "" }));
+}
+
+function votePoll(pollName, index) {
+  setPolls((prev) => ({
+    ...prev,
+    [pollName]: prev[pollName].map((option, i) =>
+      i === index ? { ...option, votes: option.votes + 1 } : option
+    ),
+  }));
+}
+
+function addLockerNote() {
+  const value = lockerNote.trim();
+  if (!value) return;
+  setLockerNotes((prev) => [value, ...prev]);
+  setLockerNote("");
+}
+
+function addCaptainNote() {
+  const value = captainNote.trim();
+  if (!value) return;
+  setCaptainNotes((prev) => [value, ...prev]);
+  setCaptainNote("");
+}
+
+function addNickname() {
+  if (!nicknamePlayer.trim() || !nicknameText.trim()) return;
+
+  setNicknames((prev) => [
+    { player: nicknamePlayer.trim(), nickname: nicknameText.trim() },
+    ...prev,
+  ]);
+
+  setNicknamePlayer("");
+  setNicknameText("");
+}
 
   const allTime = useMemo(() => {
     const batting = {};
@@ -272,6 +337,7 @@ export default function Home() {
     </div>
   </div>
 </PageWrap>
+
 <PageWrap
   id="teamhub"
   title="Team Hub"
@@ -298,79 +364,53 @@ export default function Home() {
 
   {teamHubTab === "Overview" && (
     <div className="grid gap-6 lg:grid-cols-4">
-      <HighlightCard
-        title="Run Machine"
-        name="Charan Bandaru"
-        stat="843 all-time runs"
-        note="Most consistent batting contributor from available data."
-      />
-
-      <HighlightCard
-        title="Wicket Leader"
-        name="Shanthan"
-        stat="36 all-time wickets"
-        note="Reliable wicket-taking option across seasons."
-      />
-
-      <HighlightCard
-        title="Impact Player"
-        name="Aadil Khan"
-        stat="476 runs + all-round value"
-        note="Useful in pressure phases and team balance."
-      />
-
-      <HighlightCard
-        title="Emerging Force"
-        name="Kapil"
-        stat="11 wickets + 62 runs"
-        note="Useful lower-order and bowling impact option for the squad."
-      />
-
-      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6 lg:col-span-4">
-        <h3 className="text-3xl font-black text-amber-300">
-          Captain’s Message
-        </h3>
-        <p className="mt-4 leading-7 text-white/75">
-          One team. One energy. One season. Let’s build consistency, back each
-          other, and start strong from the first ball.
-        </p>
-      </div>
+      <HighlightCard title="Run Machine" name="Charan Bandaru" stat="843 all-time runs" note="Most consistent batting contributor from available data." />
+      <HighlightCard title="Wicket Leader" name="Shanthan" stat="36 all-time wickets" note="Reliable wicket-taking option across seasons." />
+      <HighlightCard title="Impact Player" name="Aadil Khan" stat="476 runs + all-round value" note="Useful in pressure phases and team balance." />
+      <HighlightCard title="Emerging Force" name="Kapil" stat="11 wickets + 62 runs" note="Useful lower-order and bowling impact option for the squad." />
     </div>
   )}
 
   {teamHubTab === "Voting Arena" && (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {[
-        "Energy Booster of the Week",
-        "Player of the Week",
-        "Funniest Guy",
-        "Most Creative Player",
-        "Predicted Leading Run Scorer",
-        "Predicted Leading Wicket Taker",
-      ].map((poll) => (
-        <div
-          key={poll}
-          className="rounded-3xl border border-white/10 bg-white/5 p-6"
-        >
-          <h3 className="text-2xl font-black text-amber-300">{poll}</h3>
+      {Object.keys(polls).map((pollName) => (
+        <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-2xl font-black text-amber-300">{pollName}</h3>
 
           <div className="mt-5 space-y-3">
-            {["Option 1", "Option 2", "Option 3"].map((option) => (
-              <button
-                key={option}
-                className="w-full rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
-              >
-                {option}
-              </button>
-            ))}
+            {polls[pollName].length === 0 ? (
+              <p className="rounded-2xl bg-black/30 p-4 text-white/60">
+                No options yet. Add the first name below.
+              </p>
+            ) : (
+              polls[pollName].map((option, index) => (
+                <button
+                  key={`${option.name}-${index}`}
+                  onClick={() => votePoll(pollName, index)}
+                  className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+                >
+                  <span>{option.name}</span>
+                  <span>{option.votes} votes</span>
+                </button>
+              ))
+            )}
           </div>
 
           <div className="mt-5 flex gap-2">
             <input
-              placeholder="Add option"
+              value={pollInputs[pollName] || ""}
+              onChange={(e) =>
+                setPollInputs((prev) => ({
+                  ...prev,
+                  [pollName]: e.target.value,
+                }))
+              }
+              placeholder="Add player name"
               className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
             />
-            <button className="btn btn-gold">Add</button>
+            <button onClick={() => addPollOption(pollName)} className="btn btn-gold">
+              Add
+            </button>
           </div>
         </div>
       ))}
@@ -379,31 +419,36 @@ export default function Home() {
 
   {teamHubTab === "Locker Room" && (
     <div className="grid gap-6 lg:grid-cols-3">
-      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6 lg:col-span-1">
-        <h3 className="text-2xl font-black text-amber-300">
-          Add Locker Note
-        </h3>
+      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
+        <h3 className="text-2xl font-black text-amber-300">Locker Room Wall</h3>
+        <p className="mt-3 text-white/70">
+          Leave fun notes, memories, season goals, promises, jokes, or moments we can look back at later in the season.
+        </p>
+
         <textarea
-          placeholder="Write a fun season memory, goal, or locker room note..."
+          value={lockerNote}
+          onChange={(e) => setLockerNote(e.target.value)}
+          placeholder="Write a locker room note..."
           className="mt-5 h-36 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
         />
-        <button className="btn btn-gold mt-4">Post Note</button>
+
+        <button onClick={addLockerNote} className="btn btn-gold mt-4">
+          Post Note
+        </button>
       </div>
 
       <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
-        {[
-          "First win celebration photo here 🔥",
-          "Someone owes biryani after first duck 😂",
-          "Season goal: qualify strong, finish stronger.",
-          "Remember this before playoffs — one team, one fight.",
-        ].map((note, i) => (
-          <div
-            key={i}
-            className="rotate-[-1deg] rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
-          >
-            <p className="leading-7 text-white/80">{note}</p>
+        {lockerNotes.length === 0 ? (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+            No locker room notes yet.
           </div>
-        ))}
+        ) : (
+          lockerNotes.map((note, i) => (
+            <div key={i} className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg">
+              <p className="leading-7 text-white/80">{note}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )}
@@ -415,27 +460,34 @@ export default function Home() {
           Anonymous Message to Captain
         </h3>
         <p className="mt-3 text-white/70">
-          Notes added here should not show the sender name.
+          Leave feedback, ideas, concerns, or suggestions. Sender name will not be shown.
         </p>
 
         <textarea
+          value={captainNote}
+          onChange={(e) => setCaptainNote(e.target.value)}
           placeholder="Write your anonymous note..."
           className="mt-5 h-40 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
         />
 
-        <button className="btn btn-gold mt-4">
+        <button onClick={addCaptainNote} className="btn btn-gold mt-4">
           Submit Anonymously
         </button>
       </div>
 
       <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-        <h3 className="text-2xl font-black text-amber-300">
-          Captain Vault Rules
-        </h3>
-        <div className="mt-4 space-y-3 text-white/75">
-          <p>• No sender name will be displayed.</p>
-          <p>• Use this for team suggestions, concerns, or ideas.</p>
-          <p>• Keep it respectful and team-first.</p>
+        <h3 className="text-2xl font-black text-amber-300">Submitted Notes</h3>
+
+        <div className="mt-5 space-y-3">
+          {captainNotes.length === 0 ? (
+            <p className="text-white/60">No captain notes yet.</p>
+          ) : (
+            captainNotes.map((note, i) => (
+              <div key={i} className="rounded-2xl bg-black/30 p-4 text-white/75">
+                Anonymous: {note}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
@@ -443,77 +495,54 @@ export default function Home() {
 
   {teamHubTab === "Hall of Fame" && (
     <div className="grid gap-6 md:grid-cols-2">
-      <HighlightCard
-        title="2024 Bowling Pillar"
-        name="Arun"
-        stat="18 wickets • 5.98 economy • 48 overs"
-        note="One of the strongest bowling performers from the 2024 season."
-      />
-
-      <HighlightCard
-        title="All-Time Wicket Leader"
-        name="Srikanth Govula"
-        stat="29 combined wickets • 314 batting runs"
-        note="A true impact player across seasons."
-      />
-
-      <HighlightCard
-        title="All-Time Run Machine"
-        name="Charan Bandaru"
-        stat="843 combined runs"
-        note="Led the batting charts with consistency and leadership."
-      />
-
-      <HighlightCard
-        title="Team Impact"
-        name="Aadil Khan"
-        stat="476 runs + 20 wickets"
-        note="Reliable all-round value across multiple seasons."
-      />
+      <HighlightCard title="2024 Bowling Pillar" name="Arun" stat="18 wickets • 5.98 economy • 48 overs" note="One of the strongest bowling performers from the 2024 season." />
+      <HighlightCard title="All-Time Wicket Leader" name="Srikanth Govula" stat="29 combined wickets • 314 batting runs" note="A true impact player across seasons." />
+      <HighlightCard title="All-Time Run Machine" name="Charan Bandaru" stat="843 combined runs" note="Led the batting charts with consistency and leadership." />
+      <HighlightCard title="Team Impact" name="Aadil Khan" stat="476 runs + 20 wickets" note="Reliable all-round value across multiple seasons." />
     </div>
   )}
 
   {teamHubTab === "Nickname Zone" && (
     <div className="grid gap-6 lg:grid-cols-3">
       <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-        <h3 className="text-2xl font-black text-amber-300">
-          Suggest Nickname
-        </h3>
+        <h3 className="text-2xl font-black text-amber-300">Suggest Nickname</h3>
 
         <input
+          value={nicknamePlayer}
+          onChange={(e) => setNicknamePlayer(e.target.value)}
           placeholder="Player name"
           className="mt-5 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
         />
 
         <input
+          value={nicknameText}
+          onChange={(e) => setNicknameText(e.target.value)}
           placeholder="Nickname"
           className="mt-3 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
         />
 
-        <button className="btn btn-gold mt-4">Submit</button>
+        <button onClick={addNickname} className="btn btn-gold mt-4">
+          Submit
+        </button>
       </div>
 
       <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
-        {[
-          ["Bhanu", "Sher"],
-          ["Shanthan", "Swing King"],
-          ["Aadil", "Turbo"],
-          ["Charan", "Run Machine"],
-          ["Kapil", "Emerging Force"],
-          ["Sai Kiran", "Impact Bowler"],
-        ].map(([player, nickname]) => (
-          <div
-            key={player}
-            className="rounded-3xl border border-white/10 bg-white/5 p-5"
-          >
-            <div className="text-sm font-black uppercase tracking-widest text-amber-300">
-              {player}
-            </div>
-            <div className="mt-2 text-3xl font-black text-white">
-              {nickname}
-            </div>
+        {nicknames.length === 0 ? (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+            No nicknames added yet.
           </div>
-        ))}
+        ) : (
+          nicknames.map((item, i) => (
+            <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <div className="text-sm font-black uppercase tracking-widest text-amber-300">
+                {item.player}
+              </div>
+              <div className="mt-2 text-3xl font-black text-white">
+                {item.nickname}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )}
