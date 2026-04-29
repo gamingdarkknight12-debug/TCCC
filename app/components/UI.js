@@ -7,10 +7,11 @@ export function Header() {
   const [active, setActive] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
+const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
   const hrefs = {
     Home: '/',
     News: '#news',
+    'Team Hub': '#teamhub',
     'Match Analysis': '#analysis',
     'Player Stats': '#stats',
     Seasons: '#seasons',
@@ -28,6 +29,7 @@ const pages = ['Home', 'News', 'Match Analysis', 'Player Stats', 'Seasons', 'Pla
   useEffect(() => {
     const sections = [
       { id: 'news', name: 'News' },
+      { id: "teamhub", name: "Team Hub" },
       { id: 'analysis', name: 'Match Analysis' },
       { id: 'stats', name: 'Player Stats' },
       { id: 'seasons', name: 'Seasons' },

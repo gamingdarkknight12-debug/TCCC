@@ -9,6 +9,7 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 export default function Home() {
   const [season, setSeason] = useState('All-Time');
   const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
+  const [teamHubTab, setTeamHubTab] = useState("Overview");
 
   const allTime = useMemo(() => {
     const batting = {};
@@ -271,7 +272,252 @@ export default function Home() {
     </div>
   </div>
 </PageWrap>
+<PageWrap
+  id="teamhub"
+  title="Team Hub"
+  subtitle="Titans digital dressing room — votes, fun, memories, goals, and team culture."
+>
+  <div className="mb-8 flex flex-wrap gap-3">
+    {[
+      "Overview",
+      "Voting Arena",
+      "Locker Room",
+      "Captain Vault",
+      "Hall of Fame",
+      "Nickname Zone",
+    ].map((tab) => (
+      <button
+        key={tab}
+        onClick={() => setTeamHubTab(tab)}
+        className={`btn ${teamHubTab === tab ? "btn-gold" : "btn-ghost"}`}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
 
+  {teamHubTab === "Overview" && (
+    <div className="grid gap-6 lg:grid-cols-4">
+      <HighlightCard
+        title="Run Machine"
+        name="Charan Bandaru"
+        stat="843 all-time runs"
+        note="Most consistent batting contributor from available data."
+      />
+
+      <HighlightCard
+        title="Wicket Leader"
+        name="Shanthan"
+        stat="36 all-time wickets"
+        note="Reliable wicket-taking option across seasons."
+      />
+
+      <HighlightCard
+        title="Impact Player"
+        name="Aadil Khan"
+        stat="476 runs + all-round value"
+        note="Useful in pressure phases and team balance."
+      />
+
+      <HighlightCard
+        title="Emerging Force"
+        name="Kapil"
+        stat="11 wickets + 62 runs"
+        note="Useful lower-order and bowling impact option for the squad."
+      />
+
+      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6 lg:col-span-4">
+        <h3 className="text-3xl font-black text-amber-300">
+          Captain’s Message
+        </h3>
+        <p className="mt-4 leading-7 text-white/75">
+          One team. One energy. One season. Let’s build consistency, back each
+          other, and start strong from the first ball.
+        </p>
+      </div>
+    </div>
+  )}
+
+  {teamHubTab === "Voting Arena" && (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {[
+        "Energy Booster of the Week",
+        "Player of the Week",
+        "Funniest Guy",
+        "Most Creative Player",
+        "Predicted Leading Run Scorer",
+        "Predicted Leading Wicket Taker",
+      ].map((poll) => (
+        <div
+          key={poll}
+          className="rounded-3xl border border-white/10 bg-white/5 p-6"
+        >
+          <h3 className="text-2xl font-black text-amber-300">{poll}</h3>
+
+          <div className="mt-5 space-y-3">
+            {["Option 1", "Option 2", "Option 3"].map((option) => (
+              <button
+                key={option}
+                className="w-full rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-5 flex gap-2">
+            <input
+              placeholder="Add option"
+              className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+            />
+            <button className="btn btn-gold">Add</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {teamHubTab === "Locker Room" && (
+    <div className="grid gap-6 lg:grid-cols-3">
+      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6 lg:col-span-1">
+        <h3 className="text-2xl font-black text-amber-300">
+          Add Locker Note
+        </h3>
+        <textarea
+          placeholder="Write a fun season memory, goal, or locker room note..."
+          className="mt-5 h-36 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
+        />
+        <button className="btn btn-gold mt-4">Post Note</button>
+      </div>
+
+      <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
+        {[
+          "First win celebration photo here 🔥",
+          "Someone owes biryani after first duck 😂",
+          "Season goal: qualify strong, finish stronger.",
+          "Remember this before playoffs — one team, one fight.",
+        ].map((note, i) => (
+          <div
+            key={i}
+            className="rotate-[-1deg] rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
+          >
+            <p className="leading-7 text-white/80">{note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {teamHubTab === "Captain Vault" && (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-3xl font-black text-amber-300">
+          Anonymous Message to Captain
+        </h3>
+        <p className="mt-3 text-white/70">
+          Notes added here should not show the sender name.
+        </p>
+
+        <textarea
+          placeholder="Write your anonymous note..."
+          className="mt-5 h-40 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
+        />
+
+        <button className="btn btn-gold mt-4">
+          Submit Anonymously
+        </button>
+      </div>
+
+      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
+        <h3 className="text-2xl font-black text-amber-300">
+          Captain Vault Rules
+        </h3>
+        <div className="mt-4 space-y-3 text-white/75">
+          <p>• No sender name will be displayed.</p>
+          <p>• Use this for team suggestions, concerns, or ideas.</p>
+          <p>• Keep it respectful and team-first.</p>
+        </div>
+      </div>
+    </div>
+  )}
+
+  {teamHubTab === "Hall of Fame" && (
+    <div className="grid gap-6 md:grid-cols-2">
+      <HighlightCard
+        title="2024 Bowling Pillar"
+        name="Arun"
+        stat="18 wickets • 5.98 economy • 48 overs"
+        note="One of the strongest bowling performers from the 2024 season."
+      />
+
+      <HighlightCard
+        title="All-Time Wicket Leader"
+        name="Srikanth Govula"
+        stat="29 combined wickets • 314 batting runs"
+        note="A true impact player across seasons."
+      />
+
+      <HighlightCard
+        title="All-Time Run Machine"
+        name="Charan Bandaru"
+        stat="843 combined runs"
+        note="Led the batting charts with consistency and leadership."
+      />
+
+      <HighlightCard
+        title="Team Impact"
+        name="Aadil Khan"
+        stat="476 runs + 20 wickets"
+        note="Reliable all-round value across multiple seasons."
+      />
+    </div>
+  )}
+
+  {teamHubTab === "Nickname Zone" && (
+    <div className="grid gap-6 lg:grid-cols-3">
+      <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
+        <h3 className="text-2xl font-black text-amber-300">
+          Suggest Nickname
+        </h3>
+
+        <input
+          placeholder="Player name"
+          className="mt-5 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+        />
+
+        <input
+          placeholder="Nickname"
+          className="mt-3 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+        />
+
+        <button className="btn btn-gold mt-4">Submit</button>
+      </div>
+
+      <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
+        {[
+          ["Bhanu", "Sher"],
+          ["Shanthan", "Swing King"],
+          ["Aadil", "Turbo"],
+          ["Charan", "Run Machine"],
+          ["Kapil", "Emerging Force"],
+          ["Sai Kiran", "Impact Bowler"],
+        ].map(([player, nickname]) => (
+          <div
+            key={player}
+            className="rounded-3xl border border-white/10 bg-white/5 p-5"
+          >
+            <div className="text-sm font-black uppercase tracking-widest text-amber-300">
+              {player}
+            </div>
+            <div className="mt-2 text-3xl font-black text-white">
+              {nickname}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</PageWrap>
       
 
 <PageWrap
