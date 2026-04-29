@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo,useState } from "react";
 import { FUCCHeader, FUCCPageWrap, FUCCCard } from "./FUCC_UI";
 import { fuccPlayers, fuccNews, fuccSchedule } from "./FUCC_data";
 import { SponsorBanner } from "../components/UI";
@@ -9,7 +9,37 @@ import { SponsorBanner } from "../components/UI";
 
 export default function FUCCPage() {
   const [scheduleTab, setScheduleTab] = useState("t25");
-const selectedSchedule = fuccSchedule[scheduleTab];
+  const selectedSchedule = fuccSchedule[scheduleTab];
+  const allFuccMatches = [
+  ...fuccSchedule.t25,
+  ...fuccSchedule.t50,
+];
+
+function getMatchDateTime(match) {
+  const timeMap = {
+    "7:30 AM": "07:30",
+    "11:35 AM": "11:35",
+    "12:00 PM": "12:00",
+    "12:30 PM": "12:30",
+    "3:40 PM": "15:40",
+  };
+
+  const formattedTime = timeMap[match.time] || "00:00";
+  return new Date(`${match.date}T${formattedTime}:00`);
+}
+
+const nextFuccMatch = useMemo(() => {
+  const now = new Date();
+
+  return allFuccMatches
+    .map((match) => ({
+      ...match,
+      matchDateTime: getMatchDateTime(match),
+    }))
+    .filter((match) => match.matchDateTime > now)
+    .sort((a, b) => a.matchDateTime - b.matchDateTime)[0];
+}, []);
+
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <FUCCHeader />
@@ -47,7 +77,39 @@ const selectedSchedule = fuccSchedule[scheduleTab];
               FUCC is part of the Telugu Cricket Club Canada umbrella, built on
               teamwork, friendship, competition, and community.
             </p>
+          {nextFuccMatch && (
+  <div className="mt-6 rounded-3xl border border-amber-300/25 bg-amber-300/10 p-6">
+    <div className="mb-3 text-sm font-black uppercase tracking-widest text-amber-300">
+      Upcoming Match
+    </div>
 
+    <h3 className="text-2xl font-black text-white">
+      FUCC vs {nextFuccMatch.opponent}
+    </h3>
+
+    <div className="mt-4 grid gap-3 text-white/80 sm:grid-cols-2">
+      <p>
+        <span className="text-amber-300">League:</span>{" "}
+        {nextFuccMatch.league}
+      </p>
+
+      <p>
+        <span className="text-amber-300">Date:</span>{" "}
+        {nextFuccMatch.day}, {nextFuccMatch.date}
+      </p>
+
+      <p>
+        <span className="text-amber-300">Time:</span>{" "}
+        {nextFuccMatch.time}
+      </p>
+
+      <p>
+        <span className="text-amber-300">Ground:</span>{" "}
+        {nextFuccMatch.ground}
+      </p>
+    </div>
+  </div>
+)}
             <div className="mt-8 flex flex-wrap gap-3">
   <a href="#stats" className="fucc-btn">
     View Player Stats

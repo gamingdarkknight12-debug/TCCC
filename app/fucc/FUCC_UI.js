@@ -37,7 +37,6 @@ const [activeMobileMenu, setActiveMobileMenu] = useState("Home");
             <a className="fucc-btn" href="#news">News</a>
             <a className="fucc-btn" href="#players">Players</a>
             <a className="fucc-btn" href="#stats">Stats</a>
-            <a className="fucc-btn" href="#stats">Stats</a>
 
 <div className="group relative">
   <a className="fucc-btn" href="#seasons">Seasons</a>
