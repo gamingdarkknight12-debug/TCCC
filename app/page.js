@@ -536,9 +536,9 @@ async function addNickname() {
         </button>
       </div>
 
-<div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
+<div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
   {lockerNotes.length === 0 ? (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+    <div className="min-h-[70px]rounded-xl border border-white/10 bg-white/5 p-3 text-white/60">
       No locker room notes yet.
     </div>
   ) : (
