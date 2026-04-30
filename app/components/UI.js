@@ -7,7 +7,7 @@ export function Header() {
   const [active, setActive] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Player Stats', 'Seasons', 'Players', 'About Us'];
+const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Seasons', 'Players', 'About Us'];
   const hrefs = {
     Home: '/',
     News: '#news',
@@ -87,30 +87,40 @@ const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Player Stats', 'Se
           </a>
 
           {/* Desktop Menu */}
-          <nav className="hidden gap-2 md:flex">
+<nav className="hidden gap-2 md:flex">
   {pages.map((p) =>
     p === "Seasons" ? (
       <div key={p} className="relative group flex items-center">
-        <a
-          href="#seasons"
-          className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
-        >
+        <a href="#seasons" className={`btn ${active === "Seasons" ? "btn-gold" : "btn-ghost"}`}>
           Seasons
         </a>
 
         <div className="absolute left-0 top-full z-50 hidden min-w-[260px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
-          <a
-            href="#seasons"
-            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
-          >
+          <a href="#seasons" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             Seasons Overview
           </a>
-
-          <a
-            href="#schedule2026"
-            className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black"
-          >
+          <a href="#schedule2026" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             2026 Season Schedule
+          </a>
+        </div>
+      </div>
+    ) : p === "Players" ? (
+      <div key={p} className="relative group flex items-center">
+        <a
+          href="#stats"
+          className={`btn ${
+            active === "Player Stats" || active === "Players" ? "btn-gold" : "btn-ghost"
+          }`}
+        >
+          Players
+        </a>
+
+        <div className="absolute left-0 top-full z-50 hidden min-w-[230px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
+          <a href="#stats" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+            Player Stats
+          </a>
+          <a href="#players" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+            Player Info
           </a>
         </div>
       </div>
@@ -171,22 +181,76 @@ const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Player Stats', 'Se
             </button>
           </div>
 
-          <div className="grid gap-3">
-            {pages.map((p) => (
-              <a
-                key={p}
-                href={hrefs[p]}
-                onClick={() => setMenuOpen(false)}
-                className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
-                  active === p
-                    ? 'bg-amber-300 text-black'
-                    : 'border border-white/10 bg-white/[0.06] text-white'
-                }`}
-              >
-                {p}
-              </a>
-            ))}
-          </div>
+<div className="grid gap-3">
+  {pages.map((p) =>
+    p === "Seasons" ? (
+      <div key={p} className="grid gap-3">
+        <a
+          href="#seasons"
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+            active === "Seasons"
+              ? "bg-amber-300 text-black"
+              : "border border-white/10 bg-white/[0.06] text-white"
+          }`}
+        >
+          Seasons Overview
+        </a>
+
+        <a
+          href="#schedule2026"
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+            active === "Seasons"
+              ? "bg-amber-300 text-black"
+              : "border border-white/10 bg-white/[0.06] text-white"
+          }`}
+        >
+          2026 Season Schedule
+        </a>
+      </div>
+    ) : p === "Players" ? (
+      <div key={p} className="grid gap-3">
+        <a
+          href="#stats"
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+            active === "Player Stats"
+              ? "bg-amber-300 text-black"
+              : "border border-white/10 bg-white/[0.06] text-white"
+          }`}
+        >
+          Player Stats
+        </a>
+
+        <a
+          href="#players"
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+            active === "Players"
+              ? "bg-amber-300 text-black"
+              : "border border-white/10 bg-white/[0.06] text-white"
+          }`}
+        >
+          Player Info
+        </a>
+      </div>
+    ) : (
+      <a
+        key={p}
+        href={hrefs[p]}
+        onClick={() => setMenuOpen(false)}
+        className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+          active === p
+            ? "bg-amber-300 text-black"
+            : "border border-white/10 bg-white/[0.06] text-white"
+        }`}
+      >
+        {p}
+      </a>
+    )
+  )}
+</div>
 
           <div className="mt-8 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5">
             <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
@@ -235,7 +299,7 @@ export function StatTable({ title, headers, rows }) {
         </table>
       </div>
     </div>
-  );``
+  );
 }export function SponsorBanner() {
   const sponsors = [
     "/sponsors/sponsor1.png",
