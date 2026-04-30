@@ -687,7 +687,7 @@ const filteredBowlingRows = bowlingRows.filter((row) =>
       p.wickets,
       p.economy || (p.overs ? (p.runs / p.overs).toFixed(1) : '-')
     ])}
-/>
+/></div>
               </PageWrap>
 
 <PageWrap
