@@ -18,87 +18,85 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  if (body.type === "addPollOption") {
-    const { data, error } = await supabaseServer
-      .from("teamhub_polls")
-      .insert({
-        poll_name: body.pollName,
-        option_name: body.optionName,
-        votes: 0,
-      })
-      .select()
-      .single();
+    if (body.type === "addPollOption") {
+      const { data, error } = await supabaseServer
+        .from("teamhub_polls")
+        .insert({
+          poll_name: body.pollName,
+          option_name: body.optionName,
+          votes: 0,
+        })
+        .select()
+        .single();
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(data);
+    }
+
+    if (body.type === "votePoll") {
+      const { data: current, error: readError } = await supabaseServer
+        .from("teamhub_polls")
+        .select("votes")
+        .eq("id", body.id)
+        .single();
+
+      if (readError) return NextResponse.json({ error: readError.message }, { status: 500 });
+
+      const { data, error } = await supabaseServer
+        .from("teamhub_polls")
+        .update({ votes: (current?.votes || 0) + 1 })
+        .eq("id", body.id)
+        .select()
+        .single();
+
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(data);
+    }
+
+    if (body.type === "lockerNote") {
+      const { data, error } = await supabaseServer
+        .from("teamhub_locker_notes")
+        .insert({ note: body.note })
+        .select()
+        .single();
+
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(data);
+    }
+
+    if (body.type === "captainNote") {
+      const { data, error } = await supabaseServer
+        .from("teamhub_captain_notes")
+        .insert({
+          note: body.note,
+          player_name: body.player_name,
+        })
+        .select()
+        .single();
+
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(data);
+    }
+
+    if (body.type === "roastName") {
+      const { data, error } = await supabaseServer
+        .from("teamhub_roast_names")
+        .insert({
+          player_name: body.playerName,
+          roast_name: body.roastName,
+        })
+        .select()
+        .single();
+
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(data);
+    }
+
+    return NextResponse.json({ error: "Invalid request type" }, { status: 400 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  if (body.type === "votePoll") {
-    const { data: current, error: readError } = await supabaseServer
-      .from("teamhub_polls")
-      .select("votes")
-      .eq("id", body.id)
-      .single();
-
-    if (readError) return NextResponse.json({ error: readError.message }, { status: 500 });
-
-    const { data, error } = await supabaseServer
-      .from("teamhub_polls")
-      .update({ votes: (current?.votes || 0) + 1 })
-      .eq("id", body.id)
-      .select()
-      .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
-  }
-
-  if (body.type === "lockerNote") {
-    const { data, error } = await supabaseServer
-      .from("teamhub_locker_notes")
-      .insert({ note: body.note })
-      .select()
-      .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
-  }
-
-if (body.type === "captainNote") {
-  const { note, player_name } = body;
-
-  const { error } = await supabase
-    .from("teamhub_captain_notes")
-    .insert([
-      {
-        note,
-        player_name, 
-      },
-    ]);
-
-  if (error) {
-    console.log(error);
-    return NextResponse.json({ error }, { status: 500 });
-  }
-
-  return NextResponse.json({ success: true });
-}
-
-  if (body.type === "roastName") {
-    const { data, error } = await supabaseServer
-      .from("teamhub_roast_names")
-      .insert({
-        player_name: body.playerName,
-        roast_name: body.roastName,
-      })
-      .select()
-      .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
-  }
-
-  return NextResponse.json({ error: "Invalid request type" }, { status: 400 });
 }
