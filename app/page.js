@@ -642,6 +642,7 @@ const filteredBowlingRows = bowlingRows.filter((row) =>
     </div>
 
   </div>
+  </PageWrap>
 <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
   <div className="mb-6">
     <input
