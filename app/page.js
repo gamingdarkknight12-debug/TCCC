@@ -57,7 +57,7 @@ async function loadTeamHubData() {
 setCaptainNotes(
   data.captainNotes.map((x) => ({
     note: x.note,
-    player: x.player_name || "",
+    player: x.player_name,
   }))
 );  setNicknames(
     data.roastNames.map((x) => ({
@@ -123,7 +123,17 @@ async function addLockerNote() {
 
 async function addCaptainNote() {
   const value = captainNote.trim();
-  if (!value) return;
+  const player = captainPlayer.trim();
+
+  if (!player) {
+    alert("Please enter player name");
+    return;
+  }
+
+  if (!value) {
+    alert("Please enter strategy note");
+    return;
+  }
 
   await fetch("/api/teamhub", {
     method: "POST",
@@ -131,7 +141,7 @@ async function addCaptainNote() {
     body: JSON.stringify({
       type: "captainNote",
       note: value,
-      player: captainPlayer,
+      player_name: player,
     }),
   });
 
@@ -582,7 +592,7 @@ async function addNickname() {
 captainNotes.map((item, i) => (
   <div key={i} className="rounded-2xl bg-black/30 p-4 text-white/75">
     <div className="mb-1 text-xs font-black uppercase tracking-widest text-amber-300">
-      {item.player || "Anonymous"}
+      {item.player}
     </div>
 
     <div>{item.note}</div>
