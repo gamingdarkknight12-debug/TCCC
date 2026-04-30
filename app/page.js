@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { stats2024, stats2025, stats2026, captains, legends, standings2024, standings2025 } from './data';
 import { Header, PageWrap, InfoCard, HighlightCard, StatTable, SponsorBanner } from './components/UI';
 
@@ -29,54 +29,141 @@ const [captainNotes, setCaptainNotes] = useState([]);
 const [nicknamePlayer, setNicknamePlayer] = useState("");
 const [nicknameText, setNicknameText] = useState("");
 const [nicknames, setNicknames] = useState([]);
+async function loadTeamHubData() {
+  const res = await fetch("/api/teamhub");
+  const data = await res.json();
 
-function addPollOption(pollName) {
+  const groupedPolls = {
+    "Energy Booster of the Week": [],
+    "Player of the Week": [],
+    "Funniest Guy": [],
+    "Most Creative Player": [],
+    "Predicted Leading Run Scorer": [],
+    "Predicted Leading Wicket Taker": [],
+  };
+
+  data.polls.forEach((p) => {
+    if (!groupedPolls[p.poll_name]) groupedPolls[p.poll_name] = [];
+    groupedPolls[p.poll_name].push({
+      id: p.id,
+      name: p.option_name,
+      votes: p.votes,
+    });
+  });
+
+  setPolls(groupedPolls);
+  setLockerNotes(data.lockerNotes.map((x) => x.note));
+  setCaptainNotes(data.captainNotes.map((x) => x.note));
+  setNicknames(
+    data.roastNames.map((x) => ({
+      player: x.player_name,
+      nickname: x.roast_name,
+    }))
+  );
+}
+
+useEffect(() => {
+  loadTeamHubData();
+}, []);
+
+async function addPollOption(pollName) {
   const value = (pollInputs[pollName] || "").trim();
   if (!value) return;
 
-  setPolls((prev) => ({
-    ...prev,
-    [pollName]: [...prev[pollName], { name: value, votes: 0 }],
-  }));
+  await fetch("/api/teamhub", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "addPollOption",
+      pollName,
+      optionName: value,
+    }),
+  });
 
   setPollInputs((prev) => ({ ...prev, [pollName]: "" }));
+  loadTeamHubData();
 }
 
-function votePoll(pollName, index) {
-  setPolls((prev) => ({
-    ...prev,
-    [pollName]: prev[pollName].map((option, i) =>
-      i === index ? { ...option, votes: option.votes + 1 } : option
-    ),
-  }));
+async function votePoll(pollName, index) {
+  const option = polls[pollName][index];
+
+  await fetch("/api/teamhub", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "votePoll",
+      id: option.id,
+    }),
+  });
+
+  loadTeamHubData();
 }
 
-function addLockerNote() {
+async function addLockerNote() {
   const value = lockerNote.trim();
   if (!value) return;
-  setLockerNotes((prev) => [value, ...prev]);
+
+  await fetch("/api/teamhub", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "lockerNote",
+      note: value,
+    }),
+  });
+
   setLockerNote("");
+  loadTeamHubData();
 }
 
-function addCaptainNote() {
+async function addCaptainNote() {
   const value = captainNote.trim();
   if (!value) return;
-  setCaptainNotes((prev) => [value, ...prev]);
+
+  await fetch("/api/teamhub", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "captainNote",
+      note: value,
+    }),
+  });
+
   setCaptainNote("");
+  loadTeamHubData();
 }
 
-function addNickname() {
-  if (!nicknamePlayer.trim() || !nicknameText.trim()) return;
+async function addNickname() {
+  const playerName = nicknamePlayer.trim();
+  const roastName = nicknameText.trim();
 
-  setNicknames((prev) => [
-    { player: nicknamePlayer.trim(), nickname: nicknameText.trim() },
-    ...prev,
-  ]);
+  if (!playerName || !roastName) {
+    alert("Please enter both player name and roast name");
+    return;
+  }
+
+  const res = await fetch("/api/teamhub", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "roastName",
+      playerName,
+      roastName,
+    }),
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) {
+    alert("Save failed: " + result.error);
+    console.error(result);
+    return;
+  }
 
   setNicknamePlayer("");
   setNicknameText("");
+  await loadTeamHubData();
 }
-
   const allTime = useMemo(() => {
     const batting = {};
     [...stats2025.batting, ...stats2024.batting].forEach((p) => {
