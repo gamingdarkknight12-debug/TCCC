@@ -67,14 +67,14 @@ export async function POST(req) {
   }
 
 if (body.type === "captainNote") {
-  const { note, player } = body;
+  const { note, player_name } = body;
 
   const { error } = await supabase
     .from("teamhub_captain_notes")
     .insert([
       {
         note,
-        player, // ✅ must be here
+        player_name, 
       },
     ]);
 
