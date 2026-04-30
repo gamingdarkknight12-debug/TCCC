@@ -134,18 +134,7 @@ function addNickname() {
           <div className="flex justify-center"><div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10"><Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
         
         </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-8"><div className="grid gap-4 md:grid-cols-4">
-        <HighlightCard title="Run Machine" name={topBatter.name} stat={`${topBatter.runs} all-time runs`} note="Most consistent batting contributor from available data." />
-        <HighlightCard title="Wicket Leader" name={topBowler.name} stat={`${topBowler.wickets} all-time wickets`} note="Reliable wicket-taking option across seasons." />
-        <HighlightCard title="Impact Player" name={impactPlayer.name} stat={`${impactPlayer.runs} runs + all-round value`} note="Useful in pressure phases and team balance." />
-        <HighlightCard title="Emerging Force" name={emergingPlayer.name} stat={`${emergingPlayer.wickets} wickets + ${emergingPlayer.runs} runs`} note="Useful lower-order and bowling impact option for the squad." />
-      </div></section>
-
-
-
-     
+      </section> 
       <PageWrap
   id="news"
   title="News"
