@@ -642,53 +642,65 @@ const filteredBowlingRows = bowlingRows.filter((row) =>
     </div>
 
   </div>
-</PageWrap>
-      <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
-        <div className="mb-6">
-  <input
-    value={playerSearch}
-    onChange={(e) => setPlayerSearch(e.target.value)}
-    placeholder="Search player stats..."
-    className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
-  />
-</div>
-        <div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => 
-          <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>
-          {season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}
-          <div className="grid gap-6 lg:grid-cols-2">
-<StatTable
-  title="Batting Leaders"
-  headers={['Player','Runs','Balls','4s','6s','SR']}
-  rows={data.batting
-    .filter((p) =>
-      p.name.toLowerCase().includes(playerSearch.toLowerCase())
-    )
-    .map((p) => [
-      p.name,
-      p.runs,
-      p.balls,
-      p.fours || '-',
-      p.sixes || '-',
-      p.sr || (p.balls ? ((p.runs / p.balls) * 100).toFixed(1) : '-')
-    ])}
-/>
+<PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
+  <div className="mb-6">
+    <input
+      value={playerSearch}
+      onChange={(e) => setPlayerSearch(e.target.value)}
+      placeholder="Search player stats..."
+      className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
+    />
+  </div>
 
-<StatTable
-  title="Bowling Leaders"
-  headers={['Player','Overs','Runs','Wickets','Eco']}
-  rows={data.bowling
-    .filter((p) =>
-      p.name.toLowerCase().includes(playerSearch.toLowerCase())
-    )
-    .map((p) => [
-      p.name,
-      p.overs,
-      p.runs,
-      p.wickets,
-      p.economy || (p.overs ? (p.runs / p.overs).toFixed(1) : '-')
-    ])}
-/></div>
-              </PageWrap>
+  <div className="mb-6 flex flex-wrap gap-3">
+    {['All-Time', '2026', '2025', '2024'].map((s) => (
+      <button
+        key={s}
+        onClick={() => setSeason(s)}
+        className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}
+      >
+        {s}
+      </button>
+    ))}
+  </div>
+
+  {season === '2026' && (
+    <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">
+      2026 stats will populate here after admin score imports.
+    </div>
+  )}
+
+  <div className="grid gap-6 lg:grid-cols-2">
+    <StatTable
+      title="Batting Leaders"
+      headers={['Player', 'Runs', 'Balls', '4s', '6s', 'SR']}
+      rows={data.batting
+        .filter((p) => p.name.toLowerCase().includes(playerSearch.toLowerCase()))
+        .map((p) => [
+          p.name,
+          p.runs,
+          p.balls,
+          p.fours || '-',
+          p.sixes || '-',
+          p.sr || (p.balls ? ((p.runs / p.balls) * 100).toFixed(1) : '-'),
+        ])}
+    />
+
+    <StatTable
+      title="Bowling Leaders"
+      headers={['Player', 'Overs', 'Runs', 'Wickets', 'Eco']}
+      rows={data.bowling
+        .filter((p) => p.name.toLowerCase().includes(playerSearch.toLowerCase()))
+        .map((p) => [
+          p.name,
+          p.overs,
+          p.runs,
+          p.wickets,
+          p.economy || (p.overs ? (p.runs / p.overs).toFixed(1) : '-'),
+        ])}
+    />
+  </div>
+</PageWrap>
 
 <PageWrap
   id="seasons"
