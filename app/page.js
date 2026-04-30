@@ -545,13 +545,13 @@ async function addNickname() {
     lockerNotes.map((note, i) => (
       <div
         key={i}
-        className="min-h-[140px] rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
+        className="min-h-[70px] rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
       >
         <div className="mb-2 text-xs font-black uppercase tracking-widest text-amber-300">
           Locker Note #{i + 1}
         </div>
 
-        <p className="leading-7 text-white/80">
+        <p className="text-sm leading-5 text-white/80">
           {note}
         </p>
       </div>
@@ -596,7 +596,7 @@ async function addNickname() {
             <p className="text-white/60">No Strategies yet.</p>
           ) : (
 captainNotes.map((item, i) => (
-  <div key={i} className="rounded-2xl bg-black/30 p-4 text-white/75">
+  <div key={i} className="rounded-xl bg-black/30 p-3 text-smtext-white/75">
     <div className="mb-1 text-xs font-black uppercase tracking-widest text-amber-300">
       {item.player}
     </div>
@@ -683,7 +683,7 @@ captainNotes.map((item, i) => (
 
       <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
         {nicknames.length === 0 ? (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+          <div className="min-h-[70px]rounded-2xl border border-white/10 bg-white/5 p-3 text-white/60">
             No nicknames added yet.
           </div>
         ) : (
@@ -692,7 +692,7 @@ captainNotes.map((item, i) => (
               <div className="text-sm font-black uppercase tracking-widest text-amber-300">
                 {item.player}
               </div>
-              <div className="mt-2 text-3xl font-black text-white">
+              <div className="mt-1 text-xl font-black text-white">
                 {item.nickname}
               </div>
             </div>
