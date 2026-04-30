@@ -121,32 +121,38 @@ async function addLockerNote() {
   loadTeamHubData();
 }
 
-async function addCaptainNote() {
-  const value = captainNote.trim();
-  const player = captainPlayer.trim();
 
-  if (!player) {
+async function addCaptainNote() {
+  if (!captainPlayer.trim()) {
     alert("Please enter player name");
     return;
   }
 
-  if (!value) {
+  if (!captainNote.trim()) {
     alert("Please enter strategy note");
     return;
   }
 
-  await fetch("/api/teamhub", {
+  const res = await fetch("/api/teamhub", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       type: "captainNote",
-      note: value,
-      player_name: player,
+      note: captainNote,
+      player_name: captainPlayer,
     }),
   });
 
+  if (!res.ok) {
+    const err = await res.json();
+    console.log(err);
+    alert("Error saving");
+    return;
+  }
+
   setCaptainNote("");
   setCaptainPlayer("");
+
   loadTeamHubData();
 }
 
