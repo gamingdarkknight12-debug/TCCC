@@ -11,6 +11,7 @@ export default function Home() {
   const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
   const [teamHubTab, setTeamHubTab] = useState("Overview");
   const [playerSearch, setPlayerSearch] = useState("");
+  const [captainPlayer, setCaptainPlayer] = useState("");
 
 const [polls, setPolls] = useState({
   "Energy Booster of the Week": [],
@@ -53,8 +54,12 @@ async function loadTeamHubData() {
 
   setPolls(groupedPolls);
   setLockerNotes(data.lockerNotes.map((x) => x.note));
-  setCaptainNotes(data.captainNotes.map((x) => x.note));
-  setNicknames(
+setCaptainNotes(
+  data.captainNotes.map((x) => ({
+    note: x.note,
+    player: x.player_name || "",
+  }))
+);  setNicknames(
     data.roastNames.map((x) => ({
       player: x.player_name,
       nickname: x.roast_name,
@@ -126,10 +131,12 @@ async function addCaptainNote() {
     body: JSON.stringify({
       type: "captainNote",
       note: value,
+      player: captainPlayer,
     }),
   });
 
   setCaptainNote("");
+  setCaptainPlayer("");
   loadTeamHubData();
 }
 
@@ -422,10 +429,10 @@ async function addNickname() {
   <div className="mb-8 flex flex-wrap gap-3">
     {[
       "Overview",
+      "Hall of Fame",
       "Voting Arena",
       "Locker Room",
-      "Captain Vault",
-      "Hall of Fame",
+      "War Room",
       "Roast & Name",
     ].map((tab) => (
       <button
@@ -513,32 +520,46 @@ async function addNickname() {
         </button>
       </div>
 
-      <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
-        {lockerNotes.length === 0 ? (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
-            No locker room notes yet.
-          </div>
-        ) : (
-          lockerNotes.map((note, i) => (
-            <div key={i} className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg">
-              <p className="leading-7 text-white/80">{note}</p>
-            </div>
-          ))
-        )}
+<div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
+  {lockerNotes.length === 0 ? (
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+      No locker room notes yet.
+    </div>
+  ) : (
+    lockerNotes.map((note, i) => (
+      <div
+        key={i}
+        className="min-h-[140px] rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
+      >
+        <div className="mb-2 text-xs font-black uppercase tracking-widest text-amber-300">
+          Locker Note #{i + 1}
+        </div>
+
+        <p className="leading-7 text-white/80">
+          {note}
+        </p>
       </div>
+    ))
+  )}
+</div>
     </div>
   )}
 
-  {teamHubTab === "Captain Vault" && (
+  {teamHubTab === "War Room" && (
     <div className="grid gap-6 lg:grid-cols-2">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
         <h3 className="text-3xl font-black text-amber-300">
-          Anonymous Message to Captain
+          AWar Room Strategy Note
         </h3>
         <p className="mt-3 text-white/70">
-          Leave feedback, ideas, concerns, or suggestions. Sender name will not be shown.
+         Share match Strategy, plans, suggestions and ideas for the captain
         </p>
-
+<input
+  value={captainPlayer}
+  onChange={(e) => setCaptainPlayer(e.target.value)}
+  placeholder="Player name"
+  className="mt-5 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+/>
         <textarea
           value={captainNote}
           onChange={(e) => setCaptainNote(e.target.value)}
@@ -560,7 +581,12 @@ async function addNickname() {
           ) : (
             captainNotes.map((note, i) => (
               <div key={i} className="rounded-2xl bg-black/30 p-4 text-white/75">
-                Anonymous: {note}
+                {note.player && (
+  <div className="mb-1 text-xs font-black uppercase tracking-widest text-amber-300">
+    {note.player}
+  </div>
+)}
+<div>{note.note}</div>
               </div>
             ))
           )}
