@@ -143,7 +143,7 @@ function addNickname() {
         <HighlightCard title="Emerging Force" name={emergingPlayer.name} stat={`${emergingPlayer.wickets} wickets + ${emergingPlayer.runs} runs`} note="Useful lower-order and bowling impact option for the squad." />
       </div></section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12"><div className="mb-6"><h2 className="text-3xl font-black text-amber-300 md:text-4xl">Legends of Our Team</h2><p className="mt-2 text-white/65">Honouring players who helped build the team’s competitive identity.</p></div><div className="grid gap-6 md:grid-cols-2">{legends.map((l) => <div key={l.name} className="gold-card p-6"><div className="text-sm uppercase tracking-widest text-amber-300">{l.title}</div><h3 className="mt-3 text-3xl font-black">{l.name}</h3><div className="mt-3 rounded-2xl bg-black/30 p-4 text-lg font-bold text-amber-200">{l.stats}</div><p className="mt-4 leading-7 text-white/75">{l.note}</p></div>)}</div></section>
+
 
      
       <PageWrap
@@ -493,14 +493,52 @@ function addNickname() {
     </div>
   )}
 
+
   {teamHubTab === "Hall of Fame" && (
+  <div>
+    <h2 className="text-4xl font-black text-amber-300">
+      Legends of Our Team
+    </h2>
+
+    <p className="mt-2 mb-8 text-white/70">
+      Honouring players who built the foundation of the team.
+    </p>
+
     <div className="grid gap-6 md:grid-cols-2">
-      <HighlightCard title="2024 Bowling Pillar" name="Arun" stat="18 wickets • 5.98 economy • 48 overs" note="One of the strongest bowling performers from the 2024 season." />
-      <HighlightCard title="All-Time Wicket Leader" name="Srikanth Govula" stat="29 combined wickets • 314 batting runs" note="A true impact player across seasons." />
-      <HighlightCard title="All-Time Run Machine" name="Charan Bandaru" stat="843 combined runs" note="Led the batting charts with consistency and leadership." />
-      <HighlightCard title="Team Impact" name="Aadil Khan" stat="476 runs + 20 wickets" note="Reliable all-round value across multiple seasons." />
+
+      {/* Arun */}
+      <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
+        <div className="text-xs font-bold text-yellow-400">
+          2024 BOWLING PILLAR
+        </div>
+        <h3 className="mt-2 text-2xl font-black text-white">Arun</h3>
+        <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
+          18 wickets • 5.98 economy • 48 overs
+        </div>
+        <p className="mt-3 text-white/70">
+          One of the strongest bowling performers from the 2024 season and a key name in the team’s early success.
+        </p>
+      </div>
+
+      {/* Govula Srikanth */}
+      <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
+        <div className="text-xs font-bold text-yellow-400">
+          ALL-TIME IMPACT PLAYER
+        </div>
+        <h3 className="mt-2 text-2xl font-black text-white">
+          Govula Srikanth
+        </h3>
+        <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
+          29 wickets • 314 runs
+        </div>
+        <p className="mt-3 text-white/70">
+          A true match-winner across seasons — delivering impact with both bat and ball when it matters most.
+        </p>
+      </div>
+
     </div>
-  )}
+  </div>
+)}
 
   {teamHubTab === "Nickname Zone" && (
     <div className="grid gap-6 lg:grid-cols-3">

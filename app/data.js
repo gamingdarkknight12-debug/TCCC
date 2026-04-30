@@ -159,7 +159,7 @@ export const captains = [
 
 export const legends = [
   { name: "Arun", title: "2024 Bowling Pillar", stats: "18 wickets • 5.98 economy • 48 overs", note: "One of the strongest bowling performers from the 2024 season and a key name in the team’s foundation years." },
-  { name: "Srikanth Govula", title: "All-Time Wicket Leader", stats: "29 combined wickets • 314 batting runs", note: "A true impact player across seasons — wickets, quick runs, and consistent match involvement." },
+  { name: "Srikanth Govula", title: "Best Allrounder", stats: "29 combined wickets • 314 batting runs", note: "A true impact player across seasons — wickets, quick runs, and consistent match involvement." },
 ];
 
 export const standings2024 = [
