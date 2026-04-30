@@ -549,7 +549,7 @@ async function addNickname() {
     <div className="grid gap-6 lg:grid-cols-2">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
         <h3 className="text-3xl font-black text-amber-300">
-          AWar Room Strategy Note
+          War Room Strategy Note
         </h3>
         <p className="mt-3 text-white/70">
          Share match Strategy, plans, suggestions and ideas for the captain
