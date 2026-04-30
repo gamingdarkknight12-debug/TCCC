@@ -67,14 +67,15 @@ export async function POST(req) {
   }
 
 if (body.type === "captainNote") {
-  const { note, player_name } = body;
+  const { note, player_name,player } = body;
+  const finalPlayer = player_name || player
 
   const { error } = await supabase
     .from("teamhub_captain_notes")
     .insert([
       {
         note,
-        player_name, 
+        player_name: finalPlayer, 
       },
     ]);
 
