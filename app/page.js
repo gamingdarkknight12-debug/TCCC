@@ -339,7 +339,7 @@ function addNickname() {
       "Locker Room",
       "Captain Vault",
       "Hall of Fame",
-      "Nickname Zone",
+      "Roast & Name",
     ].map((tab) => (
       <button
         key={tab}

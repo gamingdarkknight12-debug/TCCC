@@ -38,19 +38,25 @@ const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Seasons', 'Players
       { id: 'about', name: 'About Us' },
     ];
 
-    const updateActive = () => {
-      let current = 'Home';
+const updateActive = () => {
+  let current = 'Home';
+  let closestTop = -Infinity;
 
-      sections.forEach((section) => {
-        const el = document.getElementById(section.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 160) current = section.name;
-        }
-      });
+  sections.forEach((section) => {
+    const el = document.getElementById(section.id);
 
-      setActive(current);
-    };
+    if (el) {
+      const rect = el.getBoundingClientRect();
+
+      if (rect.top <= 180 && rect.top > closestTop) {
+        closestTop = rect.top;
+        current = section.name;
+      }
+    }
+  });
+
+  setActive(current);
+};
 
     updateActive();
     window.addEventListener('scroll', updateActive);
