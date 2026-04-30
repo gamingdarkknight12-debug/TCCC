@@ -9,7 +9,8 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 export default function Home() {
   const [season, setSeason] = useState('All-Time');
   const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
-const [teamHubTab, setTeamHubTab] = useState("Overview");
+  const [teamHubTab, setTeamHubTab] = useState("Overview");
+  const [playerSearch, setPlayerSearch] = useState("");
 
 const [polls, setPolls] = useState({
   "Energy Booster of the Week": [],
@@ -97,7 +98,13 @@ function addNickname() {
   const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
   const emergingPlayer = { name: 'Kapil', runs: 62, wickets: 11 };
 
-  
+  const filteredBattingRows = battingRows.filter((row) =>
+  row[0].toLowerCase().includes(playerSearch.toLowerCase())
+);
+
+const filteredBowlingRows = bowlingRows.filter((row) =>
+  row[0].toLowerCase().includes(playerSearch.toLowerCase())
+);
 
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
@@ -498,7 +505,7 @@ function addNickname() {
       {/* Arun */}
       <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
         <div className="text-xs font-bold text-yellow-400">
-          2024 BOWLING PILLAR
+          BOWLING PILLAR
         </div>
         <h3 className="mt-2 text-2xl font-black text-white">Arun</h3>
         <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
@@ -636,7 +643,52 @@ function addNickname() {
 
   </div>
 </PageWrap>
-      <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons."><div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>{season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}<div className="grid gap-6 lg:grid-cols-2"><StatTable title="Batting Leaders" headers={['Player','Runs','Balls','4s','6s','SR']} rows={data.batting.map((p) => [p.name,p.runs,p.balls,p.fours || '-',p.sixes || '-',p.sr || (p.balls ? ((p.runs/p.balls)*100).toFixed(1) : '-')])} /><StatTable title="Bowling Leaders" headers={['Player','Overs','Runs','Wickets','Eco']} rows={data.bowling.map((p) => [p.name,p.overs,p.runs,p.wickets,p.economy || (p.overs ? (p.runs/p.overs).toFixed(1) : '-')])} /></div></PageWrap>
+      <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
+        <div className="mb-6">
+  <input
+    value={playerSearch}
+    onChange={(e) => setPlayerSearch(e.target.value)}
+    placeholder="Search player stats..."
+    className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
+  />
+</div>
+        <div className="mb-6 flex flex-wrap gap-3">{['All-Time','2026','2025','2024'].map((s) => 
+          <button key={s} onClick={() => setSeason(s)} className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}>{s}</button>)}</div>
+          {season === '2026' && <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">2026 stats will populate here after admin score imports.</div>}
+          <div className="grid gap-6 lg:grid-cols-2">
+<StatTable
+  title="Batting Leaders"
+  headers={['Player','Runs','Balls','4s','6s','SR']}
+  rows={data.batting
+    .filter((p) =>
+      p.name.toLowerCase().includes(playerSearch.toLowerCase())
+    )
+    .map((p) => [
+      p.name,
+      p.runs,
+      p.balls,
+      p.fours || '-',
+      p.sixes || '-',
+      p.sr || (p.balls ? ((p.runs / p.balls) * 100).toFixed(1) : '-')
+    ])}
+/>
+
+<StatTable
+  title="Bowling Leaders"
+  headers={['Player','Overs','Runs','Wickets','Eco']}
+  rows={data.bowling
+    .filter((p) =>
+      p.name.toLowerCase().includes(playerSearch.toLowerCase())
+    )
+    .map((p) => [
+      p.name,
+      p.overs,
+      p.runs,
+      p.wickets,
+      p.economy || (p.overs ? (p.runs / p.overs).toFixed(1) : '-')
+    ])}
+/>
+              </PageWrap>
 
 <PageWrap
   id="seasons"
