@@ -98,13 +98,6 @@ function addNickname() {
   const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
   const emergingPlayer = { name: 'Kapil', runs: 62, wickets: 11 };
 
-  const filteredBattingRows = battingRows.filter((row) =>
-  row[0].toLowerCase().includes(playerSearch.toLowerCase())
-);
-
-const filteredBowlingRows = bowlingRows.filter((row) =>
-  row[0].toLowerCase().includes(playerSearch.toLowerCase())
-);
 
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
