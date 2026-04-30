@@ -66,16 +66,25 @@ export async function POST(req) {
     return NextResponse.json(data);
   }
 
-  if (body.type === "captainNote") {
-    const { data, error } = await supabaseServer
-      .from("teamhub_captain_notes")
-      .insert({ note: body.note })
-      .select()
-      .single();
+if (body.type === "captainNote") {
+  const { note, player } = body;
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json(data);
+  const { error } = await supabase
+    .from("teamhub_captain_notes")
+    .insert([
+      {
+        note,
+        player, // ✅ must be here
+      },
+    ]);
+
+  if (error) {
+    console.log(error);
+    return NextResponse.json({ error }, { status: 500 });
   }
+
+  return NextResponse.json({ success: true });
+}
 
   if (body.type === "roastName") {
     const { data, error } = await supabaseServer
