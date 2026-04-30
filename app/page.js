@@ -573,7 +573,7 @@ async function addNickname() {
         <textarea
           value={captainNote}
           onChange={(e) => setCaptainNote(e.target.value)}
-          placeholder="Write your anonymous note..."
+          placeholder="Share your Strategy..."
           className="mt-5 h-40 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
         />
 
@@ -587,7 +587,7 @@ async function addNickname() {
 
         <div className="mt-5 space-y-3">
           {captainNotes.length === 0 ? (
-            <p className="text-white/60">No captain notes yet.</p>
+            <p className="text-white/60">No Strategies yet.</p>
           ) : (
 captainNotes.map((item, i) => (
   <div key={i} className="rounded-2xl bg-black/30 p-4 text-white/75">
