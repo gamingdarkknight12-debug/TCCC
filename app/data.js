@@ -12,7 +12,7 @@ export const stats2024 = {
     { name: "Manishraj Gyanugapyata", runs: 105, balls: 87, fours: 9, sixes: 4, duck: 0, sr: 120.7, avg: 21, notOut: 2, inns: 7 },
     { name: "Srikanth Govula", runs: 102, balls: 105, fours: 10, sixes: 4, duck: 0, sr: 97.1, avg: 9.3, notOut: 0, inns: 11 },
     { name: "RamSandeep", runs: 86, balls: 90, fours: 4, sixes: 2, duck: 0, sr: 95.6, avg: 17.2, notOut: 0, inns: 5 },
-     { name: "Kiran", runs: 75, balls: 151, fours: 5, sixes: 0, duck: 2, sr: 50.4, avg: 6.8, notOut: 2, inns: 13 },
+     { name: "Kiran", runs: 75, balls: 151, fours: 5, sixes: 0, duck: 2, sr: 49.7, avg: 6.8, notOut: 2, inns: 13 },
     { name: "Ram Kiran", runs: 74, balls: 114, fours: 0, sixes: 3, duck: 2, sr: 64.9, avg: 6.2, notOut: 0, inns: 12 },
     { name: "Bhanu Musunuru", runs: 63, balls: 66, fours: 2, sixes: 3, duck: 1, sr: 95.5, avg: 9, notOut: 0, inns: 7 },
     { name: "Bharath", runs: 55, balls: 73, fours: 5, sixes: 1, duck: 0, sr: 75.3, avg: 11, notOut: 0, inns: 5 },
