@@ -91,8 +91,8 @@ async function addPollOption(pollName) {
 
 async function votePoll(pollName, index) {
   const option = polls[pollName][index];
-    const voteKey = `voted_${pollName}_${option.id}`;
-  if (localStorage.getItem(voteKey)) {
+  const pollKey = `voted_${pollName}`;
+  if (localStorage.getItem(pollKey)) {
     alert("You already voted for this poll.");
     return;
   }
@@ -106,7 +106,7 @@ async function votePoll(pollName, index) {
     }),
   });
 
-  localStorage.setItem(voteKey, "true");
+  localStorage.setItem(pollKey, "true");
   loadTeamHubData();
 }
 
