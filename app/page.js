@@ -105,7 +105,7 @@ async function votePoll(pollName, index) {
       id: option.id,
     }),
   });
-  
+
   localStorage.setItem(voteKey, "true");
   loadTeamHubData();
 }
@@ -553,22 +553,21 @@ async function addNickname() {
         </button>
       </div>
 
-<div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+    <div className="flex flex-wrap gap-4 lg:col-span-2">
   {lockerNotes.length === 0 ? (
-    <div className="min-h-[70px]rounded-xl border border-white/10 bg-white/5 p-3 text-white/60">
+        <div className="h-fit w-[260px] rounded-xl border border-white/10 bg-white/5 p-4 text-white/60">
       No locker room notes yet.
     </div>
   ) : (
     lockerNotes.map((note, i) => (
       <div
         key={i}
-        className="min-h-[70px] rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5 shadow-lg"
-      >
+            className="h-fit w-[260px] rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 shadow-lg"      >
         <div className="mb-2 text-xs font-black uppercase tracking-widest text-amber-300">
           Locker Note #{i + 1}
         </div>
 
-        <p className="text-sm leading-5 text-white/80">
+        <p className="break-words text-sm leading-5 text-white/80">
           {note}
         </p>
       </div>
