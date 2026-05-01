@@ -471,6 +471,16 @@ async function addNickname() {
   )}
 
   {teamHubTab === "Voting Arena" && (
+    <div>
+      <div className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
+  <p className="text-sm text-amber-200">
+    🏆 End of Week Highlights will be posted on social media
+  </p>
+  <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
+    Stay tuned
+  </span>
+</div>
+    
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {Object.keys(polls).map((pollName) => (
         <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-6">
@@ -513,6 +523,7 @@ async function addNickname() {
           </div>
         </div>
       ))}
+    </div>
     </div>
   )}
 
