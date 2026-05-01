@@ -35,12 +35,12 @@ async function loadTeamHubData() {
   const data = await res.json();
 
   const groupedPolls = {
-    "Energy Booster of the Week": [],
-    "Player of the Week": [],
-    "Funniest Guy": [],
-    "Most Creative Player": [],
-    "Predicted Leading Run Scorer": [],
-    "Predicted Leading Wicket Taker": [],
+  "Energy Booster of Titans": [],
+  "Consistent in the nets": [],
+  "Laziest Titan on the field": [],
+  "First Drop Catch of the Season": [],
+  "Predicted Leading Run Scorer for next match": [],
+  "Predicted Leading Wicket Taker for next match": [],
   };
 
   data.polls.forEach((p) => {
