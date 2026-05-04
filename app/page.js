@@ -12,7 +12,7 @@ export default function Home() {
   const [teamHubTab, setTeamHubTab] = useState("Overview");
   const [playerSearch, setPlayerSearch] = useState("");
   const [captainPlayer, setCaptainPlayer] = useState("");
-
+const [showVotingResults, setShowVotingResults] = useState(false);
 const [polls, setPolls] = useState({
   "Energy Booster of Titans": [],
   "Consistent in the nets": [],
@@ -109,6 +109,29 @@ async function votePoll(pollName, index) {
   localStorage.setItem(pollKey, "true");
   loadTeamHubData();
 }
+function publishVotingResults() {
+  const resultsText = Object.entries(polls)
+    .map(([pollName, options]) => {
+      if (!options.length) return `${pollName}\nNo votes yet`;
+
+      // sort by votes DESC
+      const sorted = [...options].sort((a, b) => b.votes - a.votes);
+
+      const lines = sorted.map((opt, index) => {
+        const winnerTag = index === 0 ? " 🏆" : "";
+        return `${opt.name} - ${opt.votes} votes${winnerTag}`;
+      });
+
+      return `🏏 ${pollName}\n${lines.join("\n")}`;
+    })
+    .join("\n\n");
+
+  const message = `🔥 Team Hub Voting Results 🔥\n\n${resultsText}\n\nStay tuned 💪`;
+
+  navigator.clipboard.writeText(message);
+  alert("Voting results copied! Paste in WhatsApp.");
+}
+
 
 async function addLockerNote() {
   const value = lockerNote.trim();
@@ -477,61 +500,126 @@ async function addNickname() {
   )}
 
   {teamHubTab === "Voting Arena" && (
-    <div>
-      <div className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
-  <p className="text-sm text-amber-200">
-    🏆 End of Week Highlights will be posted on social media
-  </p>
-  <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-    Stay tuned
-  </span>
-</div>
-    
+  <div>
+    <div className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
+      <p className="text-sm text-amber-200">
+        🏆 End of Week Highlights will be posted on social media
+      </p>
+      <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+        Stay tuned
+      </span>
+    </div>
+
+    <div className="mb-5 mt-4 flex justify-end">
+<button
+  onClick={() => setShowVotingResults(true)}
+  disabled={showVotingResults}
+  className={`btn ${showVotingResults ? "bg-gray-600 cursor-not-allowed" : "btn-gold"}`}
+>
+  {showVotingResults ? "Results Published" : "Publish Voting Results"}
+</button>
+    </div>
+
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {Object.keys(polls).map((pollName) => (
-        <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-2xl font-black text-amber-300">{pollName}</h3>
+      {Object.keys(polls).map((pollName) => {
+        const options = polls[pollName] || [];
+        const sorted = [...options].sort((a, b) => b.votes - a.votes);
+        const winner = sorted[0];
 
-          <div className="mt-5 space-y-3">
-            {polls[pollName].length === 0 ? (
-              <p className="rounded-2xl bg-black/30 p-4 text-white/60">
-                No options yet. Add the first name below.
-              </p>
-            ) : (
-              polls[pollName].map((option, index) => (
-                <button
-                  key={`${option.name}-${index}`}
-                  onClick={() => votePoll(pollName, index)}
-                  className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
-                >
-                  <span>{option.name}</span>
-                  <span>{option.votes} votes</span>
-                </button>
-              ))
-            )}
-          </div>
+        return (
+          <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-2xl font-black text-amber-300">{pollName}</h3>
 
-          <div className="mt-5 flex gap-2">
-            <input
-              value={pollInputs[pollName] || ""}
-              onChange={(e) =>
-                setPollInputs((prev) => ({
-                  ...prev,
-                  [pollName]: e.target.value,
-                }))
-              }
-              placeholder="Add player name"
-              className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
-            />
-            <button onClick={() => addPollOption(pollName)} className="btn btn-gold">
-              Add
-            </button>
-          </div>
+{showVotingResults ? (
+  <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3">
+    {sorted.length === 0 ? (
+      <p className="text-white/60">No votes yet.</p>
+    ) : (
+      <>
+        <div className="text-sm font-black text-amber-300">
+          🏆 Winner: {sorted[0].name} - {sorted[0].votes} votes
         </div>
-      ))}
+
+        {sorted.slice(1, 3).map((item, i) => (
+          <div key={item.id || item.name} className="mt-2 text-sm font-bold text-white/75">
+            {i + 2}. {item.name} - {item.votes} votes
+          </div>
+        ))}
+      </>
+    )}
+  </div>
+) : (
+  <>
+    <div className="mt-5 space-y-3">
+      {options.length === 0 ? (
+        <p className="rounded-2xl bg-black/30 p-4 text-white/60">
+          No options yet. Add the first name below.
+        </p>
+      ) : (
+        sorted.map((option, index) => (
+          <button
+            key={`${option.name}-${index}`}
+            onClick={() =>
+              votePoll(
+                pollName,
+                options.findIndex((o) => o.id === option.id)
+              )
+            }
+            className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+          >
+            <span>{option.name}</span>
+            <span>{option.votes} votes</span>
+          </button>
+        ))
+      )}
     </div>
+
+{!showVotingResults && (
+  <div className="mt-5 flex gap-2">
+    <input
+      value={pollInputs[pollName] || ""}
+      onChange={(e) =>
+        setPollInputs((prev) => ({
+          ...prev,
+          [pollName]: e.target.value,
+        }))
+      }
+      placeholder="Add player name"
+      className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+    />
+    <button onClick={() => addPollOption(pollName)} className="btn btn-gold">
+      Add
+    </button>
+  </div>
+)}
+  </>
+)}
+            {/* <div className="mt-5 space-y-3">
+              {options.length === 0 ? (
+                <p className="rounded-2xl bg-black/30 p-4 text-white/60">
+                  No options yet. Add the first name below.
+                </p>
+              ) : (
+                sorted.map((option, index) => (
+                  <button
+                    key={`${option.name}-${index}`}
+                    onClick={() => votePoll(pollName, options.findIndex((o) => o.id === option.id))}
+                    className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+                  >
+                    <span>{option.name}</span>
+                    <span>{option.votes} votes</span>
+                  </button>
+                ))
+              )}
+            </div> */}
+
+
+          </div>
+        );
+      })}
     </div>
-  )}
+  </div>
+)}
 
   {teamHubTab === "Locker Room" && (
     <div className="grid gap-6 lg:grid-cols-3">
