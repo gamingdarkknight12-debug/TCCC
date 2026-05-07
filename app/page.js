@@ -12,7 +12,7 @@ export default function Home() {
   const [teamHubTab, setTeamHubTab] = useState("Overview");
   const [playerSearch, setPlayerSearch] = useState("");
   const [captainPlayer, setCaptainPlayer] = useState("");
-const [showVotingResults, setShowVotingResults] = useState(false);
+const [showVotingResults, setShowVotingResults] = useState(true);
 const [match1Archived, setMatch1Archived] = useState(true);
 const [showArchivedMatches, setShowArchivedMatches] = useState(false);
 const [analysisTab, setAnalysisTab] = useState("pre");
@@ -524,11 +524,10 @@ Team Performance Highlight      </h3>
 
     <div className="mb-5 mt-4 flex justify-end">
 <button
-  onClick={() => setShowVotingResults(true)}
-  disabled={showVotingResults}
-  className={`btn ${showVotingResults ? "bg-gray-600 cursor-not-allowed" : "btn-gold"}`}
+  onClick={() => setShowVotingResults((prev) => !prev)}
+  className="btn btn-gold"
 >
-  {showVotingResults ? "Results Published" : "Publish Voting Results"}
+  {showVotingResults ? "See Votes List" : "Show Results"}
 </button>
     </div>
 
