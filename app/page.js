@@ -17,6 +17,15 @@ const [match1Archived, setMatch1Archived] = useState(true);
 const [showArchivedMatches, setShowArchivedMatches] = useState(false);
 const [analysisTab, setAnalysisTab] = useState("pre");
 const [selectedArchiveMatch, setSelectedArchiveMatch] = useState(null);
+const [flippedMatch, setFlippedMatch] = useState(null);
+
+const matchSummaries = {
+  "Telugu Titans vs Brampton Strikers": {
+    result: "Telugu Titans won by 29 runs",
+    summary: "Titans scored 166/9 and defended well, restricting Brampton Strikers to 139/8.",
+    mvp: "Varun",
+  },
+};
 const [polls, setPolls] = useState({
   "Energy Booster of Titans": [],
   "Consistent in the nets": [],
@@ -1017,50 +1026,120 @@ captainNotes.map((item, i) => (
 </PageWrap>
 )}
 {activeSection === "schedule2026" && (
-      <PageWrap
-  id="schedule2026"
-  title="2026 Season Schedule"
-  subtitle="Select BEDCL or MCPL schedule."
->
-  <div className="mb-6 flex flex-wrap gap-3">
-    <button
-      onClick={() => setSelectedSchedule("BEDCL")}
-      className={`btn ${selectedSchedule === "BEDCL" ? "btn-gold" : "btn-ghost"}`}
-    >
-      BEDCL Schedule
-    </button>
+  <PageWrap
+    id="schedule2026"
+    title="2026 Season Schedule"
+    subtitle="Select BEDCL or MCPL schedule."
+  >
+    <div className="mb-6 flex flex-wrap gap-3">
+      <button
+        onClick={() => setSelectedSchedule("BEDCL")}
+        className={`btn ${selectedSchedule === "BEDCL" ? "btn-gold" : "btn-ghost"}`}
+      >
+        BEDCL Schedule
+      </button>
 
-    <button
-      onClick={() => setSelectedSchedule("MCPL")}
-      className={`btn ${selectedSchedule === "MCPL" ? "btn-gold" : "btn-ghost"}`}
-    >
-      MCPL Schedule
-    </button>
-  </div>
+      <button
+        onClick={() => setSelectedSchedule("MCPL")}
+        className={`btn ${selectedSchedule === "MCPL" ? "btn-gold" : "btn-ghost"}`}
+      >
+        MCPL Schedule
+      </button>
+    </div>
 
-  <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-    {schedule2026
-      .filter((m) => m.league === selectedSchedule)
-      .map((m, i) => (
-        <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-          <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
-            {m.league}
-          </div>
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {schedule2026
+        .filter((match) => match.league === selectedSchedule)
+        .map((match, i) => {
+          const matchKey = `Telugu Titans vs ${match.opponent}`;
+          const result = matchSummaries[matchKey];
+          const isFlipped = flippedMatch === `${matchKey}-${i}`;
 
-          <h3 className="text-2xl font-black text-amber-300">
-            Telugu Titans vs {m.opponent}
-          </h3>
+          return (
+            <div
+              key={`${matchKey}-${i}`}
+              onClick={() =>
+                setFlippedMatch(isFlipped ? null : `${matchKey}-${i}`)
+              }
+              className="cursor-pointer rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:border-amber-300/40 hover:bg-white/10"
+            >
+              {isFlipped ? (
+                result ? (
+                  <>
+                    <span className="inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-black text-black">
+                      MATCH SUMMARY
+                    </span>
 
-          <div className="mt-4 space-y-2 text-white/75">
-            <p><span className="text-amber-300">Date:</span> {m.day}, {m.date}</p>
-            <p><span className="text-amber-300">Time:</span> {m.time}</p>
-            <p><span className="text-amber-300">Home/Away:</span> {m.homeAway}</p>
-            <p><span className="text-amber-300">Ground:</span> {m.ground}</p>
-          </div>
-        </div>
-      ))}
-  </div>
-</PageWrap>
+                    <h3 className="mt-4 text-2xl font-black text-amber-300">
+                      {result.result}
+                    </h3>
+
+                    <p className="mt-4 text-sm leading-7 text-white/75">
+                      {result.summary}
+                    </p>
+
+                    <div className="mt-5 rounded-2xl border border-amber-300/20 bg-black/30 p-4">
+                      <p className="text-xs font-black uppercase tracking-widest text-amber-300">
+                        MVP OF THE MATCH
+                      </p>
+                      <p className="mt-2 text-2xl font-black text-white">
+                        🏆 {result.mvp}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-black text-amber-300">
+                      MATCH SUMMARY
+                    </span>
+
+                    <h3 className="mt-4 text-2xl font-black text-amber-300">
+                      Result Coming Soon
+                    </h3>
+
+                    <p className="mt-4 text-sm leading-7 text-white/70">
+                      Match summary and MVP will be updated after the game.
+                    </p>
+                  </>
+                )
+              ) : (
+                <>
+                  <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+                    {match.league}
+                  </div>
+
+                  <h3 className="text-2xl font-black text-amber-300">
+                    Telugu Titans vs {match.opponent}
+                  </h3>
+
+                  <div className="mt-5 space-y-3 text-white/80">
+                    <p>
+                      <span className="font-black text-amber-300">Date:</span>{" "}
+                      {match.day}, {match.date}
+                    </p>
+
+                    <p>
+                      <span className="font-black text-amber-300">Time:</span>{" "}
+                      {match.time}
+                    </p>
+
+                    <p>
+                      <span className="font-black text-amber-300">Home/Away:</span>{" "}
+                      {match.homeAway}
+                    </p>
+
+                    <p>
+                      <span className="font-black text-amber-300">Ground:</span>{" "}
+                      {match.ground}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
+    </div>
+  </PageWrap>
 )}
 {activeSection === "stats" && (
 <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
