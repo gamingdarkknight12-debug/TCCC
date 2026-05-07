@@ -231,22 +231,66 @@ async function addNickname() {
   setNicknameText("");
   await loadTeamHubData();
 }
-  const allTime = useMemo(() => {
-    const batting = {};
-    [...stats2025.batting, ...stats2024.batting].forEach((p) => {
-      const key = p.name.toLowerCase().trim();
-      if (!batting[key]) batting[key] = { name: p.name, runs: 0, balls: 0, fours: 0, sixes: 0, inns: 0 };
-      batting[key].runs += num(p.runs); batting[key].balls += num(p.balls); batting[key].fours += num(p.fours); batting[key].sixes += num(p.sixes); batting[key].inns += num(p.inns);
-    });
-    const bowling = {};
-    [...stats2025.bowling, ...stats2024.bowling].forEach((p) => {
-      const key = p.name.toLowerCase().trim();
-      if (!bowling[key]) bowling[key] = { name: p.name, overs: 0, runs: 0, wickets: 0, inns: 0 };
-      bowling[key].overs += num(p.overs); bowling[key].runs += num(p.runs); bowling[key].wickets += num(p.wickets); bowling[key].inns += num(p.inns);
-    });
-    return { batting: Object.values(batting).sort((a,b) => b.runs-a.runs), bowling: Object.values(bowling).sort((a,b) => b.wickets-a.wickets) };
-  }, []);
-  const data = season === '2026' ? stats2026 : season === '2025' ? stats2025 : season === '2024' ? stats2024 : allTime;
+const allTime = useMemo(() => {
+  const batting = {};
+  const bowling = {};
+
+  [...stats2026.batting, ...stats2025.batting, ...stats2024.batting].forEach((p) => {
+    if (!batting[p.name]) {
+      batting[p.name] = {
+        ...p,
+        runs: 0,
+        balls: 0,
+        fours: 0,
+        sixes: 0,
+      };
+    }
+
+    batting[p.name].runs += p.runs || 0;
+    batting[p.name].balls += p.balls || 0;
+    batting[p.name].fours += p.fours || 0;
+    batting[p.name].sixes += p.sixes || 0;
+  });
+
+  [...stats2026.bowling, ...stats2025.bowling, ...stats2024.bowling].forEach((p) => {
+    if (!bowling[p.name]) {
+      bowling[p.name] = {
+        ...p,
+        overs: 0,
+        runs: 0,
+        wickets: 0,
+      };
+    }
+
+    bowling[p.name].overs += p.overs || 0;
+    bowling[p.name].runs += p.runs || 0;
+    bowling[p.name].wickets += p.wickets || 0;
+  });
+
+  Object.values(batting).forEach((p) => {
+    p.sr =
+      p.balls > 0
+        ? ((p.runs / p.balls) * 100).toFixed(1)
+        : "-";
+  });
+
+  Object.values(bowling).forEach((p) => {
+    p.economy =
+      p.overs > 0
+        ? (p.runs / p.overs).toFixed(1)
+        : "-";
+  });
+
+  return {
+    batting: Object.values(batting).sort((a, b) => b.runs - a.runs),
+    bowling: Object.values(bowling).sort((a, b) => b.wickets - a.wickets),
+  };
+}, []);
+let data = allTime;
+
+if (season === "2026") data = stats2026;
+if (season === "2025") data = stats2025;
+if (season === "2024") data = stats2024;
   const topBatter = allTime.batting[0];
   const topBowler = allTime.bowling[0];
   const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
@@ -1043,39 +1087,38 @@ captainNotes.map((item, i) => (
 
   {season === '2026' && (
     <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">
-      2026 stats will populate here after admin score imports.
+      Stay tuned for the 2026 season.
     </div>
   )}
 
   <div className="grid gap-6 lg:grid-cols-2">
-    <StatTable
-      title="Batting Leaders"
-      headers={['Player', 'Runs', 'Balls', '4s', '6s', 'SR']}
-      rows={data.batting
-        .filter((p) => p.name.toLowerCase().includes(playerSearch.toLowerCase()))
-        .map((p) => [
-          p.name,
-          p.runs,
-          p.balls,
-          p.fours || '-',
-          p.sixes || '-',
-          p.sr || (p.balls ? ((p.runs / p.balls) * 100).toFixed(1) : '-'),
-        ])}
-    />
+<StatTable
+  title="Batting Leaders"
+  headers={
+    season === "2026"
+      ? ["Player", "Runs", "Balls", "4s", "6s", "SR", "Avg"]
+      : ["Player", "Runs", "Balls", "4s", "6s", "SR"]
+  }
+  rows={data.batting.map((p) =>
+    season === "2026"
+      ? [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr, p.avg]
+      : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
+  )}
+/>
 
-    <StatTable
-      title="Bowling Leaders"
-      headers={['Player', 'Overs', 'Runs', 'Wickets', 'Eco']}
-      rows={data.bowling
-        .filter((p) => p.name.toLowerCase().includes(playerSearch.toLowerCase()))
-        .map((p) => [
-          p.name,
-          p.overs,
-          p.runs,
-          p.wickets,
-          p.economy || (p.overs ? (p.runs / p.overs).toFixed(1) : '-'),
-        ])}
-    />
+<StatTable
+  title="Bowling Leaders"
+  headers={
+    season === "2026"
+      ? ["Player", "Overs", "Runs", "Wickets", "Eco", "Dots", "Wd", "NB"]
+      : ["Player", "Overs", "Runs", "Wickets", "Eco"]
+  }
+  rows={data.bowling.map((p) =>
+    season === "2026"
+      ? [p.name, p.overs, p.runs, p.wickets, p.economy, p.dots, p.wides, p.noBalls]
+      : [p.name, p.overs, p.runs, p.wickets, p.economy]
+  )}
+/>
   </div>
 </PageWrap>
 )}
