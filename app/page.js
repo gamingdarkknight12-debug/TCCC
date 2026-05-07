@@ -13,6 +13,10 @@ export default function Home() {
   const [playerSearch, setPlayerSearch] = useState("");
   const [captainPlayer, setCaptainPlayer] = useState("");
 const [showVotingResults, setShowVotingResults] = useState(false);
+const [match1Archived, setMatch1Archived] = useState(true);
+const [showArchivedMatches, setShowArchivedMatches] = useState(false);
+const [analysisTab, setAnalysisTab] = useState("pre");
+const [selectedArchiveMatch, setSelectedArchiveMatch] = useState(null);
 const [polls, setPolls] = useState({
   "Energy Booster of Titans": [],
   "Consistent in the nets": [],
@@ -409,15 +413,13 @@ async function addNickname() {
   <div className="grid gap-6 lg:grid-cols-3">
     <div className="lg:col-span-2 rounded-3xl border border-white/10 bg-gradient-to-br from-amber-300/15 to-white/5 p-8">
       <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
-        Season Focus
+        Match 1
       </div>
       <h3 className="text-4xl font-black text-amber-300">
-        2026 Double League Challenge
+        Titans Start Strong
       </h3>
       <p className="mt-4 max-w-3xl leading-8 text-white/75">
-        Telugu Titans are competing in both BEDCL and MCPL this season. Squad
-        rotation, availability, fitness, and consistency will be key to staying
-        competitive across both leagues.
+        Telugu Titans opened the season with a 29-run win against Brampton Strikers, scoring 166/9 and restricting Brampton to 139/8.
       </p>
     </div>
 
@@ -426,41 +428,36 @@ async function addNickname() {
         Performer
       </div>
       <h3 className="text-3xl font-black text-amber-300">
-        Best Performer: Charan
+       Top Batting Impact
       </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Charan was the standout performer last season with consistent batting
-        and leadership from the front.
+       Varun led the batting with 31 runs from 33 balls, followed by Charan with 29 from 33 and Kapil with 19 from 22
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-        Bowling Unit Ready
+        Bowling Match Winners
       </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Titans have strong options across pace, spin, and middle overs with
-        dependable wicket-taking depth.
+        Manish picked up 2 wickets for 18 runs, while Shanthan delivered a strong spell with 2 wickets for 26 runs.
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-        Match Alerts
+       Middle Overs Control
       </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Upcoming match details update automatically on the Home page with
-        opponent, date, time, and ground.
+        Vikas, Dheeraj, Srikanth and Sai Kiran all contributed with important wickets to keep Brampton under pressure.
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-        Season Goal
-      </h3>
+Team Performance Highlight      </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Strong performances, playoff qualification, and silverware are the main
-        targets for the 2026 season.
+        Titans defended 166 successfully with disciplined bowling and regular wickets, closing Brampton at 139/8 in 23 overs.
       </p>
     </div>
   </div>
@@ -813,62 +810,115 @@ captainNotes.map((item, i) => (
   title="Match Analysis"
   subtitle="Upcoming clash: Telugu Titans vs Brampton Strikers | Next Sunday"
 >
+<div className="mb-6 flex flex-wrap gap-3">
+  <button
+    onClick={() => {
+      setAnalysisTab("pre");
+      setSelectedArchiveMatch(null);
+    }}
+    className={`btn ${analysisTab === "pre" ? "btn-gold" : "btn-ghost"}`}
+  >
+    Pre Match Analysis
+  </button>
+
+  <button
+    onClick={() => {
+      setAnalysisTab("archive");
+      setSelectedArchiveMatch(null);
+    }}
+    className={`btn ${analysisTab === "archive" ? "btn-gold" : "btn-ghost"}`}
+  >
+    Archived Matches
+  </button>
+</div>
+
+{!showArchivedMatches && (
   <div className="grid gap-6 md:grid-cols-2">
+    {/* keep your current Opponent Snapshot, Players To Watch, Titans Strategy, Prediction cards here */}
+  </div>
+)}
+{analysisTab === "pre" && (
+  <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+    <h3 className="text-2xl font-black text-amber-300">
+      Pre Match Analysis
+    </h3>
+    <p className="mt-3 text-white/70">
+      Coming soon. Analysis will be posted before the match.
+    </p>
+  </div>
+)}
 
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-2xl font-bold text-amber-300">
-        Opponent Snapshot
-      </h3>
+{analysisTab === "archive" && !selectedArchiveMatch && (
+  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <button
+      onClick={() => setSelectedArchiveMatch("match1")}
+      className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5 text-left hover:bg-amber-300 hover:text-black"
+    >
+      <div className="text-lg font-black">Match 1</div>
+      <div className="text-sm">Telugu Titans vs Brampton Strikers</div>
+    </button>
 
-      <ul className="space-y-3 text-white/80">
-        <li>• Strong batting unit with aggressive top order</li>
-        <li>• Capable of scoring fast in powerplay</li>
-        <li>• Bowling attack becomes dangerous if defending 170+</li>
-        <li>• Pressure builds when early wickets fall</li>
-      </ul>
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-white/50">
+      <div className="text-lg font-black">Match 2</div>
+      <div className="text-sm">Coming soon</div>
     </div>
+  </div>
+)}
 
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-2xl font-bold text-amber-300">
-        Players To Watch (Brampton Strikers)
-      </h3>
+{analysisTab === "archive" && selectedArchiveMatch === "match1" && (
+  <div>
+    <button
+      onClick={() => setSelectedArchiveMatch(null)}
+      className="btn btn-ghost mb-5"
+    >
+      ← Back to Archived Matches
+    </button>
 
-      <div className="space-y-3 text-white/80">
-        <p>🔥 Ali Shah – Top scorer in previous clash (64)</p>
-        <p>🔥 Ravi Patil – Finisher + wicket taker</p>
-        <p>🔥 Hamza Talal – Impact batting + fielding</p>
-        <p>🔥 Hafiz Asim Ali – Dangerous middle overs hitter</p>
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-2xl font-black text-amber-300">Opponent Snapshot</h3>
+        <p className="mt-4 text-white/75">
+          • Strong batting unit with aggressive top order<br />
+          • Capable of scoring fast in powerplay<br />
+          • Bowling attack becomes dangerous if defending 170+<br />
+          • Pressure builds when early wickets fall
+        </p>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-2xl font-black text-amber-300">
+          Players To Watch (Brampton Strikers)
+        </h3>
+        <p className="mt-4 text-white/75">
+          🔥 Ali Shah – Top scorer in previous clash (64)<br />
+          🔥 Ravi Patil – Finisher + wicket taker<br />
+          🔥 Hamza Talal – Impact batting + fielding<br />
+          🔥 Hafiz Asim Ali – Dangerous middle overs hitter
+        </p>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-2xl font-black text-amber-300">Titans Strategy</h3>
+        <p className="mt-4 text-white/75">
+          • Get Ali Shah early<br />
+          • Tight powerplay bowling first 6 overs<br />
+          • Varun / Charan anchor chase smartly<br />
+          • Nipun / Anand can accelerate the scoring<br />
+          • Save wickets till final 8 overs while chasing
+        </p>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-2xl font-black text-amber-300">Prediction</h3>
+        <p className="mt-4 text-white/75">
+          If Titans remove Ali Shah early and keep extras under control, this becomes a 50-50 contest. Score target range: 155–175.
+        </p>
       </div>
     </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-2xl font-bold text-amber-300">
-        Titans Strategy
-      </h3>
-
-      <ul className="space-y-3 text-white/80">
-        <li>• Get Ali Shah early</li>
-        <li>• Tight powerplay bowling first 6 overs</li>
-        <li>• Varun / Charan anchor chase smartly</li>
-        <li>• Nipun/ Anand can accelerate the scoring</li>
-        <li>• Save wickets till final 8 overs while chasing</li>
-      </ul>
-    </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h3 className="mb-4 text-2xl font-bold text-amber-300">
-        Prediction
-      </h3>
-
-      <p className="leading-7 text-white/80">
-        If Titans remove Ali Shah early and keep extras under control,
-        this becomes a 50-50 contest. Score target range: 155–175.
-      </p>
-    </div>
-
   </div>
+)}
   </PageWrap>
-  
+ 
 
 <PageWrap
   id="seasons"
@@ -1010,6 +1060,7 @@ captainNotes.map((item, i) => (
     />
   </div>
 </PageWrap>
+
       <PageWrap
   id="players"
   title="Players"

@@ -93,8 +93,21 @@ const updateActive = () => {
           </a>
 
           {/* Desktop Menu */}
+          
 <nav className="hidden gap-2 md:flex">
   {pages.map((p) =>
+    p === "Match Analysis" ? (
+    <div key={p} className="relative group flex items-center">
+      <a
+        href="#analysis"
+        className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
+      >
+        Match Analysis
+      </a>
+
+
+    </div>
+  ) :
     p === "Seasons" ? (
       <div key={p} className="relative group flex items-center">
         <a href="#seasons" className={`btn ${active === "Seasons" ? "btn-gold" : "btn-ghost"}`}>
