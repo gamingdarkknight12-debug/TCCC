@@ -9,7 +9,7 @@ export function Header() {
 
 const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Seasons', 'Players', 'About Us'];
   const hrefs = {
-    Home: '/',
+    Home: '#home',
     News: '#news',
     'Team Hub': '#teamhub',
     'Match Analysis': '#analysis',
@@ -26,47 +26,33 @@ const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Seasons', 'Players
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    const sections = [
-      { id: 'news', name: 'News' },
-      { id: "teamhub", name: "Team Hub" },
-      { id: 'analysis', name: 'Match Analysis' },
-      { id: 'stats', name: 'Player Stats' },
-      { id: 'seasons', name: 'Seasons' },
-      { id: 'schedule2026', name: 'Seasons' },
-      { id: 'players', name: 'Players' },
-      { id: 'about', name: 'About Us' },
-    ];
+useEffect(() => {
+  const updateActive = () => {
+    const hash = window.location.hash.replace("#", "");
 
-const updateActive = () => {
-  let current = 'Home';
-  let closestTop = -Infinity;
-
-  sections.forEach((section) => {
-    const el = document.getElementById(section.id);
-
-    if (el) {
-      const rect = el.getBoundingClientRect();
-
-      if (rect.top <= 180 && rect.top > closestTop) {
-        closestTop = rect.top;
-        current = section.name;
-      }
-    }
-  });
-
-  setActive(current);
-};
-
-    updateActive();
-    window.addEventListener('scroll', updateActive);
-    window.addEventListener('hashchange', updateActive);
-
-    return () => {
-      window.removeEventListener('scroll', updateActive);
-      window.removeEventListener('hashchange', updateActive);
+    const hashMap = {
+      news: "News",
+      teamhub: "Team Hub",
+      analysis: "Match Analysis",
+      postmatch: "Match Analysis",
+      archive: "Match Analysis",
+      stats: "Player Stats",
+      seasons: "Seasons",
+      schedule2026: "Seasons",
+      players: "Players",
+      about: "About Us",
     };
-  }, []);
+
+    setActive(hashMap[hash] || "Home");
+  };
+
+  updateActive();
+  window.addEventListener("hashchange", updateActive);
+
+  return () => {
+    window.removeEventListener("hashchange", updateActive);
+  };
+}, []);
 
   return (
     <>

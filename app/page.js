@@ -34,6 +34,7 @@ const [captainNotes, setCaptainNotes] = useState([]);
 const [nicknamePlayer, setNicknamePlayer] = useState("");
 const [nicknameText, setNicknameText] = useState("");
 const [nicknames, setNicknames] = useState([]);
+const [activeSection, setActiveSection] = useState("home");
 async function loadTeamHubData() {
   const res = await fetch("/api/teamhub");
   const data = await res.json();
@@ -74,7 +75,17 @@ setCaptainNotes(
 useEffect(() => {
   loadTeamHubData();
 }, []);
+useEffect(() => {
+  const updateSection = () => {
+    const hash = window.location.hash.replace("#", "");
+    setActiveSection(hash || "home");
+  };
 
+  updateSection();
+  window.addEventListener("hashchange", updateSection);
+
+  return () => window.removeEventListener("hashchange", updateSection);
+}, []);
 async function addPollOption(pollName) {
   const value = (pollInputs[pollName] || "").trim();
   if (!value) return;
@@ -246,6 +257,7 @@ async function addNickname() {
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
       <SponsorBanner />
+      {activeSection === "home" && (
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
  {/* Team Switcher - Desktop + Mobile */}
 <div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
@@ -278,6 +290,8 @@ async function addNickname() {
         
         </div>
       </section> 
+      )}
+      {activeSection === "news" && (
       <PageWrap
   id="news"
   title="News"
@@ -462,7 +476,8 @@ Team Performance Highlight      </h3>
     </div>
   </div>
 </PageWrap>
-
+)}
+{activeSection === "teamhub" && (
 <PageWrap
   id="teamhub"
   title="Team Hub"
@@ -803,8 +818,9 @@ captainNotes.map((item, i) => (
     </div>
   )}
 </PageWrap>
-      
+   )}   
 
+{activeSection === "analysis" && (
 <PageWrap
   id="analysis"
   title="Match Analysis"
@@ -918,8 +934,8 @@ captainNotes.map((item, i) => (
   </div>
 )}
   </PageWrap>
- 
-
+ )}
+{activeSection === "seasons" && (
 <PageWrap
   id="seasons"
   title="Seasons"
@@ -956,6 +972,8 @@ captainNotes.map((item, i) => (
     </p>
   </div>
 </PageWrap>
+)}
+{activeSection === "schedule2026" && (
       <PageWrap
   id="schedule2026"
   title="2026 Season Schedule"
@@ -1000,7 +1018,8 @@ captainNotes.map((item, i) => (
       ))}
   </div>
 </PageWrap>
-
+)}
+{activeSection === "stats" && (
 <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
   <div className="mb-6">
     <input
@@ -1060,7 +1079,9 @@ captainNotes.map((item, i) => (
     />
   </div>
 </PageWrap>
+)}
 
+{activeSection === "players" && (
       <PageWrap
   id="players"
   title="Players"
@@ -1121,7 +1142,11 @@ captainNotes.map((item, i) => (
 
   </div>
 </PageWrap>
-<PageWrap id="about" title="About TCCC" subtitle="A cricket club built for community, competition, and growth."><div className="grid gap-6 md:grid-cols-2"><InfoCard title="Our Story" text="The club’s roots go back to Andhra Tycoons in 2008, later reformed as Telugu Cricket Club Canada in 2022." /><InfoCard title="Our Vision" text="Batting for a stronger South Asian community through cricket, while developing younger players and creating opportunities." /><InfoCard title="Competitive + Recreational" text="TCCC supports both serious competition and recreational cricket." /><InfoCard title="Future Roadmap" text="Multiple teams, international exposure, cricket leagues, and community-driven development." /></div></PageWrap>
+)}
+{activeSection === "about" && (
+<PageWrap id="about" title="About TCCC" subtitle="A cricket club built for community, competition, and growth."><div className="grid gap-6 md:grid-cols-2"><InfoCard title="Our Story" text="The club’s roots go back to Andhra Tycoons in 2008, later reformed as Telugu Cricket Club Canada in 2022." /><InfoCard title="Our Vision" text="Batting for a stronger South Asian community through cricket, while developing younger players and creating opportunities." /><InfoCard title="Competitive + Recreational" text="TCCC supports both serious competition and recreational cricket." /><InfoCard title="Future Roadmap" text="Multiple teams, international exposure, cricket leagues, and community-driven development." /></div>
+  </PageWrap>   
+)}
 
       {/* <PageWrap id="contact" title="Contact / Join TCCC" subtitle="For players, supporters, sponsors, and community members."><div className="card p-6"><h3 className="text-2xl font-bold text-amber-300">Coming Next</h3><p className="mt-4 leading-7 text-white/75">This section can include Instagram, YouTube, WhatsApp contact, sponsor inquiry, and player registration workflow.</p></div></PageWrap> */}
       <footer className="border-t border-white/10 bg-black/40 px-4 py-8 text-center text-sm text-white/60">© 2026 Telugu Cricket Club Canada. Built for TCCC.</footer>
