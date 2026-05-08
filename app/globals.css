@@ -61,8 +61,16 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     transform: translateX(0);
   }
 }
-html,
-body {
-  max-width: 100%;
-  overflow-x: hidden;
+
+@media (max-width: 768px) {
+  main {
+    zoom: 0.65;
+    transform-origin: top left;
+    width: 138%;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
