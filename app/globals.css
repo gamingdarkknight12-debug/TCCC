@@ -200,4 +200,34 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     padding: 12px 16px !important;
     border-radius: 16px !important;
   }
+  
+  .stats-tables-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  .table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-wrap table {
+    min-width: 620px !important;
+  }
+
+  .stats-pagination {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+  }
+
+  .stats-pagination .btn {
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+  }
+
 }

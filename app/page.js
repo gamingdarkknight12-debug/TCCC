@@ -1288,7 +1288,7 @@ captainNotes.map((item, i) => (
 
   <div className="grid gap-6 lg:grid-cols-2">
     <div>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="stats-pagination mt-4 flex items-center justify-between">
   <button
     onClick={() => setBattingPage((p) => Math.max(1, p - 1))}
     disabled={battingPage === 1}
@@ -1309,7 +1309,8 @@ captainNotes.map((item, i) => (
     Next
   </button>
   </div>
-  <div className='table-wrap'>
+  <div className="stats-tables-grid grid gap-6 lg:grid-cols-2">
+    <div className="table-wrap">
 <StatTable
   title="Batting Leaders"
   headers={
@@ -1325,8 +1326,9 @@ captainNotes.map((item, i) => (
 />
 </div>
 </div>
+</div>
 <div>
-<div className="mt-4 flex items-center justify-between">
+<div className="stats-pagination mt-4 flex items-center justify-between">
   <button
     onClick={() => setBowlingPage((p) => Math.max(1, p - 1))}
     disabled={bowlingPage === 1}
@@ -1347,7 +1349,8 @@ captainNotes.map((item, i) => (
     Next
   </button>
 </div>
-<div className='table-wrap'>
+<div className="stats-tables-grid grid gap-6 lg:grid-cols-2">
+  <div className="table-wrap">
 <StatTable
   title="Bowling Leaders"
   headers={
@@ -1361,6 +1364,7 @@ captainNotes.map((item, i) => (
       : [p.name, p.overs, p.runs, p.wickets, p.economy]
   )}
 />
+</div>
 </div>
 </div>
   </div>
