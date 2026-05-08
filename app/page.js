@@ -9,7 +9,7 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 export default function Home() {
   const [season, setSeason] = useState('All-Time');
   const [selectedSchedule, setSelectedSchedule] = useState('BEDCL');
-  const [teamHubTab, setTeamHubTab] = useState("Overview");
+  const [teamHubTab, setTeamHubTab] = useState("Hall of Fame");
   const [playerSearch, setPlayerSearch] = useState("");
   const [captainPlayer, setCaptainPlayer] = useState("");
 const [showVotingResults, setShowVotingResults] = useState(true);
@@ -334,10 +334,9 @@ const battingTotalPages = Math.max(1, Math.ceil(filteredBattingRows.length / row
 const bowlingTotalPages = Math.max(1, Math.ceil(filteredBowlingRows.length / rowsPerPage));
 
 
+
   const topBatter = allTime.batting[0];
   const topBowler = allTime.bowling[0];
-  const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
-  const emergingPlayer = { name: 'Kapil', runs: 62, wickets: 11 };
 const players = [
       { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder", image: "/players/4.jpg" },
       { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
@@ -377,6 +376,34 @@ const players = [
     filteredPlayers.length / playersPerPage
   );
 
+
+
+const impactPlayerBat =
+  allTime.batting.find((p) => p.name === "Srikanth Govula");
+
+const impactPlayerBowl =
+  allTime.bowling.find((p) => p.name === "Srikanth Govula");
+
+const impactPlayer = {
+  name: "Srikanth Govula",
+  runs: impactPlayerBat?.runs || 0,
+  wickets: impactPlayerBowl?.wickets || 0,
+};
+
+const emergingPlayerBat =
+  allTime.batting.find((p) => p.name === "Kapil Sai Darshi") ||
+  allTime.batting.find((p) => p.name === "Kapil");
+
+const emergingPlayerBowl =
+  allTime.bowling.find((p) => p.name === "Kapil Sai Darshi") ||
+  allTime.bowling.find((p) => p.name === "Kapil");
+
+const emergingPlayer = {
+  name: "Kapil Sai Darshi",
+  runs: emergingPlayerBat?.runs || 0,
+  wickets: emergingPlayerBowl?.wickets || 0,
+};
+
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
@@ -410,8 +437,39 @@ const players = [
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
 </div>          
 </div>
-          <div className="flex justify-center"><div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10"><Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
-        
+          <div className="flex justify-center">
+            <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
+            <Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
+
+<div className="mt-10 grid w-[1400px]  grid-cols-4 gap-4">
+    <HighlightCard
+      title="Run Machine"
+      name={topBatter?.name}
+      stat={`${topBatter?.runs || 0} all-time runs`}
+      note="Top run scorer for Titans."
+    />  
+    <HighlightCard
+      title="Wicket Leader"
+      name={topBowler?.name}
+      stat={`${topBowler?.wickets || 0} all-time wickets`}
+      note="Leading wicket taker for Titans."
+    />
+
+    <HighlightCard
+      title="Impact Player"
+      name={impactPlayer?.name}
+      stat={`${impactPlayer?.runs || 0} runs + ${impactPlayer?.wickets || 0} wickets`}
+      note="Useful in pressure phases and team balance."
+    />
+
+    <HighlightCard
+      title="Emerging Force of 2025"
+      name={emergingPlayer?.name}
+      stat={`${emergingPlayer?.wickets || 0} wickets + ${emergingPlayer?.runs || 0} runs`}
+      note="Useful lower-order and bowling impact option."
+    />
+
+  </div>
         </div>
       </section> 
       )}
@@ -609,7 +667,6 @@ Team Performance Highlight      </h3>
 >
   <div className="mb-8 flex flex-wrap gap-3">
     {[
-      "Overview",
       "Hall of Fame",
       "Voting Arena",
       "Locker Room",
@@ -626,14 +683,6 @@ Team Performance Highlight      </h3>
     ))}
   </div>
 
-  {teamHubTab === "Overview" && (
-    <div className="grid gap-6 lg:grid-cols-4">
-      <HighlightCard title="Run Machine" name="Charan Bandaru" stat="843 all-time runs" note="Most consistent batting contributor from available data." />
-      <HighlightCard title="Wicket Leader" name="Shanthan" stat="36 all-time wickets" note="Reliable wicket-taking option across seasons." />
-      <HighlightCard title="Impact Player" name="Aadil Khan" stat="476 runs + all-round value" note="Useful in pressure phases and team balance." />
-      <HighlightCard title="Emerging Force" name="Kapil" stat="11 wickets + 62 runs" note="Useful lower-order and bowling impact option for the squad." />
-    </div>
-  )}
 
   {teamHubTab === "Voting Arena" && (
   <div>

@@ -288,7 +288,11 @@ export function InfoCard({ title, text }) {
 }
 
 export function HighlightCard({ title, name, stat, note }) {
-  return <div className="gold-card p-5"><div className="text-sm uppercase tracking-widest text-amber-300">{title}</div><h3 className="mt-3 text-2xl font-bold">{name}</h3><div className="mt-2 text-lg font-semibold text-white/90">{stat}</div><p className="mt-3 text-sm leading-6 text-white/60">{note}</p></div>;
+  return <div className="rounded-3xl border border-amber-300/30 bg-white/5 p-5 min-h-[200px]">
+    <div className="text-sm uppercase tracking-widest text-amber-300">{title}</div>
+    <h3 className="mt-3 text-2xl font-bold">{name}</h3>
+    <div className="mt-2 text-lg font-semibold text-white/90">{stat}</div>
+    <p className="mt-3 text-sm leading-6 text-white/60">{note}</p></div>;
 }
 
 export function StatTable({ title, headers, rows }) {
