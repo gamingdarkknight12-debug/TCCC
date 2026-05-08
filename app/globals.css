@@ -337,6 +337,18 @@ width: 38% !important;
     transform-origin: top left;
     width: 108%;
   }
+  .hero-left-content {
+    transform: none !important;
+    width: 100% !important;
+  }
+    section {
+    padding-bottom: 24px !important;
+  }
+
+  footer {
+    margin-top: 0 !important;
+    padding: 18px 16px !important;
+  }
 }
 
 /* Hero left side size control */
