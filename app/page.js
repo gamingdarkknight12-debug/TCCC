@@ -428,7 +428,7 @@ const emergingPlayer = {
   </div>
 </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.22),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(30,64,175,0.2),transparent_35%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
+        <div className="hero-grid relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Titans</div>
             <h1 className="text-5xl font-black leading-none md:text-7xl">Beyond the Pitch, 
@@ -440,11 +440,11 @@ const emergingPlayer = {
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
 </div>          
 </div>
-          <div className="flex justify-center">
+          <div className="home-logo-card">
             <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
             <Image src="/tccc-logo.png" alt="TCCC Logo" width={420} height={420} priority /></div></div>
 
-<div className="mt-10 grid w-[1400px]  grid-cols-4 gap-4">
+<div className="home-stats-grid mt-10 grid w-[1400px]  grid-cols-4 gap-4">
     <HighlightCard
       title="Run Machine"
       name={topBatter?.name}
