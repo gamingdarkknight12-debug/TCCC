@@ -412,7 +412,7 @@ const emergingPlayer = {
       </div>
       }
       {activeSection === "home" && (
-      <section className="relative overflow-hidden px-4 py-16 md:py-24">
+      <section className="relative overflow-hidden px-4 pt-4 pb-16 md:pt-8 md:pb-24">
  {/* Team Switcher - Desktop + Mobile */}
 <div className="relative z-30 mx-auto mb-8 flex max-w-7xl justify-center px-4 md:absolute md:right-8 md:top-8 md:mx-0 md:mb-0 md:block md:px-0">
   <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/60 p-1 backdrop-blur-xl">
