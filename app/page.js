@@ -443,16 +443,18 @@ const emergingPlayer = {
 </div>
           <div className="home-logo-card flex justify-center lg;:justify-end">
             <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
-            <Image src="/tccc-logo.png" alt="TCCC Logo" width={420} height={320} priority /></div></div>
+            <Image src="/tccc-logo.png" alt="TCCC Logo" width={320} height={320} priority /></div></div>
 
-<div className="home-stats-grid mt-10 grid w-[1400px]  grid-cols-4 gap-4">
+<div className="home-stats-grid mt-10 grid   w-[1400px] grid-cols-4 gap-6 max-w-5xl">
     <HighlightCard
+    className="highlight-card"
       title="Run Machine"
       name={topBatter?.name}
       stat={`${topBatter?.runs || 0} all-time runs`}
       note="Top run scorer for Titans."
     />  
     <HighlightCard
+    className="highlight-card"
       title="Wicket Leader"
       name={topBowler?.name}
       stat={`${topBowler?.wickets || 0} all-time wickets`}
@@ -460,6 +462,7 @@ const emergingPlayer = {
     />
 
     <HighlightCard
+    className="highlight-card"
       title="Impact Player"
       name={impactPlayer?.name}
       stat={`${impactPlayer?.runs || 0} runs + ${impactPlayer?.wickets || 0} wickets`}
@@ -467,6 +470,7 @@ const emergingPlayer = {
     />
 
     <HighlightCard
+    className="highlight-card"
       title="Emerging Force of 2025"
       name={emergingPlayer?.name}
       stat={`${emergingPlayer?.wickets || 0} wickets + ${emergingPlayer?.runs || 0} runs`}
@@ -1286,7 +1290,7 @@ captainNotes.map((item, i) => (
     </div>
   )}
 
-  <div className="grid gap-6 lg:grid-cols-2">
+  <div className="stats-table-grid grid gap-6 lg:grid-cols-2">
     <div>
       <div className="stats-pagination mt-4 flex items-center justify-between">
   <button
@@ -1309,7 +1313,6 @@ captainNotes.map((item, i) => (
     Next
   </button>
   </div>
-  <div className="stats-tables-grid grid gap-6 lg:grid-cols-2">
     <div className="table-wrap">
 <StatTable
   title="Batting Leaders"
@@ -1324,7 +1327,7 @@ captainNotes.map((item, i) => (
       : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
   )}
 />
-</div>
+
 </div>
 </div>
 <div>
@@ -1349,7 +1352,7 @@ captainNotes.map((item, i) => (
     Next
   </button>
 </div>
-<div className="stats-tables-grid grid gap-6 lg:grid-cols-2">
+
   <div className="table-wrap">
 <StatTable
   title="Bowling Leaders"
@@ -1365,7 +1368,7 @@ captainNotes.map((item, i) => (
   )}
 />
 </div>
-</div>
+
 </div>
   </div>
 </PageWrap>

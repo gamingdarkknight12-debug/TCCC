@@ -287,8 +287,8 @@ export function InfoCard({ title, text }) {
   return <div className="card p-6"><h3 className="text-2xl font-bold text-amber-300">{title}</h3><p className="mt-4 leading-7 text-white/75">{text}</p></div>;
 }
 
-export function HighlightCard({ title, name, stat, note }) {
-  return <div className="rounded-3xl border border-amber-300/30 bg-white/5 p-5 min-h-[200px]">
+export function HighlightCard({ title, name, stat, note,className="" }) {
+  return <div className="highlight-card rounded-3xl border border-amber-300/30 bg-white/5 p-5 min-h-[200px] ${className}">
     <div className="text-sm uppercase tracking-widest text-amber-300">{title}</div>
     <h3 className="mt-3 text-2xl font-bold">{name}</h3>
     <div className="mt-2 text-lg font-semibold text-white/90">{stat}</div>

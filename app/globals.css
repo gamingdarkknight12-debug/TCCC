@@ -117,33 +117,42 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
 
   /* Home hero mobile */
 .hero-grid {
-  display: grid !important;
-  grid-template-columns: 1.3fr 0.7fr !important;
-  align-items: center !important;
-  gap: 14px !important;
-}
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
 
-.home-logo-card {
-  max-width: 150px !important;
-  margin: 0 !important;
-}
+  .home-logo-card {
+    max-width: 180px !important;
+    margin: 0 auto !important;
+  }
 
-.home-logo-card img {
-  width: 150px !important;
-  height: 150px !important;
-  object-fit: contain !important;
-}
+  .home-logo-card img {
+    width: 160px !important;
+    height: 160px !important;
+    object-fit: contain !important;
+  }
 
   /* Home stat cards */
   .home-stats-grid {
     display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 14px !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
     width: 100% !important;
   }
 
-  .home-stats-grid > * {
-    width: 100% !important;
+  .home-stats-grid .highlight-card {
+    min-height: 130px !important;
+    padding: 14px !important;
+  }
+
+  .home-stats-grid h3 {
+    font-size: 16px !important;
+    line-height: 1.15 !important;
+  }
+
+  .home-stats-grid p {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
   }
 
   /* All cards smaller on phone */
@@ -204,9 +213,6 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   }
   
   .stats-tables-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
     width: 100% !important;
   }
 
