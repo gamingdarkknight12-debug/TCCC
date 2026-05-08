@@ -3,19 +3,40 @@
 @tailwind utilities;
 
 :root { color-scheme: dark; }
-body { margin: 0; background: #090b10; color: white; }
-.card { border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.05); border-radius: 1.5rem; }
-.gold-card { border: 1px solid rgba(252,211,77,.25); background: linear-gradient(135deg, rgba(252,211,77,.12), rgba(255,255,255,.04)); border-radius: 1.5rem; }
-.btn { border-radius: .9rem; padding: .65rem 1rem; font-weight: 700; transition: all .15s ease; }
-.btn-gold { background: #fcd34d; color: #000; }
-.btn-ghost { background: rgba(255,255,255,.08); color: white; }
-.table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.10); border-radius: 1rem; }
-th, td { padding: .75rem; white-space: nowrap; }
-th { text-align: left; color: rgba(255,255,255,.85); background: rgba(255,255,255,.10); }
-td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); }
+
+body {
+  margin: 0;
+  background: #090b10;
+  color: white;
+}
+
+.card {
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+  border-radius: 1.5rem;
+}
+
+.gold-card {
+  border: 1px solid rgba(252,211,77,.25);
+  background: linear-gradient(135deg, rgba(252,211,77,.12), rgba(255,255,255,.04));
+  border-radius: 1.5rem;
+}
 
 .btn {
+  border-radius: .9rem;
+  padding: .65rem 1rem;
+  font-weight: 700;
   transition: all 0.2s ease;
+}
+
+.btn-gold {
+  background: #fcd34d;
+  color: #000;
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,.08);
+  color: white;
 }
 
 .btn-ghost:hover {
@@ -29,6 +50,7 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   color: #000 !important;
   transform: translateY(-2px);
 }
+
 .fucc-btn {
   border-radius: 9999px;
   background: rgba(255,255,255,0.08);
@@ -48,6 +70,29 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   transform: translateY(-2px);
 }
 
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 1rem;
+}
+
+th,
+td {
+  padding: .75rem;
+  white-space: nowrap;
+}
+
+th {
+  text-align: left;
+  color: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.10);
+}
+
+td {
+  color: rgba(255,255,255,.75);
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
 .sponsor-track {
   animation: sponsor-scroll 24s linear infinite;
 }
@@ -62,18 +107,26 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   }
 }
 
+/* Desktop default */
+.mobile-title-logo {
+  display: block;
+}
+
+.mobile-logo-inside {
+  display: none !important;
+}
+
+.desktop-logo-card,
+.home-logo-card {
+  display: flex;
+}
+
 /* =========================
    MOBILE UI FIXES ONLY
-   Does not affect desktop
 ========================= */
 @media (max-width: 768px) {
   html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
+  body,
   main {
     width: 100%;
     max-width: 100%;
@@ -103,7 +156,6 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     line-height: 1.6 !important;
   }
 
-  /* Sponsor banner smaller on phone */
   .sponsor-banner,
   .sponsor-banner img {
     height: 70px !important;
@@ -115,24 +167,44 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     overflow: hidden !important;
   }
 
-  /* Home hero mobile */
-.hero-grid {
+  .hero-grid {
     grid-template-columns: 1fr !important;
     gap: 18px !important;
   }
 
+  .desktop-logo-card,
   .home-logo-card {
-    max-width: 180px !important;
-    margin: 0 auto !important;
+    display: none !important;
   }
 
-  .home-logo-card img {
-    width: 160px !important;
-    height: 160px !important;
+  .mobile-title-logo {
+    display: grid !important;
+    grid-template-columns: 1fr 105px !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .mobile-title-logo h1 {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+  }
+
+  .mobile-logo-inside {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 105px !important;
+    height: 105px !important;
+    padding: 8px !important;
+  }
+
+  .mobile-logo-inside img {
+    width: 90px !important;
+    height: 90px !important;
     object-fit: contain !important;
   }
 
-  /* Home stat cards */
   .home-stats-grid {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -155,14 +227,12 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     line-height: 1.35 !important;
   }
 
-  /* All cards smaller on phone */
   .card,
   .highlight-card,
   .rounded-3xl {
     padding: 20px !important;
   }
 
-  /* Team Hub tabs smaller */
   .teamhub-tabs {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -175,7 +245,6 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     border-radius: 16px !important;
   }
 
-  /* Mobile menu smaller */
   .mobile-menu button,
   .mobile-menu a {
     font-size: 22px !important;
@@ -183,7 +252,6 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     border-radius: 18px !important;
   }
 
-  /* Player cards */
   .players-grid {
     display: grid !important;
     grid-template-columns: 1fr !important;
@@ -195,25 +263,8 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     object-fit: cover !important;
   }
 
-  /* Tables should scroll, not break page */
   table {
     font-size: 13px !important;
-  }
-
-  .table-wrap {
-    overflow-x: auto !important;
-    width: 100% !important;
-  }
-
-  /* Buttons smaller */
-  .btn {
-    font-size: 14px !important;
-    padding: 12px 16px !important;
-    border-radius: 16px !important;
-  }
-  
-  .stats-tables-grid {
-    width: 100% !important;
   }
 
   .table-wrap {
@@ -226,6 +277,13 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     min-width: 620px !important;
   }
 
+  .stats-tables-grid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
   .stats-pagination {
     width: 100% !important;
     display: flex !important;
@@ -233,68 +291,10 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     gap: 10px !important;
   }
 
-  .stats-pagination .btn {
-    padding: 10px 14px !important;
-    font-size: 13px !important;
-  }
-
-  /*mobile*/
-    .desktop-logo-card {
-    display: none !important;
-  }
-
-  .mobile-title-logo {
-    display: grid !important;
-    grid-template-columns: 1fr 105px !important;
-    align-items: center !important;
-    gap: 12px !important;
-  }
-
-  .mobile-title-logo h1 {
-    font-size: 34px !important;
-    line-height: 1.05 !important;
-    margin: 0 !important;
-  }
-
-  .mobile-logo-inside {
-    display: flex !important;
-    justify-content: center !important;
-    width: 105px !important;
-    height: 105px !important;
-    padding: 8px !important;
-  }
-
-  .mobile-logo-inside img {
-    width: 90px !important;
-    height: 90px !important;
-    object-fit: contain !important;
-  }
-}
-
-
-
-@media (max-width: 768px) {
-  .mobile-hero-title-row {
-    display: grid !important;
-    grid-template-columns: 1fr 95px !important;
-    align-items: center !important;
-    gap: 12px !important;
-  }
-
-  .mobile-hero-title-row h1 {
-    font-size: 34px !important;
-    line-height: 1.05 !important;
-    margin: 0 !important;
-  }
-
-  .mobile-title-logo-img {
-    display: block !important;
-    width: 90px !important;
-    height: 90px !important;
-    object-fit: contain !important;
-  }
-
-  .home-logo-card {
-    display: none !important;
+  .stats-pagination .btn,
+  .btn {
+    font-size: 14px !important;
+    padding: 12px 16px !important;
+    border-radius: 16px !important;
   }
 }
