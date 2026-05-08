@@ -432,18 +432,28 @@ const emergingPlayer = {
         <div className="hero-grid relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Titans</div>
-            <h1 className="text-5xl font-black leading-none md:text-7xl">Beyond the Pitch, 
-              <span className="text-amber-300">We Unite.</span></h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
-            <NextMatchCard />
-            <div className="mt-8 flex flex-wrap gap-3">
+            
+<div className="mobile-title-logo">
+  <h1 className="text-5xl font-black leading-none md:text-7xl">
+    Beyond the Pitch, <span className="text-amber-300">We Unite.</span>
+  </h1>
 
-  <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
-</div>          
+  <img
+    src="/tccc-logo.png"
+    alt="TCCC Logo"
+    className="mobile-logo-inside"
+  />
+</div>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">
+            A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
+            <NextMatchCard />
+       
 </div>
           <div className="home-logo-card flex justify-center lg;:justify-end">
             <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
-            <Image src="/tccc-logo.png" alt="TCCC Logo" width={320} height={320} priority /></div></div>
+            <Image src="/tccc-logo.png" alt="TCCC Logo" width={320} height={320} priority />
+            </div>
+            </div>
 
 <div className="home-stats-grid mt-10 grid   w-[1400px] grid-cols-4 gap-6 max-w-5xl">
     <HighlightCard

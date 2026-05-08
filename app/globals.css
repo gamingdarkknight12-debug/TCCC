@@ -238,4 +238,63 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
     font-size: 13px !important;
   }
 
+  /*mobile*/
+    .desktop-logo-card {
+    display: none !important;
+  }
+
+  .mobile-title-logo {
+    display: grid !important;
+    grid-template-columns: 1fr 105px !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .mobile-title-logo h1 {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+  }
+
+  .mobile-logo-inside {
+    display: flex !important;
+    justify-content: center !important;
+    width: 105px !important;
+    height: 105px !important;
+    padding: 8px !important;
+  }
+
+  .mobile-logo-inside img {
+    width: 90px !important;
+    height: 90px !important;
+    object-fit: contain !important;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .mobile-hero-title-row {
+    display: grid !important;
+    grid-template-columns: 1fr 95px !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .mobile-hero-title-row h1 {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+  }
+
+  .mobile-title-logo-img {
+    display: block !important;
+    width: 90px !important;
+    height: 90px !important;
+    object-fit: contain !important;
+  }
+
+  .home-logo-card {
+    display: none !important;
+  }
 }
