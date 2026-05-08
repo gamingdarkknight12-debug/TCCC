@@ -19,6 +19,7 @@ const [analysisTab, setAnalysisTab] = useState("pre");
 const [selectedArchiveMatch, setSelectedArchiveMatch] = useState(null);
 const [flippedMatch, setFlippedMatch] = useState(null);
 
+
 const matchSummaries = {
   "Telugu Titans vs Brampton Strikers": {
     result: "Telugu Titans won by 29 runs",
@@ -44,9 +45,14 @@ const [nicknamePlayer, setNicknamePlayer] = useState("");
 const [nicknameText, setNicknameText] = useState("");
 const [nicknames, setNicknames] = useState([]);
 const [activeSection, setActiveSection] = useState("home");
+const [playerCardSearch, setPlayerCardSearch] = useState("");
+const [playerPage, setPlayerPage] = useState(1);
+const playersPerPage = 6;
+
 async function loadTeamHubData() {
   const res = await fetch("/api/teamhub");
   const data = await res.json();
+
 
   const groupedPolls = {
   "Energy Booster of Titans": [],
@@ -300,11 +306,76 @@ let data = allTime;
 if (season === "2026") data = stats2026;
 if (season === "2025") data = stats2025;
 if (season === "2024") data = stats2024;
+  const [battingPage, setBattingPage] = useState(1);
+const [bowlingPage, setBowlingPage] = useState(1);
+
+const rowsPerPage = 10;
+const battingRows = data?.batting || [];
+const bowlingRows = data?.bowling || [];
+
+const filteredBattingRows = battingRows.filter((p) =>
+  p.name.toLowerCase().includes(playerSearch.toLowerCase())
+);
+
+const filteredBowlingRows = bowlingRows.filter((p) =>
+  p.name.toLowerCase().includes(playerSearch.toLowerCase())
+);
+const pagedBattingRows = filteredBattingRows.slice(
+  (battingPage - 1) * rowsPerPage,
+  battingPage * rowsPerPage
+);
+
+const pagedBowlingRows = filteredBowlingRows.slice(
+  (bowlingPage - 1) * rowsPerPage,
+  bowlingPage * rowsPerPage
+);
+
+const battingTotalPages = Math.max(1, Math.ceil(filteredBattingRows.length / rowsPerPage));
+const bowlingTotalPages = Math.max(1, Math.ceil(filteredBowlingRows.length / rowsPerPage));
+
+
   const topBatter = allTime.batting[0];
   const topBowler = allTime.bowling[0];
   const impactPlayer = allTime.batting.find((p) => p.name === 'Aadil') || allTime.batting[2];
   const emergingPlayer = { name: 'Kapil', runs: 62, wickets: 11 };
+const players = [
+      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder", image: "/players/4.jpg" },
+      { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
+      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/21.jpeg" },
+      { name: "Dheeraj", skill: "All-rounder", image: "/players/25.jpg" },
+      { name: "Srikanth", skill: "All-rounder", image: "/players/26.jpeg" },
+      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
+      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
+      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
+      { name: "Kiran",  skill: "All-rounder", image: "/players/7.jpg" },
+      { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
+      { name: "Martin Thandhara", skill: "Bowler", image: "/players/9.jpg" },
+      { name: "Nagesh Kowligi", skill: "Bowler", image: "/players/10.jpg" },
+      { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
+      { name: "Nipun", skill: "Destructive Batter", image: "/players/24.jpeg" },
+      { name: "Nikhil Holagunda", skill: "Spin BowlingAll-rounder", image: "/players/12.jpeg" },
+      { name: "Prashanth", skill: "Spin Bowling All-rounder", image: "/players/20.jpg" },
+      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
+      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
+      { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
+      { name: "Varun Rambha", skill: "Batter", image: "/players/16.jpeg" },
+      { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
+      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" },
+      { name: "Dheeraj", skill: "Bowler", image: "/players/23.jpeg" },
+      { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" }
+    ];
+      const filteredPlayers = players.filter((p) =>
+    p.name.toLowerCase().includes(playerCardSearch.toLowerCase())
+  );
 
+  const pagedPlayers = filteredPlayers.slice(
+    (playerPage - 1) * playersPerPage,
+    playerPage * playersPerPage
+  );
+
+  const playerTotalPages = Math.ceil(
+    filteredPlayers.length / playersPerPage
+  );
 
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
@@ -1143,15 +1214,21 @@ captainNotes.map((item, i) => (
 )}
 {activeSection === "stats" && (
 <PageWrap id="stats" title="Player Stats" subtitle="Historical performance across available seasons.">
+  <div>
   <div className="mb-6">
-    <input
-      value={playerSearch}
-      onChange={(e) => setPlayerSearch(e.target.value)}
-      placeholder="Search player stats..."
-      className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
-    />
+<input
+  value={playerSearch}
+  onChange={(e) => {
+    setPlayerSearch(e.target.value);
+    setBattingPage(1);
+    setBowlingPage(1);
+  }}
+  placeholder="Search player stats..."
+  className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
+/>
   </div>
-
+  </div>
+<div>
   <div className="mb-6 flex flex-wrap gap-3">
     {['All-Time', '2026', '2025', '2024'].map((s) => (
       <button
@@ -1163,6 +1240,7 @@ captainNotes.map((item, i) => (
       </button>
     ))}
   </div>
+  </div>
 
   {season === '2026' && (
     <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">
@@ -1171,6 +1249,7 @@ captainNotes.map((item, i) => (
   )}
 
   <div className="grid gap-6 lg:grid-cols-2">
+    <div>
 <StatTable
   title="Batting Leaders"
   headers={
@@ -1178,13 +1257,35 @@ captainNotes.map((item, i) => (
       ? ["Player", "Runs", "Balls", "4s", "6s", "SR", "Avg"]
       : ["Player", "Runs", "Balls", "4s", "6s", "SR"]
   }
-  rows={data.batting.map((p) =>
+ rows={pagedBattingRows.map((p) =>
     season === "2026"
       ? [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr, p.avg]
       : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
   )}
 />
+<div className="mt-4 flex items-center justify-between">
+  <button
+    onClick={() => setBattingPage((p) => Math.max(1, p - 1))}
+    disabled={battingPage === 1}
+    className="btn btn-ghost disabled:opacity-40"
+  >
+    Previous
+  </button>
 
+  <span className="text-sm text-white/70">
+    Page {battingPage} of {battingTotalPages}
+  </span>
+
+  <button
+    onClick={() => setBattingPage((p) => Math.min(battingTotalPages, p + 1))}
+    disabled={battingPage === battingTotalPages}
+    className="btn btn-ghost disabled:opacity-40"
+  >
+    Next
+  </button>
+  </div>
+</div>
+<div>
 <StatTable
   title="Bowling Leaders"
   headers={
@@ -1192,78 +1293,106 @@ captainNotes.map((item, i) => (
       ? ["Player", "Overs", "Runs", "Wickets", "Eco", "Dots", "Wd", "NB"]
       : ["Player", "Overs", "Runs", "Wickets", "Eco"]
   }
-  rows={data.bowling.map((p) =>
+  rows={pagedBowlingRows.map((p) =>
     season === "2026"
       ? [p.name, p.overs, p.runs, p.wickets, p.economy, p.dots, p.wides, p.noBalls]
       : [p.name, p.overs, p.runs, p.wickets, p.economy]
   )}
 />
+<div className="mt-4 flex items-center justify-between">
+  <button
+    onClick={() => setBowlingPage((p) => Math.max(1, p - 1))}
+    disabled={bowlingPage === 1}
+    className="btn btn-ghost disabled:opacity-40"
+  >
+    Previous
+  </button>
+
+  <span className="text-sm text-white/70">
+    Page {bowlingPage} of {bowlingTotalPages}
+  </span>
+
+  <button
+    onClick={() => setBowlingPage((p) => Math.min(bowlingTotalPages, p + 1))}
+    disabled={bowlingPage === bowlingTotalPages}
+    className="btn btn-ghost disabled:opacity-40"
+  >
+    Next
+  </button>
+</div>
+</div>
   </div>
 </PageWrap>
 )}
 
 {activeSection === "players" && (
-      <PageWrap
-  id="players"
-  title="Players"
-  subtitle="Meet the Telugu Titans squad under TCCC banner."
->
-  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <PageWrap
+    id="players"
+    title="Players"
+    subtitle="Meet the Telugu Titans squad under TCCC banner."
+  >
+    <input
+      value={playerCardSearch}
+      onChange={(e) => {
+        setPlayerCardSearch(e.target.value);
+        setPlayerPage(1);
+      }}
+      placeholder="Search player..."
+      className="mb-6 w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
+    />
 
-    {[
-      { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder", image: "/players/4.jpg" },
-      { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
-      { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/21.jpeg" },
-      { name: "Dheeraj", skill: "All-rounder", image: "/players/25.jpg" },
-      { name: "Srikanth", skill: "All-rounder", image: "/players/26.jpeg" },
-      { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
-      { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-      { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
-      { name: "Kiran",  skill: "All-rounder", image: "/players/7.jpg" },
-      { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
-      { name: "Martin Thandhara", skill: "Bowler", image: "/players/9.jpg" },
-      { name: "Nagesh Kowligi", skill: "Bowler", image: "/players/10.jpg" },
-      { name: "Naveen Gajula", skill: "All-rounder", image: "/players/11.jpeg" },
-      { name: "Nipun", skill: "Destructive Batter", image: "/players/24.jpeg" },
-      { name: "Nikhil Holagunda", skill: "Spin BowlingAll-rounder", image: "/players/12.jpeg" },
-      { name: "Prashanth", skill: "Spin Bowling All-rounder", image: "/players/20.jpg" },
-      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
-      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
-      { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
-      { name: "Varun Rambha", skill: "Batter", image: "/players/16.jpeg" },
-      { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
-      { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" },
-      { name: "Dheeraj", skill: "Bowler", image: "/players/23.jpeg" },
-      { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" }
-    ].map((p) => (
-      <div
-        key={p.name}
-        className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
-      >
-        <img
-          src={p.image}
-          alt={p.name}
-          className="h-72 w-full object-cover"
-          style={{ objectPosition: "50% 25%" }} 
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {pagedPlayers.map((p, i) => (
+        <div
+          key={`${p.name}-${i}`}
+          className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+        >
+          <img
+            src={p.image}
+            alt={p.name}
+            className="h-72 w-full object-cover"
+            style={{ objectPosition: "50% 25%" }}
           />
 
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
+          <div className="p-4">
+            <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
 
-          {p.role && (
-            <p className="text-sm font-semibold text-yellow-300">
-              {p.role}
-            </p>
-          )}
+            {p.role && (
+              <p className="text-sm font-semibold text-yellow-300">
+                {p.role}
+              </p>
+            )}
 
-          <p className="mt-1 text-white/70">{p.skill}</p>
+            <p className="mt-1 text-white/70">{p.skill}</p>
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
 
-  </div>
-</PageWrap>
+    <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+      <button
+        onClick={() => setPlayerPage((p) => Math.max(1, p - 1))}
+        disabled={playerPage === 1}
+        className="btn btn-ghost disabled:opacity-40"
+      >
+        Previous
+      </button>
+
+      <span className="text-sm font-bold text-white/70">
+        Page {playerPage} of {playerTotalPages}
+      </span>
+
+      <button
+        onClick={() => setPlayerPage((p) => Math.min(playerTotalPages, p + 1))}
+        disabled={playerPage === playerTotalPages}
+        className="btn btn-ghost disabled:opacity-40"
+      >
+        Next
+      </button>
+    </div>
+  </PageWrap>
 )}
+
 {activeSection === "about" && (
 <PageWrap id="about" title="About TCCC" subtitle="A cricket club built for community, competition, and growth."><div className="grid gap-6 md:grid-cols-2"><InfoCard title="Our Story" text="The club’s roots go back to Andhra Tycoons in 2008, later reformed as Telugu Cricket Club Canada in 2022." /><InfoCard title="Our Vision" text="Batting for a stronger South Asian community through cricket, while developing younger players and creating opportunities." /><InfoCard title="Competitive + Recreational" text="TCCC supports both serious competition and recreational cricket." /><InfoCard title="Future Roadmap" text="Multiple teams, international exposure, cricket leagues, and community-driven development." /></div>
   </PageWrap>   
