@@ -270,17 +270,24 @@ td {
   .table-wrap {
     width: 100% !important;
     max-width: 100% !important;
-    overflow-x: auto !important;
+    overflow-x: hidden !important;
   }
 
   .table-wrap table {
-    min-width: 520px !important;
-  }
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;  }
 
   .table-wrap th,
   .table-wrap td {
-    padding: 12px 14px !important;
-    font-size: 14px !important;
+    padding: 10px 8px !important;
+    font-size: 12px !important;
+    white-space: normal !important;
+  }
+
+  .table-wrap th:first-child,
+  .table-wrap td:first-child {
+width: 38% !important;
   }
 
   .stats-tables-grid {
