@@ -441,9 +441,9 @@ const emergingPlayer = {
   <a className="btn btn-ghost" href="#analysis">Upcoming Match Analysis</a>
 </div>          
 </div>
-          <div className="home-logo-card">
+          <div className="home-logo-card flex justify-center lg;:justify-end">
             <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
-            <Image src="/tccc-logo.png" alt="TCCC Logo" width={420} height={420} priority /></div></div>
+            <Image src="/tccc-logo.png" alt="TCCC Logo" width={420} height={320} priority /></div></div>
 
 <div className="home-stats-grid mt-10 grid w-[1400px]  grid-cols-4 gap-4">
     <HighlightCard

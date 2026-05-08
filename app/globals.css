@@ -85,7 +85,7 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   }
 
   h1 {
-    font-size: 42px !important;
+    font-size: 34px !important;
     line-height: 1.05 !important;
   }
 
@@ -116,21 +116,23 @@ td { color: rgba(255,255,255,.75); border-top: 1px solid rgba(255,255,255,.10); 
   }
 
   /* Home hero mobile */
-  .hero-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
-  }
+.hero-grid {
+  display: grid !important;
+  grid-template-columns: 1.3fr 0.7fr !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
 
-  .home-logo-card {
-    max-width: 260px !important;
-    margin: 0 auto !important;
-  }
+.home-logo-card {
+  max-width: 150px !important;
+  margin: 0 !important;
+}
 
-  .home-logo-card img {
-    width: 100% !important;
-    height: auto !important;
-  }
+.home-logo-card img {
+  width: 150px !important;
+  height: 150px !important;
+  object-fit: contain !important;
+}
 
   /* Home stat cards */
   .home-stats-grid {
