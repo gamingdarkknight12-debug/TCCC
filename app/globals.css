@@ -156,15 +156,22 @@ td {
     line-height: 1.6 !important;
   }
 
-  .sponsor-banner,
+  .sponsor-banner {
+    height: 90px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
   .sponsor-banner img {
     height: 70px !important;
-    max-height: 70px !important;
+    width: auto !important;
     object-fit: contain !important;
   }
 
-  .sponsor-banner {
-    overflow: hidden !important;
+  .sponsor-track {
+    gap: 40px !important;
+    align-items: center !important;
   }
 
   .hero-grid {
