@@ -497,12 +497,13 @@ const emergingPlayer = {
   title="News"
   subtitle="Latest Telugu Titans updates, player stories, and team highlights."
 >
+  <div className='news-section'>
 {/* Featured Player Carousel */}
-<div className="mb-10 overflow-x-auto pb-4">
+<div className="news-grid mb-10 overflow-x-auto pb-4">
   <div className="flex gap-6">
 
     {/* Inder */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/22.jpeg"
@@ -522,7 +523,7 @@ const emergingPlayer = {
     </div>
 
     {/* Dheeraj */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/23.jpeg"
@@ -542,7 +543,7 @@ const emergingPlayer = {
     </div>
 
     {/* Amit */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/1.jpeg"
@@ -562,7 +563,7 @@ const emergingPlayer = {
     </div>
 
     {/* Varun */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/16.jpeg"
@@ -582,7 +583,7 @@ const emergingPlayer = {
     </div>
 
     {/* Saikiran */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/13.JPG"
@@ -602,7 +603,7 @@ const emergingPlayer = {
     </div>
 
     {/* Nipun */}
-    <div className="min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/24.jpeg"
@@ -674,6 +675,7 @@ Team Performance Highlight      </h3>
         Titans defended 166 successfully with disciplined bowling and regular wickets, closing Brampton at 139/8 in 23 overs.
       </p>
     </div>
+    </div>
   </div>
 </PageWrap>
 )}
@@ -683,7 +685,8 @@ Team Performance Highlight      </h3>
   title="Team Hub"
   subtitle="Titans digital dressing room — votes, fun, memories, goals, and team culture."
 >
-  <div className="teamhub-tabs mb-8 flex flex-wrap gap-3">
+
+  <div className=" teamhub-tabs mb-8 flex flex-wrap gap-3">
     {[
       "Hall of Fame",
       "Voting Arena",
@@ -699,9 +702,7 @@ Team Performance Highlight      </h3>
         {tab}
       </button>
     ))}
-  </div>
-
-
+ </div>
   {teamHubTab === "Voting Arena" && (
   <div>
     <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">

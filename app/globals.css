@@ -357,3 +357,118 @@ width: 38% !important;
   transform-origin: top left;
 }
 
+/* =========================
+   DESKTOP + MOBILE ZOOM OUT FIX
+   Keeps About/Seasons untouched
+========================= */
+
+/* Reduce top empty space below header */
+main {
+  padding-top: 0 !important;
+}
+
+/* Page content should not look zoomed in */
+section {
+  padding-top: 28px !important;
+}
+
+/* News cards smaller */
+.news-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 20px !important;
+}
+
+.news-card {
+  max-width: 320px !important;
+}
+
+.news-card img {
+  height: 260px !important;
+  object-fit: cover !important;
+}
+
+.news-card h3 {
+  font-size: 26px !important;
+  line-height: 1.1 !important;
+}
+
+.news-card p {
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+/* Team Hub / Match Analysis / Players / Stats spacing */
+.teamhub-section,
+.match-analysis-section,
+.players-section,
+.stats-section {
+  max-width: 1050px !important;
+  margin: 0 auto !important;
+  padding-top: 24px !important;
+}
+
+/* General page titles smaller except About/Seasons */
+.teamhub-section h1,
+.match-analysis-section h1,
+.players-section h1,
+.stats-section h1,
+.news-section h1 {
+  font-size: 44px !important;
+  line-height: 1.05 !important;
+}
+
+/* Cards slightly smaller */
+.teamhub-section .card,
+.match-analysis-section .card,
+.players-section .card,
+.stats-section .card,
+.news-section .card {
+  padding: 22px !important;
+}
+
+/* MOBILE ONLY */
+@media (max-width: 768px) {
+  section {
+    padding: 24px 18px !important;
+  }
+
+  .teamhub-section,
+  .match-analysis-section,
+  .players-section,
+  .stats-section,
+  .news-section {
+    max-width: 100% !important;
+    padding-top: 18px !important;
+  }
+
+  .teamhub-section h1,
+  .match-analysis-section h1,
+  .players-section h1,
+  .stats-section h1,
+  .news-section h1 {
+    font-size: 36px !important;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .news-card {
+    max-width: 100% !important;
+  }
+
+  .news-card img {
+    height: 260px !important;
+  }
+
+  .teamhub-tabs button,
+  .match-analysis-section button,
+  .players-section button,
+  .stats-section button {
+    font-size: 14px !important;
+    padding: 10px 14px !important;
+    border-radius: 14px !important;
+  }
+}
