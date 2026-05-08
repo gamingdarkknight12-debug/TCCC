@@ -523,7 +523,7 @@ const emergingPlayer = {
     </div>
 
     {/* Dheeraj */}
-    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/23.jpeg"
@@ -543,7 +543,7 @@ const emergingPlayer = {
     </div>
 
     {/* Amit */}
-    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/1.jpeg"
@@ -563,7 +563,7 @@ const emergingPlayer = {
     </div>
 
     {/* Varun */}
-    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/16.jpeg"
@@ -583,7 +583,7 @@ const emergingPlayer = {
     </div>
 
     {/* Saikiran */}
-    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/13.JPG"
@@ -603,7 +603,7 @@ const emergingPlayer = {
     </div>
 
     {/* Nipun */}
-    <div className="news-card card min-w-[340px] overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
+    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
       <div className="relative h-80">
         <img
           src="/players/24.jpeg"
