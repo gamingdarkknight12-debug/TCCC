@@ -1403,7 +1403,7 @@ captainNotes.map((item, i) => (
         Next
       </button>
     </div>
-    <div className="player-gridgrid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="player-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {pagedPlayers.map((p, i) => (
         <div
           key={`${p.name}-${i}`}
