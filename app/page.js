@@ -407,9 +407,10 @@ const emergingPlayer = {
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
-      <div className="sponsor-banner">
+     {activeSection === "home" &&  <div className="sponsor-banner">
       <SponsorBanner />
       </div>
+      }
       {activeSection === "home" && (
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
  {/* Team Switcher - Desktop + Mobile */}
