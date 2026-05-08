@@ -407,7 +407,9 @@ const emergingPlayer = {
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
+      <div className="flex gap-4 min-w-max px-4">
       <SponsorBanner />
+      </div>
       {activeSection === "home" && (
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
  {/* Team Switcher - Desktop + Mobile */}
@@ -429,7 +431,8 @@ const emergingPlayer = {
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
           <div>
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Titans</div>
-            <h1 className="text-5xl font-black leading-tight md:text-7xl">Beyond the Pitch, <span className="text-amber-300">We Unite.</span></h1>
+            <h1 className="text-5xl font-black leading-none md:text-7xl">Beyond the Pitch, 
+              <span className="text-amber-300">We Unite.</span></h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">A cricket community built on performance, brotherhood, Telugu pride, and opportunities for players to grow on and off the field.</p>
             <NextMatchCard />
             <div className="mt-8 flex flex-wrap gap-3">
@@ -439,7 +442,7 @@ const emergingPlayer = {
 </div>
           <div className="flex justify-center">
             <div className="rounded-[2rem] border border-amber-300/25 bg-white/5 p-8 shadow-2xl shadow-amber-500/10">
-            <Image src="/tccc-logo.png" alt="TCCC Crest" width={420} height={420} priority /></div></div>
+            <Image src="/tccc-logo.png" alt="TCCC Logo" width={420} height={420} priority /></div></div>
 
 <div className="mt-10 grid w-[1400px]  grid-cols-4 gap-4">
     <HighlightCard
