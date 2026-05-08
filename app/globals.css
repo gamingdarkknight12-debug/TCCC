@@ -332,5 +332,16 @@ width: 38% !important;
     padding: 10px 8px !important;
     font-size: 12px !important;
   }
-
+  .hero-left-content {
+    transform: scale(0.92);
+    transform-origin: top left;
+    width: 108%;
+  }
 }
+
+/* Hero left side size control */
+.hero-left-content {
+  transform: scale(0.88);
+  transform-origin: top left;
+}
+

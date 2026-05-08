@@ -429,8 +429,8 @@ const emergingPlayer = {
   </div>
 </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.22),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(30,64,175,0.2),transparent_35%)]" />
-        <div className="hero-grid relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
-          <div>
+<div className="hero-left-content relative mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
+            <div>
             <div className="mb-4 inline-flex rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">Telugu Titans</div>
             
 <div className="mobile-title-logo">
@@ -1495,22 +1495,30 @@ const schedule2026 = [
   { league: "MCPL", opponent: "Predators CC B", date: "2026-06-28", day: "Sunday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
   { league: "MCPL", opponent: "Toronto Pacers", date: "2026-07-01", day: "Wednesday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
 ];
-function getNextMatch() {
-  const today = new Date();
-  today.setHours(0,0,0,0);
 
-  return schedule2026
-    .map((m) => ({ ...m, matchDate: new Date(`${m.date}T00:00:00`) }))
+function getNextMatches() {
+  const today = new Date();
+  const upcoming = schedule2026
+  
+    .map((m) => ({
+      ...m,
+      matchDate: new Date(`${m.date}T00:00:00`),
+    }))
     .filter((m) => m.matchDate >= today)
-    .sort((a,b) => a.matchDate - b.matchDate)[0];
+    .sort((a, b) => a.matchDate - b.matchDate);
+
+  const nextDate = upcoming[0]?.date;
+  if (!nextDate) return [];
+
+  return upcoming.filter((m) => m.date === nextDate);
 }
 function NextMatchCard() {
-  const nextMatch = getNextMatch();
+  const nextMatches = getNextMatches();
 
-  if (!nextMatch) return null;
+  if (!nextMatches.length) return null;
 
   const today = new Date();
-  const matchDate = new Date(`${nextMatch.date}T00:00:00`);
+  const matchDate = new Date(`${nextMatches[0].date}T00:00:00`);
   const diffDays = Math.ceil((matchDate - today) / (1000 * 60 * 60 * 24));
 
   let reminderText = "Upcoming Match";
@@ -1520,18 +1528,27 @@ function NextMatchCard() {
   return (
     <div className="mt-6 rounded-3xl border border-amber-300/30 bg-amber-300/10 p-5">
       <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
-        {reminderText}
+        {nextMatches.length > 1 ? `${reminderText}es` : reminderText}
       </div>
 
-      <h3 className="mt-2 text-2xl font-black text-white">
-        Telugu Titans vs {nextMatch.opponent}
-      </h3>
+      <div className="mt-4 grid gap-4">
+        {nextMatches.map((match, index) => (
+          <div
+            key={`${match.date}-${match.time}-${index}`}
+            className="rounded-2xl border border-amber-300/20 bg-black/20 p-4"
+          >
+            <h3 className="text-2xl font-black text-white">
+              Telugu Titans vs {match.opponent}
+            </h3>
 
-      <div className="mt-3 grid gap-2 text-white/75 sm:grid-cols-2">
-        <p><span className="text-amber-300">League:</span> {nextMatch.league}</p>
-        <p><span className="text-amber-300">Date:</span> {nextMatch.day}, {nextMatch.date}</p>
-        <p><span className="text-amber-300">Time:</span> {nextMatch.time}</p>
-        <p><span className="text-amber-300">Ground:</span> {nextMatch.ground}</p>
+            <div className="mt-3 grid gap-2 text-white/75 sm:grid-cols-2">
+              <p><span className="text-amber-300">League:</span> {match.league}</p>
+              <p><span className="text-amber-300">Date:</span> {match.date}</p>
+              <p><span className="text-amber-300">Time:</span> {match.time}</p>
+              <p><span className="text-amber-300">Ground:</span> {match.ground}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
