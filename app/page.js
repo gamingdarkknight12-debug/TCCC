@@ -407,7 +407,7 @@ const emergingPlayer = {
   return (
     <main className="min-h-screen bg-[#090b10] text-white">
       <Header />
-      <div className="flex gap-4 min-w-max px-4">
+      <div className="sponsor-banner">
       <SponsorBanner />
       </div>
       {activeSection === "home" && (
@@ -668,7 +668,7 @@ Team Performance Highlight      </h3>
   title="Team Hub"
   subtitle="Titans digital dressing room — votes, fun, memories, goals, and team culture."
 >
-  <div className="mb-8 flex flex-wrap gap-3">
+  <div className="teamhub-tabs mb-8 flex flex-wrap gap-3">
     {[
       "Hall of Fame",
       "Voting Arena",
@@ -689,7 +689,7 @@ Team Performance Highlight      </h3>
 
   {teamHubTab === "Voting Arena" && (
   <div>
-    <div className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
+    <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
       <p className="text-sm text-amber-200">
         🏆 End of Week Highlights will be posted on social media
       </p>
@@ -707,7 +707,7 @@ Team Performance Highlight      </h3>
 </button>
     </div>
 
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div teamhub-tabs  className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {Object.keys(polls).map((pollName) => {
         const options = polls[pollName] || [];
         const sorted = [...options].sort((a, b) => b.votes - a.votes);
@@ -781,25 +781,6 @@ Team Performance Highlight      </h3>
 )}
   </>
 )}
-            {/* <div className="mt-5 space-y-3">
-              {options.length === 0 ? (
-                <p className="rounded-2xl bg-black/30 p-4 text-white/60">
-                  No options yet. Add the first name below.
-                </p>
-              ) : (
-                sorted.map((option, index) => (
-                  <button
-                    key={`${option.name}-${index}`}
-                    onClick={() => votePoll(pollName, options.findIndex((o) => o.id === option.id))}
-                    className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
-                  >
-                    <span>{option.name}</span>
-                    <span>{option.votes} votes</span>
-                  </button>
-                ))
-              )}
-            </div> */}
-
 
           </div>
         );
@@ -809,7 +790,7 @@ Team Performance Highlight      </h3>
 )}
 
   {teamHubTab === "Locker Room" && (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div teamhub-tabs className="grid gap-6 lg:grid-cols-3">
       <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
         <h3 className="text-2xl font-black text-amber-300">Locker Room Wall</h3>
         <p className="mt-3 text-white/70">
@@ -853,7 +834,7 @@ Team Performance Highlight      </h3>
   )}
 
   {teamHubTab === "War Room" && (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div teamhub-tabs className="grid gap-6 lg:grid-cols-2">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
         <h3 className="text-3xl font-black text-amber-300">
           War Room Strategy Note
@@ -903,7 +884,7 @@ captainNotes.map((item, i) => (
 
 
   {teamHubTab === "Hall of Fame" && (
-  <div>
+  <div teamhub-tabs >
     <h2 className="text-4xl font-black text-amber-300">
       Legends of Our Team
     </h2>
@@ -912,7 +893,7 @@ captainNotes.map((item, i) => (
       Honouring players who built the foundation of the team.
     </p>
 
-    <div className="grid gap-6 md:grid-cols-2">
+    <div teamhub-tabs className="grid gap-6 md:grid-cols-2">
 
       {/* Arun */}
       <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
@@ -949,7 +930,7 @@ captainNotes.map((item, i) => (
 )}
 
   {teamHubTab === "Roast & Name" && (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div teamhub-tabs  className="grid gap-6 lg:grid-cols-3">
       <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
         <h3 className="text-2xl font-black text-amber-300">Suggest a Name</h3>
 
@@ -1327,6 +1308,7 @@ captainNotes.map((item, i) => (
     Next
   </button>
   </div>
+  <div className='table-wrap'>
 <StatTable
   title="Batting Leaders"
   headers={
@@ -1340,7 +1322,7 @@ captainNotes.map((item, i) => (
       : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
   )}
 />
-
+</div>
 </div>
 <div>
 <div className="mt-4 flex items-center justify-between">
@@ -1364,6 +1346,7 @@ captainNotes.map((item, i) => (
     Next
   </button>
 </div>
+<div className='table-wrap'>
 <StatTable
   title="Bowling Leaders"
   headers={
@@ -1377,7 +1360,7 @@ captainNotes.map((item, i) => (
       : [p.name, p.overs, p.runs, p.wickets, p.economy]
   )}
 />
-
+</div>
 </div>
   </div>
 </PageWrap>
@@ -1419,7 +1402,7 @@ captainNotes.map((item, i) => (
         Next
       </button>
     </div>
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="player-gridgrid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {pagedPlayers.map((p, i) => (
         <div
           key={`${p.name}-${i}`}
