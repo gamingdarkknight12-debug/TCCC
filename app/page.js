@@ -1009,7 +1009,7 @@ captainNotes.map((item, i) => (
     }}
     className={`btn ${analysisTab === "pre" ? "btn-gold" : "btn-ghost"}`}
   >
-    Pre Match Analysis
+    Upcoming Match Analysis
   </button>
 
   <button
@@ -1019,7 +1019,7 @@ captainNotes.map((item, i) => (
     }}
     className={`btn ${analysisTab === "archive" ? "btn-gold" : "btn-ghost"}`}
   >
-    Archived Matches
+    Past Matches Analysis
   </button>
 </div>
 
@@ -1285,7 +1285,11 @@ captainNotes.map((item, i) => (
     {['All-Time', '2026', '2025', '2024'].map((s) => (
       <button
         key={s}
-        onClick={() => setSeason(s)}
+        onClick={() => {
+          setSeason(s)
+        setBattingPage(1)
+        setBowlingPage(1)
+    }}
         className={`btn ${season === s ? 'btn-gold' : 'btn-ghost'}`}
       >
         {s}
@@ -1302,20 +1306,7 @@ captainNotes.map((item, i) => (
 
   <div className="grid gap-6 lg:grid-cols-2">
     <div>
-<StatTable
-  title="Batting Leaders"
-  headers={
-    season === "2026"
-      ? ["Player", "Runs", "Balls", "4s", "6s", "SR", "Avg"]
-      : ["Player", "Runs", "Balls", "4s", "6s", "SR"]
-  }
- rows={pagedBattingRows.map((p) =>
-    season === "2026"
-      ? [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr, p.avg]
-      : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
-  )}
-/>
-<div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 flex items-center justify-between">
   <button
     onClick={() => setBattingPage((p) => Math.max(1, p - 1))}
     disabled={battingPage === 1}
@@ -1336,21 +1327,22 @@ captainNotes.map((item, i) => (
     Next
   </button>
   </div>
-</div>
-<div>
 <StatTable
-  title="Bowling Leaders"
+  title="Batting Leaders"
   headers={
     season === "2026"
-      ? ["Player", "Overs", "Runs", "Wickets", "Eco", "Dots", "Wd", "NB"]
-      : ["Player", "Overs", "Runs", "Wickets", "Eco"]
+      ? ["Player", "Runs", "Balls", "4s", "6s", "SR", "Avg"]
+      : ["Player", "Runs", "Balls", "4s", "6s", "SR"]
   }
-  rows={pagedBowlingRows.map((p) =>
+ rows={pagedBattingRows.map((p) =>
     season === "2026"
-      ? [p.name, p.overs, p.runs, p.wickets, p.economy, p.dots, p.wides, p.noBalls]
-      : [p.name, p.overs, p.runs, p.wickets, p.economy]
+      ? [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr, p.avg]
+      : [p.name, p.runs, p.balls, p.fours || "-", p.sixes || "-", p.sr]
   )}
 />
+
+</div>
+<div>
 <div className="mt-4 flex items-center justify-between">
   <button
     onClick={() => setBowlingPage((p) => Math.max(1, p - 1))}
@@ -1372,6 +1364,20 @@ captainNotes.map((item, i) => (
     Next
   </button>
 </div>
+<StatTable
+  title="Bowling Leaders"
+  headers={
+    season === "2026"
+      ? ["Player", "Overs", "Runs", "Wickets", "Eco", "Dots", "Wd", "NB"]
+      : ["Player", "Overs", "Runs", "Wickets", "Eco"]
+  }
+  rows={pagedBowlingRows.map((p) =>
+    season === "2026"
+      ? [p.name, p.overs, p.runs, p.wickets, p.economy, p.dots, p.wides, p.noBalls]
+      : [p.name, p.overs, p.runs, p.wickets, p.economy]
+  )}
+/>
+
 </div>
   </div>
 </PageWrap>
@@ -1392,7 +1398,27 @@ captainNotes.map((item, i) => (
       placeholder="Search player..."
       className="mb-6 w-full max-w-md rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none focus:border-amber-300"
     />
+    <div className="mt-6 flex items-center justify-between rounded-2xl  border-white/10 bg-white/5 px-4 py-3">
+      <button
+        onClick={() => setPlayerPage((p) => Math.max(1, p - 1))}
+        disabled={playerPage === 1}
+        className="btn btn-ghost disabled:opacity-40"
+      >
+        Previous
+      </button>
 
+      <span className="text-sm font-bold text-white/70">
+        Page {playerPage} of {playerTotalPages}
+      </span>
+
+      <button
+        onClick={() => setPlayerPage((p) => Math.min(playerTotalPages, p + 1))}
+        disabled={playerPage === playerTotalPages}
+        className="btn btn-ghost disabled:opacity-40"
+      >
+        Next
+      </button>
+    </div>
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {pagedPlayers.map((p, i) => (
         <div
@@ -1421,27 +1447,7 @@ captainNotes.map((item, i) => (
       ))}
     </div>
 
-    <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-      <button
-        onClick={() => setPlayerPage((p) => Math.max(1, p - 1))}
-        disabled={playerPage === 1}
-        className="btn btn-ghost disabled:opacity-40"
-      >
-        Previous
-      </button>
 
-      <span className="text-sm font-bold text-white/70">
-        Page {playerPage} of {playerTotalPages}
-      </span>
-
-      <button
-        onClick={() => setPlayerPage((p) => Math.min(playerTotalPages, p + 1))}
-        disabled={playerPage === playerTotalPages}
-        className="btn btn-ghost disabled:opacity-40"
-      >
-        Next
-      </button>
-    </div>
   </PageWrap>
 )}
 

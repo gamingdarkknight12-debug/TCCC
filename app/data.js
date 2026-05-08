@@ -10,6 +10,7 @@ export const stats2026 = {
     { name: "Dheeraj N", runs: 3, balls: 9, fours: 0, sixes: 0, sr: "33.3", avg: "3.0" },
     { name: "Sai Kiran Reddy", runs: 2, balls: 3, fours: 0, sixes: 0, sr: "66.7", avg: "2.0" },
     { name: "Vikas Tiwari", runs: 1, balls: 1, fours: 0, sixes: 0, sr: "100.0", avg: "-" },
+    { name: "Shanthan", runs: 1, balls: 3, fours: 0, sixes: 0, sr: "33.3.0", avg: "1" },
   ],
 
   bowling: [
