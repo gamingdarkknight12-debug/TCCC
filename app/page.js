@@ -643,38 +643,40 @@ const emergingPlayer = {
         Performer
       </div>
       <h3 className="text-3xl font-black text-amber-300">
-       Top Batting Impact
+       MVP
       </h3>
       <p className="mt-4 leading-7 text-white/75">
-       Varun led the batting with 31 runs from 33 balls, followed by Charan with 29 from 33 and Kapil with 19 from 22
+       Varun led the batting with 31 runs from 33 balls, batting powered by panic and hand-eye coordination.
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-        Bowling Match Winners
+        First Six of the season
       </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Manish picked up 2 wickets for 18 runs, while Shanthan delivered a strong spell with 2 wickets for 26 runs.
+        Nipun with an extraordinary six, Shot had no timing. Boundary had no standards..
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-       Middle Overs Control
-      </h3>
+      First wicket of the season     </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Vikas, Dheeraj, Srikanth and Sai Kiran all contributed with important wickets to keep Brampton under pressure.
+        Pure teamwork between bad batting and lucky bowling made Shanthan's day..
       </p>
     </div>
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-Team Performance Highlight      </h3>
+       First Drop Catch of the season
+      </h3>
       <p className="mt-4 leading-7 text-white/75">
-        Titans defended 166 successfully with disciplined bowling and regular wickets, closing Brampton at 139/8 in 23 overs.
+       Bhanu Musunuru dropping most simple catch under no pressure, gravity worked harder than the fielder.
       </p>
     </div>
+
+
     </div>
   </div>
 </PageWrap>
