@@ -491,195 +491,77 @@ const emergingPlayer = {
         </div>
       </section> 
       )}
-      {activeSection === "news" && (
-      <PageWrap
-  id="news"
-  title="News"
-  subtitle="Latest Telugu Titans updates, player stories, and team highlights."
->
-  <div className='news-section'>
-{/* Featured Player Carousel */}
-<div className="news-grid mb-10 overflow-x-auto pb-4">
-  <div className="flex gap-6">
 
-    {/* Inder */}
-    <div className="news-card card overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/22.jpeg"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          NEW SIGNING
+{activeSection === "news" && (
+  <PageWrap
+    id="news"
+    title="News"
+    subtitle="Latest Telugu Titans updates, player stories, and team highlights."
+  >
+    <div className="news-section">
+
+      {/* Featured Player Carousel */}
+      <div className="news-carousel">
+        <div className="news-carousel-track">
+
+          {[
+            ["/players/22.jpeg", "NEW SIGNING", "Welcome Inder", "Telugu Titans welcomes Inder to the squad for the 2026 season."],
+            ["/players/23.jpeg", "NEW SIGNING", "Welcome Dheeraj", "Dheeraj joins Telugu Titans bringing fresh energy and commitment."],
+            ["/players/1.jpeg", "NEW SIGNING", "Welcome Amit", "Amit joins Telugu Titans bringing his amazing round skills to the table."],
+            ["/players/16.jpeg", "PLAYER WATCH", "Varun – Rising Gem", "After joining last season, Varun quickly became a valuable all-round option."],
+            ["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
+            ["/players/24.jpeg", "RED HOT", "Nipun On Fire", "Nipun was breathing fire during practice sessions and looks match ready."],
+          ].map(([img, tag, title, text]) => (
+            <div key={title} className="news-player-card">
+              <div className="news-player-img-wrap">
+                <img src={img} className="news-player-img" style={{ objectPosition: "50% 20%" }} />
+                <div className="news-player-tag">{tag}</div>
+              </div>
+              <div className="news-player-content">
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            </div>
+          ))}
+
         </div>
       </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Welcome Inder</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          Telugu Titans welcomes Inder to the squad for the 2026 season.
-        </p>
-      </div>
-    </div>
 
-    {/* Dheeraj */}
-    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/23.jpeg"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          NEW SIGNING
+      {/* Modern News Flow */}
+      <div className="news-flow-grid">
+        <div className="news-main-card">
+          <div className="news-pill">Match 1</div>
+          <h3>Titans Start Strong</h3>
+          <p>
+            Telugu Titans opened the season with a 29-run win against Brampton Strikers,
+            scoring 166/9 and restricting Brampton to 139/8.
+          </p>
+        </div>
+
+        <div className="news-small-card">
+          <div className="news-pill dark">Performer</div>
+          <h3>MVP</h3>
+          <p>Varun led the batting with 31 runs from 33 balls, batting powered by panic and hand-eye coordination.</p>
+        </div>
+
+        <div className="news-small-card">
+          <h3>First Six of the season</h3>
+          <p>Nipun with an extraordinary six. Shot had no timing. Boundary had no standards.</p>
+        </div>
+
+        <div className="news-small-card">
+          <h3>First Wicket of the season</h3>
+          <p>Pure teamwork between bad batting and lucky bowling made Shanthan's day.</p>
+        </div>
+
+        <div className="news-small-card">
+          <h3>First Drop Catch of the season</h3>
+          <p>Bhanu Musunuru dropping the most simple catch under no pressure. Gravity worked harder than the fielder.</p>
         </div>
       </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Welcome Dheeraj</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          Dheeraj joins Telugu Titans bringing fresh energy and commitment.
-        </p>
-      </div>
-    </div>
-
-    {/* Amit */}
-    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/1.jpeg"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          NEW SIGNING
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Welcome Amit</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          Amit joins Telugu Titans bringing his amazing round skills to the table.
-        </p>
-      </div>
-    </div>
-
-    {/* Varun */}
-    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/16.jpeg"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          PLAYER WATCH
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Varun – Rising Gem</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          After joining last season, Varun quickly became a valuable all-round option.
-        </p>
-      </div>
-    </div>
-
-    {/* Saikiran */}
-    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/13.JPG"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          WATCH OUT
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Saikiran Loading</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          Watch out for Saikiran who might be heading into his best season yet.
-        </p>
-      </div>
-    </div>
-
-    {/* Nipun */}
-    <div className="news-card card  overflow-hidden rounded-3xl border border-amber-300/20 bg-white/5 shadow-xl md:min-w-[420px]">
-      <div className="relative h-80">
-        <img
-          src="/players/24.jpeg"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "50% 20%" }}
-        />
-        <div className="absolute left-4 top-4 rounded-full bg-amber-300 px-4 py-1 text-xs font-black text-black">
-          RED HOT
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-3xl font-black text-amber-300">Nipun On Fire</h3>
-        <p className="mt-3 leading-7 text-white/75">
-          Nipun was breathing fire during practice sessions and looks match ready.
-        </p>
-      </div>
-    </div>
-
-  </div>
-</div>
-  {/* Modern News Flow */}
-  <div className="grid gap-6 lg:grid-cols-3">
-    <div className="lg:col-span-2 rounded-3xl border border-white/10 bg-gradient-to-br from-amber-300/15 to-white/5 p-8">
-      <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
-        Match 1
-      </div>
-      <h3 className="text-4xl font-black text-amber-300">
-        Titans Start Strong
-      </h3>
-      <p className="mt-4 max-w-3xl leading-8 text-white/75">
-        Telugu Titans opened the season with a 29-run win against Brampton Strikers, scoring 166/9 and restricting Brampton to 139/8.
-      </p>
-    </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-      <div className="mb-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-amber-300">
-        Performer
-      </div>
-      <h3 className="text-3xl font-black text-amber-300">
-       MVP
-      </h3>
-      <p className="mt-4 leading-7 text-white/75">
-       Varun led the batting with 31 runs from 33 balls, batting powered by panic and hand-eye coordination.
-      </p>
-    </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-      <h3 className="text-2xl font-bold text-amber-300">
-        First Six of the season
-      </h3>
-      <p className="mt-4 leading-7 text-white/75">
-        Nipun with an extraordinary six, Shot had no timing. Boundary had no standards..
-      </p>
-    </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-      <h3 className="text-2xl font-bold text-amber-300">
-      First Wicket of the season     </h3>
-      <p className="mt-4 leading-7 text-white/75">
-        Pure teamwork between bad batting and lucky bowling made Shanthan's day..
-      </p>
-    </div>
-
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-      <h3 className="text-2xl font-bold text-amber-300">
-       First Drop Catch of the season
-      </h3>
-      <p className="mt-4 leading-7 text-white/75">
-       Bhanu Musunuru dropping most simple catch under no pressure, gravity worked harder than the fielder.
-      </p>
-    </div>
-
 
     </div>
-  </div>
-</PageWrap>
+  </PageWrap>
 )}
 {activeSection === "teamhub" && (
 <PageWrap
