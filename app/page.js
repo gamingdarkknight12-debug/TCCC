@@ -661,7 +661,7 @@ const emergingPlayer = {
 
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
       <h3 className="text-2xl font-bold text-amber-300">
-      First wicket of the season     </h3>
+      First Wicket of the season     </h3>
       <p className="mt-4 leading-7 text-white/75">
         Pure teamwork between bad batting and lucky bowling made Shanthan's day..
       </p>
