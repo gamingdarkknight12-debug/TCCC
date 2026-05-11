@@ -598,7 +598,7 @@ const emergingPlayer = {
   onClick={() => setShowVotingResults((prev) => !prev)}
   className="btn btn-gold"
 >
-  {showVotingResults ? "See Votes List" : "Show Results"}
+  {showVotingResults ? "Show Votes" : "Show Results"}
 </button>   
     </div>
 
