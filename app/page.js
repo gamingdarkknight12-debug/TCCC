@@ -589,23 +589,20 @@ const emergingPlayer = {
  </div>
   {teamHubTab === "Voting Arena" && (
   <div>
-    <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-4 py-3">
-      <p className="text-sm text-amber-200">
+    <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-3 py-2">
+      <p className="text-xs text-amber-200">
         🏆 End of Week Highlights will be posted on social media
       </p>
-      <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-        Stay tuned
-      </span>
-    </div>
-
-    <div className="mb-5 mt-4 flex justify-end">
+ 
 <button
   onClick={() => setShowVotingResults((prev) => !prev)}
   className="btn btn-gold"
 >
   {showVotingResults ? "See Votes List" : "Show Results"}
-</button>
+</button>   
     </div>
+
+
 
     <div teamhub-tabs  className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {Object.keys(polls).map((pollName) => {
