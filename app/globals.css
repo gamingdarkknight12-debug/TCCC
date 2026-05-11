@@ -675,7 +675,7 @@ section {
 /* DESKTOP / WEB BROWSER COMPACT UI ONLY */
 @media (min-width: 769px) {
   section {
-    padding-top: 5px !important;
+    padding-top: 0 !important;
     padding-bottom: 32px !important;
   }
 
@@ -769,4 +769,57 @@ section {
   .news-small-card h3 {
     font-size: 22px !important;
   }
+    /* TeamHub + MatchAnalysis cards */
+  .teamhub-section .card,
+  .teamhub-section .gold-card,
+  .match-analysis-section .card,
+  .match-analysis-section .gold-card,
+  .match-analysis-section .rounded-3xl,
+  .teamhub-section .rounded-3xl {
+    padding: 16px !important;
+    border-radius: 20px !important;
+  }
+   /* Smaller headings inside cards */
+  .teamhub-section h3,
+  .match-analysis-section h3 {
+    font-size: 18px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Smaller text */
+  .teamhub-section p,
+  .match-analysis-section p,
+  .teamhub-section li,
+  .match-analysis-section li {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Voting cards spacing */
+  .teamhub-section .grid,
+  .match-analysis-section .grid {
+    gap: 14px !important;
+  }
+
+  /* Match analysis buttons */
+  .match-analysis-section button,
+  .teamhub-section button {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Reduce large title size slightly */
+  .teamhub-section h1,
+  .match-analysis-section h1 {
+    font-size: 54px !important;
+    line-height: 0.95 !important;
+  }
+
+  /* Reduce empty vertical spacing */
+  .teamhub-section,
+  .match-analysis-section {
+    padding-top: 10px !important;
+  }
+
 }
