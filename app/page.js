@@ -341,12 +341,15 @@ const players = [
       { name: "Bhanu Musunuru", role: "Captain", skill: "All-rounder", image: "/players/4.jpg" },
       { name: "Charan Teja", role: "Captain", skill: "All-rounder", image: "/players/5.jpeg" },
       { name: "Aadil Khan", role: "Vice Captain", skill: "All-rounder", image: "/players/21.jpeg" },
-      { name: "Dheeraj", skill: "All-rounder", image: "/players/25.jpg" },
+      { name: "Dheeraj A", skill: "All-rounder", image: "/players/25.jpg" },
       { name: "Srikanth", skill: "All-rounder", image: "/players/26.jpeg" },
       { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
       { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
       { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
-      { name: "Kiran",  skill: "All-rounder", image: "/players/7.jpg" },
+      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
+      { name: "Dheeraj N", skill: "Bowler", image: "/players/23.jpeg" },
+      { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" },
+      { name: "Kiran K",  skill: "All-rounder", image: "/players/7.jpg" },
       { name: "Manish Raj", skill: "Spin Bowling All-rounder", image: "/players/8.png" },
       { name: "Martin Thandhara", skill: "Bowler", image: "/players/9.jpg" },
       { name: "Nagesh Kowligi", skill: "Bowler", image: "/players/10.jpg" },
@@ -354,14 +357,12 @@ const players = [
       { name: "Nipun", skill: "Destructive Batter", image: "/players/24.jpeg" },
       { name: "Nikhil Holagunda", skill: "Spin BowlingAll-rounder", image: "/players/12.jpeg" },
       { name: "Prashanth", skill: "Spin Bowling All-rounder", image: "/players/20.jpg" },
-      { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
-      { name: "Sai", skill: "Impact Bowler", image: "/players/13.JPG" },
+      { name: "Sai Kiran Reddy", skill: "Impact Bowler", image: "/players/13.JPG" },
       { name: "Shanthan Akkiraju", skill: "Bowler", image: "/players/14.jpeg" },
       { name: "Varun Rambha", skill: "Batter", image: "/players/16.jpeg" },
       { name: "Vikas Tiwari", skill: "Bowler", image: "/players/17.jpeg" },
       { name: "Vikranth Nyalakonda", skill: "Wicket Keeper / Batter", image: "/players/18.jpeg" },
-      { name: "Dheeraj", skill: "Bowler", image: "/players/23.jpeg" },
-      { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" }
+    
     ];
       const filteredPlayers = players.filter((p) =>
     p.name.toLowerCase().includes(playerCardSearch.toLowerCase())
