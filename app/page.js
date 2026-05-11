@@ -12,7 +12,7 @@ export default function Home() {
   const [teamHubTab, setTeamHubTab] = useState("Hall of Fame");
   const [playerSearch, setPlayerSearch] = useState("");
   const [captainPlayer, setCaptainPlayer] = useState("");
-const [showVotingResults, setShowVotingResults] = useState(true);
+const [showVotingResults, setShowVotingResults] = useState(false);
 const [match1Archived, setMatch1Archived] = useState(true);
 const [showArchivedMatches, setShowArchivedMatches] = useState(false);
 const [analysisTab, setAnalysisTab] = useState("pre");
