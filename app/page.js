@@ -540,8 +540,8 @@ const emergingPlayer = {
         </div>
 
         <div className="news-small-card">
-          <div className="news-pill dark">Performer</div>
-          <h3>MVP</h3>
+          <div className="news-pill dark">MVP</div>
+          <h3>Man of the Match</h3>
           <p>Varun led the batting with 31 runs from 33 balls, batting powered by panic and hand-eye coordination.</p>
         </div>
 
