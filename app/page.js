@@ -1253,7 +1253,7 @@ captainNotes.map((item, i) => (
   title="Bowling Leaders"
   headers={
     season === "2026"
-      ? ["Player", "Ovr", "Runs", "Wkts", "Eco", "Dots", "Wd", "NB"]
+      ? ["Player", "O", "R", "W", "E", "Dots", "Wd", "NB"]
       : ["Player", "Overs", "Runs", "Wickets", "Eco"]
   }
   rows={pagedBowlingRows.map((p) =>
