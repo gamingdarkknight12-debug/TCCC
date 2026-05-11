@@ -591,7 +591,7 @@ const emergingPlayer = {
   <div>
     <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-3 py-2">
       <p className="text-xs text-amber-200">
-        🏆 End of Week Highlights will be posted on social media
+        Weekly Highlights will be posted on social media
       </p>
  
 <button
