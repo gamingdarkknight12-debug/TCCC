@@ -28,13 +28,13 @@ const matchSummaries = {
   },
 };
 const [polls, setPolls] = useState({
-  "Energy Booster of Titans": [],
-  "Consistent in the nets": [],
-  "Laziest Titan on the field": [],
-  "First Drop Catch of the Season": [],
-  "Predicted Leading Run Scorer for next match": [],
-  "Predicted Leading Wicket Taker for next match": [],
+  "This weekend’s run machine ": [],
+  "This weekend’s wicket hunter 🎯": [],
+  "This weekend’s wide king 😭": [],
+  "This weekend’s dot ball batsman 🫠": [],
 });
+const resultOpenDate = new Date("2026-05-17T00:00:00");
+const canShowVotingResults = new Date() >= resultOpenDate;
 
 const [pollInputs, setPollInputs] = useState({});
 const [lockerNote, setLockerNote] = useState("");
@@ -55,12 +55,10 @@ async function loadTeamHubData() {
 
 
   const groupedPolls = {
-  "Energy Booster of Titans": [],
-  "Consistent in the nets": [],
-  "Laziest Titan on the field": [],
-  "First Drop Catch of the Season": [],
-  "Predicted Leading Run Scorer for next match": [],
-  "Predicted Leading Wicket Taker for next match": [],
+  "This weekend’s run machine ": [],
+  "This weekend’s wicket hunter 🎯": [],
+  "This weekend’s wide king 😭": [],
+  "This weekend’s dot ball batsman 🫠": [],
   };
 
   data.polls.forEach((p) => {
@@ -596,24 +594,34 @@ const emergingPlayer = {
       </p>
  
 <button
-  onClick={() => setShowVotingResults((prev) => !prev)}
-  className="btn btn-gold"
+  onClick={() => {
+    if (!canShowVotingResults) return;
+    setShowVotingResults((prev) => !prev);
+  }}
+  disabled={!canShowVotingResults}
+  className="btn btn-gold disabled:opacity-40 disabled:cursor-not-allowed"
 >
-  {showVotingResults ? "Show Votes" : "Show Results"}
-</button>   
+  {canShowVotingResults
+    ? showVotingResults
+      ? "Show Votes"
+      : "Show Results"
+    : "Results open on match day"}
+</button> 
     </div>
 
 
 
-    <div teamhub-tabs  className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {Object.keys(polls).map((pollName) => {
+<div
+  teamhub-tabs
+  className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+>      {Object.keys(polls).map((pollName) => {
         const options = polls[pollName] || [];
         const sorted = [...options].sort((a, b) => b.votes - a.votes);
         const winner = sorted[0];
 
         return (
-          <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <h3 className="text-2xl font-black text-amber-300">{pollName}</h3>
+<div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-4 x1:p-5">
+            <h3 className="text-xl font-black text-amber-300">{pollName}</h3>
 
 {showVotingResults ? (
   <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3">
