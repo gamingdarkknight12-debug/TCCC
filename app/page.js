@@ -1176,11 +1176,7 @@ captainNotes.map((item, i) => (
   </div>
   </div>
 
-  {season === '2026' && (
-    <div className="mb-6 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-amber-100">
-      Stay tuned for the 2026 season.
-    </div>
-  )}
+
 
   <div className="stats-table-grid grid gap-6 lg:grid-cols-2">
     <div>
