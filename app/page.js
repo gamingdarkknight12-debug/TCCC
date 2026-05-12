@@ -18,7 +18,7 @@ const [showArchivedMatches, setShowArchivedMatches] = useState(false);
 const [analysisTab, setAnalysisTab] = useState("pre");
 const [selectedArchiveMatch, setSelectedArchiveMatch] = useState(null);
 const [flippedMatch, setFlippedMatch] = useState(null);
-
+const [analysisLeague, setAnalysisLeague] = useState("BEDCL");
 
 const matchSummaries = {
   "Telugu Titans vs Brampton Strikers": {
@@ -331,7 +331,18 @@ const pagedBowlingRows = filteredBowlingRows.slice(
 const battingTotalPages = Math.max(1, Math.ceil(filteredBattingRows.length / rowsPerPage));
 const bowlingTotalPages = Math.max(1, Math.ceil(filteredBowlingRows.length / rowsPerPage));
 
-
+function AnalysisCard({ title, points }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
+      <h3 className="text-2xl font-black text-amber-300">{title}</h3>
+      <ul className="mt-4 space-y-2 text-white/75">
+        {points.map((point, index) => (
+          <li key={index}>• {point}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
   const topBatter = allTime.batting[0];
   const topBowler = allTime.bowling[0];
@@ -910,21 +921,131 @@ captainNotes.map((item, i) => (
   </button>
 </div>
 
+<div className="mt-5 flex flex-wrap gap-3">
+  <button
+    onClick={() => setAnalysisLeague("BEDCL")}
+    className={`btn ${
+      analysisLeague === "BEDCL" ? "btn-gold" : "btn-ghost"
+    }`}
+  >
+    BEDCL
+  </button>
+
+  <button
+    onClick={() => setAnalysisLeague("MCPL")}
+    className={`btn ${
+      analysisLeague === "MCPL" ? "btn-gold" : "btn-ghost"
+    }`}
+  >
+    MCPL
+  </button>
+</div>
+
 {!showArchivedMatches && (
   <div className="grid gap-6 md:grid-cols-2">
     {/* keep your current Opponent Snapshot, Players To Watch, Titans Strategy, Prediction cards here */}
   </div>
 )}
-{analysisTab === "pre" && (
-  <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h3 className="text-2xl font-black text-amber-300">
-      Pre Match Analysis
-    </h3>
-    <p className="mt-3 text-white/70">
-      Coming soon. Analysis will be posted before the match.
+
+  
+
+{analysisLeague === "BEDCL" && analysisTab === "pre" && (
+<div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+  <p className="mt-2 text-white/80">Telugu Titans vs CricKnights</p>
+
+  <div className="mt-5 grid gap-3 text-white/75 sm:grid-cols-2">
+    <p><span className="text-amber-300">League:</span> BEDCL – Division F</p>
+    <p><span className="text-amber-300">Date:</span> May 17, 2026</p>
+    <p><span className="text-amber-300">Time:</span> 3:40 PM</p>
+    <p><span className="text-amber-300">Ground:</span> Dixie-407 - A</p>
+  </div>
+
+  <div className="mt-8 grid gap-5 md:grid-cols-2">
+    <AnalysisCard
+      title="Opponent Snapshot"
+      points={[
+        "Division G semi-finalists last season and promoted to Division F.",
+        "Batting-heavy team with multiple aggressive hitters.",
+        "Recent scores include 292/8, 231/7, 195/9, 181/7.",
+        "Bowling can leak runs under pressure."
+      ]}
+    />
+
+    <AnalysisCard
+      title="Players To Watch"
+      points={[
+        "Ishpreet Singh — explosive opener who can change the game quickly.",
+        "Karanvir Singh — consistent aggressive batter.",
+        "Iqbaljit Singh — dangerous all-rounder.",
+        "Sunil Kumar — bowling threat with 3-wicket spells."
+      ]}
+    />
+
+    <AnalysisCard
+      title="CricKnights Strengths"
+      points={[
+        "Strong batting lineup with power hitters.",
+        "Capable of scoring 180+ or 220+ totals.",
+        "Middle order can accelerate quickly.",
+        "All-rounders give them balance."
+      ]}
+    />
+
+    <AnalysisCard
+      title="CricKnights Weaknesses"
+      points={[
+        "They lose wickets even while scoring big.",
+        "Bowling is inconsistent and can leak runs.",
+        "Some bowlers go for 12+ economy.",
+        "Extras and wides increase under pressure."
+      ]}
+    />
+
+    <AnalysisCard
+      title="Titans Bowling Strategy"
+      points={[
+        "Remove Ishpreet, Karanvir, Iqbaljit, and Saurabh early.",
+        "Avoid slot balls and leg-side freebies.",
+        "Use slower balls, wide yorkers, and change of pace.",
+        "Keep extras low and take every catching chance."
+      ]}
+    />
+
+<AnalysisCard
+  title="Titans Batting Strategy"
+  points={[
+    "Do not throw wickets early and build a stable platform.",
+    "Respect Sunil Kumar and Iqbaljit Singh during their spells.",
+    "Put pressure on their supporting bowlers and force captaincy changes.",
+    "Rotate strike regularly and punish loose deliveries immediately.",
+    "Their bowling has leaked runs in previous matches if pressure builds.",
+    "If chasing, stay calm — boundaries and extras will come."
+  ]}
+/>
+  </div>
+
+  <div className="mt-6 rounded-3xl border border-amber-300/25 bg-amber-300/10 p-6">
+    <h3 className="text-2xl font-black text-amber-300">Final Titans Message</h3>
+    <p className="mt-3 leading-7 text-white/80">
+      CricKnights are a strong promoted side with explosive batting, but they are beatable.
+      Our key is simple: early wickets, low extras, sharp fielding, and smart batting.
+    </p>
+  </div>
+</div>
+)}
+
+{analysisLeague === "MCPL" && (
+  <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6">
+    <h2 className="text-3xl font-black text-amber-300">
+      MCPL Match Analysis
+    </h2>
+
+    <p className="mt-3 text-white/75 leading-7">
+      Upcoming MCPL analysis will be added soon.
     </p>
   </div>
 )}
+
 
 {analysisTab === "archive" && !selectedArchiveMatch && (
   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
