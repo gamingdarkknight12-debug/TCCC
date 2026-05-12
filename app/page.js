@@ -921,6 +921,8 @@ captainNotes.map((item, i) => (
   </button>
 </div>
 
+{analysisTab === "pre" && (
+  
 <div className="mt-5 flex flex-wrap gap-3">
   <button
     onClick={() => setAnalysisLeague("BEDCL")}
@@ -940,6 +942,7 @@ captainNotes.map((item, i) => (
     MCPL
   </button>
 </div>
+)}
 
 {!showArchivedMatches && (
   <div className="grid gap-6 md:grid-cols-2">
