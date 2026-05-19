@@ -19,6 +19,176 @@ const [analysisTab, setAnalysisTab] = useState("pre");
 const [selectedArchiveMatch, setSelectedArchiveMatch] = useState(null);
 const [flippedMatch, setFlippedMatch] = useState(null);
 const [analysisLeague, setAnalysisLeague] = useState("BEDCL");
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const analysisData = {
+"BEDCL-CricKnights-2026-05-17": {
+  title: "Telugu Titans vs CricKnights",
+  cards: [
+    {
+      title: "Opponent Snapshot",
+      points: [
+        "Division G semi-finalists last season and promoted to Division F.",
+        "Batting-heavy team with multiple aggressive hitters.",
+        "Recent scores include 292/8, 231/7, 195/9, 181/7.",
+        "Bowling can leak runs under pressure."
+      ],
+    },
+    {
+      title: "Players To Watch",
+      points: [
+        "Ishpreet Singh — explosive opener who can change the game quickly.",
+        "Karanvir Singh — consistent aggressive batter.",
+        "Iqbaljit Singh — dangerous all-rounder.",
+        "Sunil Kumar — bowling threat with 3-wicket spells."
+      ],
+    },
+    {
+      title: "CricKnights Strengths",
+      points: [
+        "Strong batting lineup with power hitters.",
+        "Capable of scoring 180+ or 220+ totals.",
+        "Middle order can accelerate quickly.",
+        "All-rounders give them balance."
+      ],
+    },
+    {
+      title: "CricKnights Weaknesses",
+      points: [
+        "They lose wickets even while scoring big.",
+        "Bowling is inconsistent and can leak runs.",
+        "Some bowlers go for 12+ economy.",
+        "Extras and wides increase under pressure."
+      ],
+    },
+    {
+      title: "Titans Bowling Strategy",
+      points: [
+        "Remove Ishpreet, Karanvir, Iqbaljit, and Saurabh early.",
+        "Avoid slot balls and leg-side freebies.",
+        "Use slower balls, wide yorkers, and change of pace.",
+        "Keep extras low and take every catching chance."
+      ],
+    },
+    {
+      title: "Titans Batting Strategy",
+      points: [
+        "Do not throw wickets early and build a stable platform.",
+        "Respect Sunil Kumar and Iqbaljit Singh during their spells.",
+        "Put pressure on their supporting bowlers and force captaincy changes.",
+        "Rotate strike regularly and punish loose deliveries immediately.",
+        "Their bowling has leaked runs in previous matches if pressure builds.",
+        "If chasing, stay calm — boundaries and extras will come."
+      ],
+    },
+  ],
+  },
+    "BEDCL-Brampton Strikers-2026-05-03": {
+    title: "Telugu Titans vs Brampton Strikers",
+    cards: [
+      {
+        title: "Opponent Snapshot",
+        points: [
+          "Strong batting unit with aggressive top order.",
+          "Can score quickly if powerplay is loose.",
+          "Pressure builds if early wickets fall.",
+          "Bowling attack becomes dangerous if defending 170+."
+        ],
+      },
+      {
+        title: "Players To Watch",
+        points: [
+          "Ali Shah — dangerous top-order batter.",
+          "Ravi Patil — finisher and wicket taker.",
+          "Hamza Talal — impact batting and fielding.",
+          "Hafiz Asim Ali — middle overs hitter."
+        ],
+      },
+      {
+        title: "Titans Strategy",
+        points: [
+          "Get Ali Shah early.",
+          "Keep extras low.",
+          "Bat smart and avoid early wickets.",
+          "Save wickets for final overs."
+        ],
+      },
+      {
+        title: "Prediction",
+        points: [
+          "If Titans control extras and take early wickets, this is a close contest.",
+          "Target range: 155–175."
+        ],
+      },
+    ],
+  },
+};
+
+function AnalysisDetails({ match }) {
+  if (!match) return null;
+
+  const key = getAnalysisKey(match);
+  const data = analysisData[key];
+
+  if (!data) return null;
+
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <p className="text-white/80">{data.title}</p>
+
+      <div className="mt-5 grid gap-3 text-white/75 sm:grid-cols-2">
+        <p>
+          <span className="text-amber-300">League:</span> {match.league}
+        </p>
+        <p>
+          <span className="text-amber-300">Date:</span> {match.date}
+        </p>
+        <p>
+          <span className="text-amber-300">Time:</span> {match.time}
+        </p>
+        <p>
+          <span className="text-amber-300">Ground:</span> {match.ground}
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-5 md:grid-cols-2">
+        {data.cards.map((card, index) => (
+          <AnalysisCard
+            key={index}
+            title={card.title}
+            points={card.points}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getMatchDate(match) {
+  const d = new Date(`${match.date}T00:00:00`);
+  return d;
+}
+
+function isMatchDone(match) {
+  return getMatchDate(match) < today;
+}
+
+function getAnalysisKey(match) {
+  return `${match.league}-${match.opponent}-${match.date}`.trim();
+}
+
+const analyzedMatches = schedule2026.filter((match) => analysisData[getAnalysisKey(match)]);
+
+const upcomingAnalysisMatches = analyzedMatches
+  .filter((match) => !isMatchDone(match))
+  .sort((a, b) => getMatchDate(a) - getMatchDate(b));
+
+const archivedAnalysisMatches = analyzedMatches
+  .filter((match) => isMatchDone(match))
+  .sort((a, b) => getMatchDate(a) - getMatchDate(b));
+
+const currentUpcomingAnalysis = upcomingAnalysisMatches[0];
 
 const matchSummaries = {
   "Telugu Titans vs Brampton Strikers": {
@@ -528,13 +698,15 @@ const emergingPlayer = {
         <div className="news-carousel-track">
 
           {[
-            ["/players/22.jpeg", "NEW SIGNING", "Welcome Inder", "Telugu Titans welcomes Inder to the squad for the 2026 season."],
-            ["/players/23.jpeg", "NEW SIGNING", "Welcome Dheeraj", "Dheeraj joins Telugu Titans bringing fresh energy and commitment."],
-            ["/players/1.jpeg", "NEW SIGNING", "Welcome Amit", "Amit joins Telugu Titans bringing his amazing round skills to the table."],
-            ["/players/16.jpeg", "PLAYER WATCH", "Varun – Rising Gem", "After joining last season, Varun quickly became a valuable all-round option."],
-            ["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
+            ["/players/12.jpeg", "HAT-TRICK STAR", "Nikhil Holagunda", "Four wickets and a hat-trick in the MCPL win. MVP performance when Titans needed it most."],
+["/players/1.jpeg", "ABSOLUTE FIRE", "Amit Turns Back The Clock", "Amit came in breathing fire with sharp pace, aggressive intent, and serious pressure with the new ball."],
+            ["/players/22.jpeg", "FIRST BALL STRIKE", "Inder Makes Statement", "Maiden over and a wicket on the very first ball — Inder announced himself instantly for the Titans."],          
             ["/players/24.jpeg", "RED HOT", "Nipun On Fire", "Nipun was breathing fire during practice sessions and looks match ready."],
-          ].map(([img, tag, title, text]) => (
+        
+["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
+         ["/players/16.jpeg", "PLAYER WATCH", "Varun – Rising Gem", "After joining last season, Varun quickly became a valuable player for the team."],
+
+].map(([img, tag, title, text]) => (
             <div key={title} className="news-player-card">
               <div className="news-player-img-wrap">
                 <img src={img} className="news-player-img" style={{ objectPosition: "50% 20%" }} />
@@ -550,38 +722,49 @@ const emergingPlayer = {
         </div>
       </div>
 
-      {/* Modern News Flow */}
-      <div className="news-flow-grid">
-        <div className="news-main-card">
-          <div className="news-pill">Match 1</div>
-          <h3>Titans Start Strong</h3>
-          <p>
-            Telugu Titans opened the season with a 29-run win against Brampton Strikers,
-            scoring 166/9 and restricting Brampton to 139/8.
-          </p>
-        </div>
+{/* Modern News Flow */}
+<div className="news-flow-grid">
+  <div className="news-main-card">
+    <div className="news-pill">MCPL Match</div>
+    <h3>Nikhil’s Hat-trick Heroics</h3>
+    <p>
+      Nikhil Holagunda delivered a match-winning spell with 4 wickets, including a hat-trick,
+      helping Telugu Titans win the MCPL match by 2 wickets.
+    </p>
+  </div>
 
-        <div className="news-small-card">
-          <div className="news-pill dark">MVP</div>
-          <h3>Man of the Match</h3>
-          <p>Varun led the batting with 31 runs from 33 balls, batting powered by panic and hand-eye coordination.</p>
-        </div>
+<div className="news-small-card">
+  <div className="news-pill dark">Dream Start</div>
+  <h3>Inder’s First Ball Strike</h3>
+  <p>
+    Inder announced himself in style — wicket on the very first ball after bowling a maiden over under pressure.
+  </p>
+</div>
 
-        <div className="news-small-card">
-          <h3>First Six of the season</h3>
-          <p>Nipun with an extraordinary six. Shot had no timing. Boundary had no standards.</p>
-        </div>
+  <div className="news-small-card">
+    <h3>MCPL Fightback Win</h3>
+    <p>
+      Telugu Titans chased down AKAAL XI’s 108 and sealed a tight 2-wicket win with pressure,
+      patience, and lower-order fight.
+    </p>
+  </div>
 
-        <div className="news-small-card">
-          <h3>First Wicket of the season</h3>
-          <p>Pure teamwork between bad batting and lucky bowling made Shanthan's day.</p>
-        </div>
+  <div className="news-small-card">
+    <h3>BEDCL Result</h3>
+    <p>
+      Telugu Titans lost to CricKnights by 33 runs using the D/L method. CricKnights scored
+      184/8, while Titans reached 155/8.
+    </p>
+  </div>
 
-        <div className="news-small-card">
-          <h3>First Drop Catch of the season</h3>
-          <p>Bhanu Musunuru dropping the most simple catch under no pressure. Gravity worked harder than the fielder.</p>
-        </div>
-      </div>
+  <div className="news-small-card">
+    <h3>Positive From BEDCL</h3>
+    <p>
+      Even in the loss, Titans showed fight with the bat. Sai Kiran Reddy stood out with a
+      useful 26-run knock.
+    </p>
+  </div>
+</div>
 
     </div>
   </PageWrap>
@@ -907,233 +1090,100 @@ captainNotes.map((item, i) => (
    )}   
 
 {activeSection === "analysis" && (
-<PageWrap
-  id="analysis"
-  title="Match Analysis"
-  subtitle="Upcoming clash: Telugu Titans vs Brampton Strikers | Next Sunday"
->
-<div className="mb-6 flex flex-wrap gap-3">
-  <button
-    onClick={() => {
-      setAnalysisTab("pre");
-      setSelectedArchiveMatch(null);
-    }}
-    className={`btn ${analysisTab === "pre" ? "btn-gold" : "btn-ghost"}`}
+  <PageWrap
+    id="analysis"
+    title="Match Analysis"
+    subtitle={
+      currentUpcomingAnalysis
+        ? `Upcoming clash: Telugu Titans vs ${currentUpcomingAnalysis.opponent}`
+        : "No upcoming match analysis available"
+    }
   >
-    Upcoming Match Analysis
-  </button>
+    <div className="mb-6 flex flex-wrap gap-3">
+      <button
+        onClick={() => {
+          setAnalysisTab("pre");
+          setSelectedArchiveMatch(null);
+        }}
+        className={`btn ${analysisTab === "pre" ? "btn-gold" : "btn-ghost"}`}
+      >
+        Upcoming Match Analysis
+      </button>
 
-  <button
-    onClick={() => {
-      setAnalysisTab("archive");
-      setSelectedArchiveMatch(null);
-    }}
-    className={`btn ${analysisTab === "archive" ? "btn-gold" : "btn-ghost"}`}
-  >
-    Past Matches Analysis
-  </button>
-</div>
-
-{/* {analysisTab === "pre" && (
-  
-<div className="mt-5 flex flex-wrap gap-3">
-  <button
-    onClick={() => setAnalysisLeague("BEDCL")}
-    className={`btn ${
-      analysisLeague === "BEDCL" ? "btn-gold" : "btn-ghost"
-    }`}
-  >
-    BEDCL
-  </button>
-
-  <button
-    onClick={() => setAnalysisLeague("MCPL")}
-    className={`btn ${
-      analysisLeague === "MCPL" ? "btn-gold" : "btn-ghost"
-    }`}
-  >
-    MCPL
-  </button>
-</div>
-)} */}
-
-{!showArchivedMatches && (
-  <div className="grid gap-6 md:grid-cols-2">
-    {/* keep your current Opponent Snapshot, Players To Watch, Titans Strategy, Prediction cards here */}
-  </div>
-)}
-
-  
-
-{analysisLeague === "BEDCL" && analysisTab === "pre" && (
-<div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-  <p className="mt-2 text-white/80">Telugu Titans vs CricKnights</p>
-
-  <div className="mt-5 grid gap-3 text-white/75 sm:grid-cols-2">
-    <p><span className="text-amber-300">League:</span> BEDCL – Division F</p>
-    <p><span className="text-amber-300">Date:</span> May 17, 2026</p>
-    <p><span className="text-amber-300">Time:</span> 3:40 PM</p>
-    <p><span className="text-amber-300">Ground:</span> Dixie-407 - A</p>
-  </div>
-
-  <div className="mt-8 grid gap-5 md:grid-cols-2">
-    <AnalysisCard
-      title="Opponent Snapshot"
-      points={[
-        "Division G semi-finalists last season and promoted to Division F.",
-        "Batting-heavy team with multiple aggressive hitters.",
-        "Recent scores include 292/8, 231/7, 195/9, 181/7.",
-        "Bowling can leak runs under pressure."
-      ]}
-    />
-
-    <AnalysisCard
-      title="Players To Watch"
-      points={[
-        "Ishpreet Singh — explosive opener who can change the game quickly.",
-        "Karanvir Singh — consistent aggressive batter.",
-        "Iqbaljit Singh — dangerous all-rounder.",
-        "Sunil Kumar — bowling threat with 3-wicket spells."
-      ]}
-    />
-
-    <AnalysisCard
-      title="CricKnights Strengths"
-      points={[
-        "Strong batting lineup with power hitters.",
-        "Capable of scoring 180+ or 220+ totals.",
-        "Middle order can accelerate quickly.",
-        "All-rounders give them balance."
-      ]}
-    />
-
-    <AnalysisCard
-      title="CricKnights Weaknesses"
-      points={[
-        "They lose wickets even while scoring big.",
-        "Bowling is inconsistent and can leak runs.",
-        "Some bowlers go for 12+ economy.",
-        "Extras and wides increase under pressure."
-      ]}
-    />
-
-    <AnalysisCard
-      title="Titans Bowling Strategy"
-      points={[
-        "Remove Ishpreet, Karanvir, Iqbaljit, and Saurabh early.",
-        "Avoid slot balls and leg-side freebies.",
-        "Use slower balls, wide yorkers, and change of pace.",
-        "Keep extras low and take every catching chance."
-      ]}
-    />
-
-<AnalysisCard
-  title="Titans Batting Strategy"
-  points={[
-    "Do not throw wickets early and build a stable platform.",
-    "Respect Sunil Kumar and Iqbaljit Singh during their spells.",
-    "Put pressure on their supporting bowlers and force captaincy changes.",
-    "Rotate strike regularly and punish loose deliveries immediately.",
-    "Their bowling has leaked runs in previous matches if pressure builds.",
-    "If chasing, stay calm — boundaries and extras will come."
-  ]}
-/>
-  </div>
-
-  <div className="mt-6 rounded-3xl border border-amber-300/25 bg-amber-300/10 p-6">
-    <h3 className="text-2xl font-black text-amber-300">Final Titans Message</h3>
-    <p className="mt-3 leading-7 text-white/80">
-      CricKnights are a strong promoted side with explosive batting, but they are beatable.
-      Our key is simple: early wickets, low extras, sharp fielding, and smart batting.
-    </p>
-  </div>
-</div>
-)}
-
-{analysisLeague === "MCPL" && (
-  <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h2 className="text-3xl font-black text-amber-300">
-      MCPL Match Analysis
-    </h2>
-
-    <p className="mt-3 text-white/75 leading-7">
-      Upcoming MCPL analysis will be added soon.
-    </p>
-  </div>
-)}
-
-
-{analysisTab === "archive" && !selectedArchiveMatch && (
-  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-    <button
-      onClick={() => setSelectedArchiveMatch("match1")}
-      className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5 text-left hover:bg-amber-300 hover:text-black"
-    >
-      <div className="text-lg font-black">Match 1</div>
-      <div className="text-sm">Telugu Titans vs Brampton Strikers</div>
-    </button>
-
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-white/50">
-      <div className="text-lg font-black">Match 2</div>
-      <div className="text-sm">Coming soon</div>
+      <button
+        onClick={() => {
+          setAnalysisTab("archive");
+          setSelectedArchiveMatch(null);
+        }}
+        className={`btn ${analysisTab === "archive" ? "btn-gold" : "btn-ghost"}`}
+      >
+        Past Matches Analysis
+      </button>
     </div>
-  </div>
-)}
 
-{analysisTab === "archive" && selectedArchiveMatch === "match1" && (
-  <div>
-    <button
-      onClick={() => setSelectedArchiveMatch(null)}
-      className="btn btn-ghost mb-5"
-    >
-      ← Back to Archived Matches
-    </button>
+    {analysisTab === "pre" && (
+      <>
+        {!currentUpcomingAnalysis ? (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-2xl font-black text-amber-300">
+              No Upcoming Analysis
+            </h3>
+            <p className="mt-3 text-white/75">
+              Once a future match analysis is added, it will show here automatically.
+            </p>
+          </div>
+        ) : (
+          <AnalysisDetails match={currentUpcomingAnalysis} />
+        )}
+      </>
+    )}
 
-    <div className="grid gap-6 md:grid-cols-2">
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h3 className="text-2xl font-black text-amber-300">Opponent Snapshot</h3>
-        <p className="mt-4 text-white/75">
-          • Strong batting unit with aggressive top order<br />
-          • Capable of scoring fast in powerplay<br />
-          • Bowling attack becomes dangerous if defending 170+<br />
-          • Pressure builds when early wickets fall
-        </p>
+    {analysisTab === "archive" && !selectedArchiveMatch && (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {archivedAnalysisMatches.map((match, index) => {
+          const key = getAnalysisKey(match);
+
+          return (
+            <button
+              key={key}
+              onClick={() => setSelectedArchiveMatch(getAnalysisKey(match))}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left hover:bg-amber-300 hover:text-black"
+            >
+<div className="text-lg font-black">
+  Match {match.matchNo || index + 1}
+</div>
+              <div className="text-sm">
+                Telugu Titans vs {match.opponent}
+              </div>
+              <div className="mt-2 text-xs opacity-70">
+                {match.league} • {match.date}
+              </div>
+            </button>
+          );
+        })}
       </div>
+    )}
 
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h3 className="text-2xl font-black text-amber-300">
-          Players To Watch (Brampton Strikers)
-        </h3>
-        <p className="mt-4 text-white/75">
-          🔥 Ali Shah – Top scorer in previous clash (64)<br />
-          🔥 Ravi Patil – Finisher + wicket taker<br />
-          🔥 Hamza Talal – Impact batting + fielding<br />
-          🔥 Hafiz Asim Ali – Dangerous middle overs hitter
-        </p>
-      </div>
+    {analysisTab === "archive" && selectedArchiveMatch && (
+      <div>
+        <button
+          onClick={() => setSelectedArchiveMatch(null)}
+          className="btn btn-ghost mb-5"
+        >
+          ← Back to Archived Matches
+        </button>
 
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h3 className="text-2xl font-black text-amber-300">Titans Strategy</h3>
-        <p className="mt-4 text-white/75">
-          • Get Ali Shah early<br />
-          • Tight powerplay bowling first 6 overs<br />
-          • Varun / Charan anchor chase smartly<br />
-          • Nipun / Anand can accelerate the scoring<br />
-          • Save wickets till final 8 overs while chasing
-        </p>
+        <AnalysisDetails
+          match={archivedAnalysisMatches.find(
+            (match) => getAnalysisKey(match) === selectedArchiveMatch
+          )}
+        />
       </div>
-
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h3 className="text-2xl font-black text-amber-300">Prediction</h3>
-        <p className="mt-4 text-white/75">
-          If Titans remove Ali Shah early and keep extras under control, this becomes a 50-50 contest. Score target range: 155–175.
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+    )}
   </PageWrap>
- )}
+)}
+
+
 {activeSection === "seasons" && (
 <PageWrap
   id="seasons"
@@ -1522,8 +1572,9 @@ const schedule2026 = [
 
 function getNextMatches() {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const upcoming = schedule2026
-  
     .map((m) => ({
       ...m,
       matchDate: new Date(`${m.date}T00:00:00`),
@@ -1531,11 +1582,28 @@ function getNextMatches() {
     .filter((m) => m.matchDate >= today)
     .sort((a, b) => a.matchDate - b.matchDate);
 
-  const nextDate = upcoming[0]?.date;
-  if (!nextDate) return [];
+  if (!upcoming.length) return [];
 
-  return upcoming.filter((m) => m.date === nextDate);
+  const firstDate = upcoming[0].matchDate;
+  const day = firstDate.getDay(); // 0 Sunday, 6 Saturday
+
+  let weekendStart = new Date(firstDate);
+  let weekendEnd = new Date(firstDate);
+
+  if (day === 6) {
+    weekendEnd.setDate(weekendStart.getDate() + 1); // Saturday + Sunday
+  } else if (day === 0) {
+    weekendStart.setDate(weekendStart.getDate() - 1); // Saturday
+  }
+
+  weekendStart.setHours(0, 0, 0, 0);
+  weekendEnd.setHours(23, 59, 59, 999);
+
+  return upcoming.filter(
+    (m) => m.matchDate >= weekendStart && m.matchDate <= weekendEnd
+  );
 }
+
 function NextMatchCard() {
   const nextMatches = getNextMatches();
 
@@ -1552,7 +1620,7 @@ function NextMatchCard() {
   return (
     <div className="mt-6 rounded-3xl border border-amber-300/30 bg-amber-300/10 p-5">
       <div className="text-sm font-bold uppercase tracking-widest text-amber-300">
-        {nextMatches.length > 1 ? `${reminderText}es` : reminderText}
+        {nextMatches.length > 1 ? `Upcoming Matches` : reminderText}
       </div>
 
       <div className="mt-4 grid gap-4">
