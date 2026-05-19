@@ -700,7 +700,7 @@ const emergingPlayer = {
           {[
             ["/players/12.jpeg", "HAT-TRICK STAR", "Nikhil Holagunda", "Four wickets and a hat-trick in the MCPL win. MVP performance when Titans needed it most."],
 ["/players/1.jpeg", "ABSOLUTE FIRE", "Amit Turns Back The Clock", "Amit came in breathing fire with sharp pace, aggressive intent, and serious pressure with the new ball."],
-            ["/players/22.jpeg", "FIRST BALL STRIKE", "Inder Makes Statement", "Maiden over and a wicket on the very first ball — Inder announced himself instantly for the Titans."],          
+            ["/players/22.jpeg", "FIRST BALL STRIKE", "Inder Makes Statement", " Wicket on the very first ball — Inder announced himself instantly for the Titans."],          
             ["/players/24.jpeg", "RED HOT", "Nipun On Fire", "Nipun was breathing fire during practice sessions and looks match ready."],
         
 ["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
@@ -737,7 +737,7 @@ const emergingPlayer = {
   <div className="news-pill dark">Dream Start</div>
   <h3>Inder’s First Ball Strike</h3>
   <p>
-    Inder announced himself in style — wicket on the very first ball after bowling a maiden over under pressure.
+    Inder announced himself in style — wicket on the very first ball after bowling a tight over under pressure.
   </p>
 </div>
 
@@ -793,6 +793,7 @@ const emergingPlayer = {
       </button>
     ))}
  </div>
+ 
   {teamHubTab === "Voting Arena" && (
   <div>
     <div teamhub-tabs  className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-3 py-2">
