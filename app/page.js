@@ -26,7 +26,20 @@ const matchSummaries = {
     summary: "Titans scored 166/9 and defended well, restricting Brampton Strikers to 139/8.",
     mvp: "Varun",
   },
+
+  "Telugu Titans vs CricKnights": {
+    result: "Lost by 33 runs (D/L)",
+    summary: "CricKnights scored 184/8. Telugu Titans scored 155/8.",
+    mvp: "Sai Kiran Reddy - 26 runs",
+  },
+
+  "Telugu Titans vs AKAAL XI": {
+    result: "Won by 2 wickets",
+    summary: "AKAAL XI scored 108 all out. Telugu Titans chased successfully.",
+    mvp: "Nikhil Holagunda - 4 wickets",
+  },
 };
+
 const [polls, setPolls] = useState({
   "This weekend’s run machine ": [],
   "This weekend’s wicket hunter 🎯": [],
