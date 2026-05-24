@@ -760,18 +760,16 @@ const emergingPlayer = {
   </div>
 
   <div className="news-small-card">
-    <h3>BEDCL Result</h3>
+    <h3>Vote Before The Team Does 👀</h3>
     <p>
-      Telugu Titans lost to CricKnights by 33 runs using the D/L method. CricKnights scored
-      184/8, while Titans reached 155/8.
+       Titans are already fighting in Voting Arena. Pick your weekend heroes before the locker room arguments begin.
     </p>
   </div>
 
   <div className="news-small-card">
-    <h3>Positive From BEDCL</h3>
+    <h3>Locker Room Secrets Loading 🤫</h3>
     <p>
-      Even in the loss, Titans showed fight with the bat. Sai Kiran Reddy stood out with a
-      useful 26-run knock.
+      From roast sessions to match-day drama, Titans Locker Room is getting wild. Stay tuned for new drops this week.
     </p>
   </div>
 </div>
