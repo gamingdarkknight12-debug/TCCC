@@ -208,6 +208,17 @@ const matchSummaries = {
     summary: "AKAAL XI scored 108 all out. Telugu Titans chased successfully.",
     mvp: "Nikhil Holagunda - 4 wickets",
   },
+  "Telugu Titans vs SuperNovas CC": {
+  result: "Match cancelled due to rain",
+  summary: "The MCPL match on 2026-05-23 was abandoned due to rain. Both teams shared equal points.",
+  mvp: "No MVP - Match abandoned",
+},
+
+"Telugu Titans vs GTA Sultans": {
+  result: "Match cancelled due to rain",
+  summary: "The BEDCL match on 2026-05-24 was abandoned due to rain. Both teams shared equal points.",
+  mvp: "No MVP - Match abandoned",
+},
 };
 
 const [polls, setPolls] = useState({
@@ -742,10 +753,9 @@ const emergingPlayer = {
 </div>
 
   <div className="news-small-card">
-    <h3>MCPL Fightback Win</h3>
+    <h3>Weekend Washed out</h3>
     <p>
-      Telugu Titans chased down AKAAL XI’s 108 and sealed a tight 2-wicket win with pressure,
-      patience, and lower-order fight.
+      Both weekend matches on May 23 and May 24 were cancelled due to rain. Titans share equal points in both fixtures
     </p>
   </div>
 
