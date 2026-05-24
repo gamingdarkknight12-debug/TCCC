@@ -213,8 +213,8 @@ const matchSummaries = {
 const [polls, setPolls] = useState({
   "This weekend’s run machine ": [],
   "This weekend’s wicket hunter 🎯": [],
-  "This weekend’s wide king 😭": [],
-  "This weekend’s dot ball batsman 🫠": [],
+  "This weekend’s extras king 😭": [],
+  "This weekend’s tuk tuk batsman 🫠": [],
 });
 const resultOpenDate = new Date("2026-05-17T00:00:00");
 const canShowVotingResults = new Date() >= resultOpenDate;
@@ -240,8 +240,8 @@ async function loadTeamHubData() {
   const groupedPolls = {
   "This weekend’s run machine ": [],
   "This weekend’s wicket hunter 🎯": [],
-  "This weekend’s wide king 😭": [],
-  "This weekend’s dot ball batsman 🫠": [],
+  "This weekend’s extras king 😭": [],
+  "This weekend’s tuk tuk batsman 🫠": [],
   };
 
   data.polls.forEach((p) => {
