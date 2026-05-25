@@ -1569,14 +1569,142 @@ const schedule2026 = [
   { league: "BEDCL", opponent: "Golden United", date: "2026-09-06", day: "Sunday", time: "7:30 AM", ground: "Dixie-407 - C (North-West)", homeAway: "Away" },
   { league: "BEDCL", opponent: "Kanada Sports Team", date: "2026-09-19", day: "Saturday", time: "11:35 AM", ground: "BSP - Artificial", homeAway: "Away" },
 
-  // MCPL
-  { league: "MCPL", opponent: "AKAAL XI", date: "2026-05-17", day: "Sunday", time: "3:45 PM", ground: "Mavis", homeAway: "Away" },
-  { league: "MCPL", opponent: "SuperNovas CC", date: "2026-05-23", day: "Saturday", time: "9:00 AM", ground: "Danville", homeAway: "Home" },
-  { league: "MCPL", opponent: "Toronto Lightning XI", date: "2026-05-31", day: "Sunday", time: "TBD", ground: "Aquinas", homeAway: "Away" },
-  { league: "MCPL", opponent: "Northern Lightning CC", date: "2026-06-07", day: "Sunday", time: "8:00 AM", ground: "Aquinas", homeAway: "Home" },
-  { league: "MCPL", opponent: "AKAAL XI", date: "2026-06-24", day: "Wednesday", time: "5:30 PM", ground: "Danville", homeAway: "Away" },
-  { league: "MCPL", opponent: "Predators CC B", date: "2026-06-28", day: "Sunday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
-  { league: "MCPL", opponent: "Toronto Pacers", date: "2026-07-01", day: "Wednesday", time: "8:45 AM", ground: "Mavis", homeAway: "Home" },
+// MCPL
+{
+  league: "MCPL",
+  opponent: "AKAAL XI",
+  date: "2026-05-17",
+  day: "Sunday",
+  time: "3:45 PM",
+  ground: "Mavis",
+  homeAway: "Away"
+},
+{
+  league: "MCPL",
+  opponent: "SuperNovas CC",
+  date: "2026-05-23",
+  day: "Saturday",
+  time: "9:00 AM",
+  ground: "Danville",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "Toronto Lightning XI",
+  date: "2026-05-31",
+  day: "Sunday",
+  time: "9:00 AM",
+  ground: "Aquinas",
+  homeAway: "Away"
+},
+{
+  league: "MCPL",
+  opponent: "Northern Lightning CC",
+  date: "2026-06-07",
+  day: "Sunday",
+  time: "9:00 AM",
+  ground: "Aquinas",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "AKAAL XI",
+  date: "2026-06-24",
+  day: "Wednesday",
+  time: "5:30 PM",
+  ground: "Danville",
+  homeAway: "Away"
+},
+{
+  league: "MCPL",
+  opponent: "Predators CC B",
+  date: "2026-06-28",
+  day: "Sunday",
+  time: "8:45 AM",
+  ground: "Mavis",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "Toronto Pacers",
+  date: "2026-07-01",
+  day: "Wednesday",
+  time: "8:45 AM",
+  ground: "Mavis",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "WI Sports Mississauga",
+  date: "2026-07-15",
+  day: "Wednesday",
+  time: "5:30 PM",
+  ground: "Aquinas",
+  homeAway: "Away"
+},
+{
+  league: "MCPL",
+  opponent: "Toronto Lightning XI",
+  date: "2026-07-19",
+  day: "Sunday",
+  time: "9:00 AM",
+  ground: "Aquinas",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "SuperNovas CC",
+  date: "2026-08-01",
+  day: "Saturday",
+  time: "3:45 PM",
+  ground: "Mavis",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "Northern Lightning CC",
+  date: "2026-08-02",
+  day: "Sunday",
+  time: "9:00 AM",
+  ground: "Danville",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "Toronto Pacers",
+  date: "2026-08-12",
+  day: "Wednesday",
+  time: "5:30 PM",
+  ground: "Danville",
+  homeAway: "Away"
+},
+{
+  league: "MCPL",
+  opponent: "Predators CC B",
+  date: "2026-08-29",
+  day: "Saturday",
+  time: "9:00 AM",
+  ground: "Danville",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "WI Sports Mississauga",
+  date: "2026-09-26",
+  day: "Saturday",
+  time: "3:45 PM",
+  ground: "Aquinas",
+  homeAway: "Home"
+},
+{
+  league: "MCPL",
+  opponent: "Toronto Lightning XI",
+  date: "2026-10-04",
+  day: "Sunday",
+  time: "3:45 PM",
+  ground: "Mavis",
+  homeAway: "Away"
+},
 ];
 
 function getNextMatches() {
