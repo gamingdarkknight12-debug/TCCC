@@ -222,8 +222,8 @@ const matchSummaries = {
 };
 
 const [polls, setPolls] = useState({
-  "This weekend’s run machine ": [],
-  "This weekend’s wicket hunter 🎯": [],
+  "This weekend’s run hunter ": [],
+  "This weekend’s wicket machine 🎯": [],
   "This weekend’s extras king 😭": [],
   "This weekend’s tuk tuk batsman 🫠": [],
 });
@@ -249,8 +249,8 @@ async function loadTeamHubData() {
 
 
   const groupedPolls = {
-  "This weekend’s run machine ": [],
-  "This weekend’s wicket hunter 🎯": [],
+  "This weekend’s run hunter ": [],
+  "This weekend’s wicket machine 🎯": [],
   "This weekend’s extras king 😭": [],
   "This weekend’s tuk tuk batsman 🫠": [],
   };
