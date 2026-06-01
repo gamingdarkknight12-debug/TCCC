@@ -219,6 +219,17 @@ const matchSummaries = {
   summary: "The BEDCL match on 2026-05-24 was abandoned due to rain. Both teams shared equal points.",
   mvp: "No MVP - Match abandoned",
 },
+"Telugu Titans vs Jaguar B": {
+  result: "Won by 7 wickets",
+  summary: "Jaguar B scored 151. Telugu Titans chased successfully, finishing 155/3 in 24 overs.",
+  mvp: "Sreekanth Reddy - 60 runs",
+},
+
+"Telugu Titans vs Toronto Lightning XI": {
+  result: "Lost by 19 runs",
+  summary: "Toronto Lightning XI scored 197/6. Telugu Titans fought hard but finished at 178/7.",
+  mvp: "Nipun Rattan - 78 runs",
+},
 };
 
 const [polls, setPolls] = useState({
@@ -709,13 +720,17 @@ const emergingPlayer = {
         <div className="news-carousel-track">
 
           {[
+            ["/players/24.jpeg", "RED HOT", "Nipun Rattan", "Explosive 78 off 41 in MCPL with 8 sixes. Pure destruction mode."],
+            ["/players/9.jpg", "SPELL MASTER", "Martin T", "Brilliant BEDCL spell with 3 wickets for just 21 runs."],
+            ["/players/27.jpeg", "MATCH WINNER", "Sreekanth Reddy", "Calm and classy 60 off 52 to guide Titans home against Jaguar B."],
+            ["/players/28.jpeg", "3-WICKET IMPACT", "GVK Teja", "Picked up 3 wickets in MCPL and kept fighting hard with the ball."],
             ["/players/12.jpeg", "HAT-TRICK STAR", "Nikhil Holagunda", "Four wickets and a hat-trick in the MCPL win. MVP performance when Titans needed it most."],
-["/players/1.jpeg", "ABSOLUTE FIRE", "Amit Turns Back The Clock", "Amit came in breathing fire with sharp pace, aggressive intent, and serious pressure with the new ball."],
+            ["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
+            ["/players/16.jpeg", "PLAYER WATCH", "Varun – Rising Gem", "After joining last season, Varun quickly became a valuable player for the team."],
+            ["/players/1.jpeg", "ABSOLUTE FIRE", "Amit Turns Back The Clock", "Amit came in breathing fire with sharp pace, aggressive intent, and serious pressure with the new ball."],
             ["/players/22.jpeg", "FIRST BALL STRIKE", "Inder Makes Statement", " Wicket on the very first ball — Inder announced himself instantly for the Titans."],          
-            ["/players/24.jpeg", "RED HOT", "Nipun On Fire", "Nipun was breathing fire during practice sessions and looks match ready."],
-        
-["/players/13.JPG", "WATCH OUT", "Saikiran Loading", "Watch out for Saikiran who might be heading into his best season yet."],
-         ["/players/16.jpeg", "PLAYER WATCH", "Varun – Rising Gem", "After joining last season, Varun quickly became a valuable player for the team."],
+  
+            
 
 ].map(([img, tag, title, text]) => (
             <div key={title} className="news-player-card">
@@ -735,45 +750,47 @@ const emergingPlayer = {
 
 {/* Modern News Flow */}
 <div className="news-flow-grid">
-  <div className="news-main-card">
-    <div className="news-pill">MCPL Match</div>
-    <h3>Nikhil’s Hat-trick Heroics</h3>
-    <p>
-      Nikhil Holagunda delivered a match-winning spell with 4 wickets, including a hat-trick,
-      helping Telugu Titans win the MCPL match by 2 wickets.
-    </p>
-  </div>
-
-<div className="news-small-card">
-  <div className="news-pill dark">Dream Start</div>
-  <h3>Inder’s First Ball Strike</h3>
+ <div className="news-main-card">
+  <div className="news-pill">BEDCL Match</div>
+  <h3>Titans Chase Down Jaguar B</h3>
   <p>
-    Inder announced himself in style — wicket on the very first ball after bowling a tight over under pressure.
+    Telugu Titans chased 152 successfully, finishing 155/3. Sreekanth Reddy led the way with a composed 60, supported by Sandesh and Chaitanya.
   </p>
 </div>
 
-  <div className="news-small-card">
-    <h3>Weekend Washed out</h3>
-    <p>
-      Both weekend matches on May 23 and May 24 were cancelled due to rain. Titans share equal points in both fixtures
-    </p>
-  </div>
-
-  <div className="news-small-card">
-    <h3>Vote Before The Team Does 👀</h3>
-    <p>
-       Titans are already fighting in Voting Arena. Pick your weekend heroes before the locker room arguments begin.
-    </p>
-  </div>
-
-  <div className="news-small-card">
-    <h3>Locker Room Secrets Loading 🤫</h3>
-    <p>
-      From roast sessions to match-day drama, Titans Locker Room is getting wild. Stay tuned for new drops this week.
-    </p>
-  </div>
+<div className="news-small-card">
+  <div className="news-pill dark">Top Knock</div>
+  <h3>Nipun Goes Big 💥</h3>
+  <p>
+    Nipun smashed 78 off 41 in MCPL, including 8 sixes. A proper power-hitting statement from the Titans batter.
+  </p>
 </div>
 
+<div className="news-small-card">
+  <div className="news-pill dark">Bowling Star</div>
+  <h3>Martin Controls BEDCL</h3>
+  <p>
+    Martin delivered a sharp 5-over spell, taking 3 wickets for just 21 runs and keeping the game under control.
+  </p>
+</div>
+
+<div className="news-small-card">
+  <div className="news-pill dark">MCPL Fight</div>
+  <h3>GVK Teja Strikes Back</h3>
+  <p>
+    Venkata Krishna Teja picked up 3 wickets in the MCPL match, giving Titans important breakthroughs under pressure.
+  </p>
+</div>
+
+<div className="news-small-card">
+  <div className="news-pill dark">Result Update</div>
+  <h3>Mixed Weekend Results</h3>
+  <p>
+    Titans won the BEDCL match against Jaguar B by 7 wickets, but fell short in MCPL against Predators CC B by 19 runs.
+  </p>
+</div>
+
+</div>
     </div>
   </PageWrap>
 )}
