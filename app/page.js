@@ -730,8 +730,6 @@ const emergingPlayer = {
             ["/players/1.jpeg", "ABSOLUTE FIRE", "Amit Turns Back The Clock", "Amit came in breathing fire with sharp pace, aggressive intent, and serious pressure with the new ball."],
             ["/players/22.jpeg", "FIRST BALL STRIKE", "Inder Makes Statement", " Wicket on the very first ball — Inder announced himself instantly for the Titans."],          
   
-            
-
 ].map(([img, tag, title, text]) => (
             <div key={title} className="news-player-card">
               <div className="news-player-img-wrap">
