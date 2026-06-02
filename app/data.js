@@ -19,7 +19,6 @@ batting: [
   { name: "Manish", runs: 12, balls: 12, fours: 0, sixes: 1, sr: "100.0", avg: "12.0" },
   { name: "Vikranth Nyalakonda", runs: 12, balls: 8, fours: 2, sixes: 0, sr: "150.0", avg: "12.0" },
   { name: "Ram Sandeep Chimata", runs: 11, balls: 9, fours: 1, sixes: 0, sr: "122.2", avg: "-" },
-  { name: "Meet Patel", runs: 11, balls: 6, fours: 0, sixes: 1, sr: "183.3", avg: "-" },
   { name: "Amit Koul", runs: 6, balls: 14, fours: 0, sixes: 0, sr: "42.9", avg: "6.0" },
   { name: "Ananda Maddula", runs: 4, balls: 13, fours: 0, sixes: 0, sr: "30.8", avg: "4.0" },
   { name: "Gowtam Reddy Pidaparti", runs: 3, balls: 8, fours: 0, sixes: 0, sr: "37.5", avg: "3.0" },
