@@ -7,12 +7,11 @@ export function Header() {
   const [active, setActive] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-const pages = ['Home', 'News', 'Team Hub', 'Match Analysis', 'Seasons', 'Players', 'About Us'];
+const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'About Us'];
   const hrefs = {
     Home: '#home',
     News: '#news',
     'Team Hub': '#teamhub',
-    'Match Analysis': '#analysis',
     'Player Stats': '#stats',
     Seasons: '#seasons',
     Players: '#players',
@@ -33,11 +32,9 @@ useEffect(() => {
     const hashMap = {
       news: "News",
       teamhub: "Team Hub",
-      analysis: "Match Analysis",
-      postmatch: "Match Analysis",
-      archive: "Match Analysis",
       stats: "Player Stats",
       seasons: "Seasons",
+      standings: "Seasons",
       schedule2026: "Seasons",
       players: "Players",
       about: "About Us",
@@ -82,18 +79,6 @@ useEffect(() => {
           
 <nav className="hidden gap-2 md:flex">
   {pages.map((p) =>
-    p === "Match Analysis" ? (
-    <div key={p} className="relative group flex items-center">
-      <a
-        href="#analysis"
-        className={`btn ${active === p ? "btn-gold" : "btn-ghost"}`}
-      >
-        Match Analysis
-      </a>
-
-
-    </div>
-  ) :
     p === "Seasons" ? (
       <div key={p} className="relative group flex items-center">
         <a href="#seasons" className={`btn ${active === "Seasons" ? "btn-gold" : "btn-ghost"}`}>
@@ -106,6 +91,9 @@ useEffect(() => {
           </a>
           <a href="#schedule2026" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             2026 Season Schedule
+          </a>
+          <a href="#standings" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+            Standings
           </a>
         </div>
       </div>
@@ -212,6 +200,18 @@ useEffect(() => {
           }`}
         >
           2026 Season Schedule
+        </a>
+
+        <a
+          href="#standings"
+          onClick={() => setMenuOpen(false)}
+          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
+            active === "Seasons"
+              ? "bg-amber-300 text-black"
+              : "border border-white/10 bg-white/[0.06] text-white"
+          }`}
+        >
+          Standings
         </a>
       </div>
     ) : p === "Players" ? (
