@@ -11,7 +11,7 @@ export async function GET(req) {
 
   const { data, error } = await supabaseServer
     .from('tccc_matches')
-    .select('id, league, season, opponent, match_date, status')
+    .select('id, league, season, opponent, match_date, match_time, ground, home_away, status, team_score, opponent_score, result_text, result_type, summary_text, mvp_text')
     .eq('team', 'TT')
     .neq('league', 'SEASON')
     .order('match_date', { ascending: false })

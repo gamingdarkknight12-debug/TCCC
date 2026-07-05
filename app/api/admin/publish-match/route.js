@@ -11,6 +11,7 @@ export async function POST(req) {
 
   const body = await req.json();
   const {
+    matchId,
     status,
     league,
     season,
@@ -40,32 +41,50 @@ export async function POST(req) {
 
   const matchStatus = status === 'draft' ? 'draft' : 'published';
 
-  const { data: match, error: matchError } = await supabaseServer
-    .from('tccc_matches')
-    .insert({
-      team: 'TT',
-      league,
-      season: season || new Date(matchDate).getFullYear(),
-      opponent,
-      match_date: matchDate,
-      match_time: matchTime || null,
-      ground: ground || null,
-      home_away: homeAway || null,
-      status: matchStatus,
-      source_type: sourceType || 'manual',
-      source_file_name: sourceFileName || null,
-      result_text: resultText || null,
-      result_type: resultType || null,
-      summary_text: summaryText || null,
-      mvp_text: mvpText || null,
-      team_score: teamScore || null,
-      opponent_score: opponentScore || null,
-      raw_extraction: rawExtraction || null,
-    })
-    .select('id')
-    .single();
+  const matchFields = {
+    league,
+    season: season || new Date(matchDate).getFullYear(),
+    opponent,
+    match_date: matchDate,
+    match_time: matchTime || null,
+    ground: ground || null,
+    home_away: homeAway || null,
+    status: matchStatus,
+    source_type: sourceType || 'manual',
+    source_file_name: sourceFileName || null,
+    result_text: resultText || null,
+    result_type: resultType || null,
+    summary_text: summaryText || null,
+    mvp_text: mvpText || null,
+    team_score: teamScore || null,
+    opponent_score: opponentScore || null,
+    raw_extraction: rawExtraction || null,
+  };
 
-  if (matchError) return NextResponse.json({ error: matchError.message }, { status: 500 });
+  let match;
+  if (matchId) {
+    // Attaching a scorecard to an existing (usually scheduled) match — update
+    // it in place and clear any prior innings rows so re-imports don't duplicate.
+    const { data, error } = await supabaseServer
+      .from('tccc_matches')
+      .update(matchFields)
+      .eq('id', matchId)
+      .select('id')
+      .single();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    match = data;
+
+    await supabaseServer.from('tccc_batting_innings').delete().eq('match_id', matchId);
+    await supabaseServer.from('tccc_bowling_innings').delete().eq('match_id', matchId);
+  } else {
+    const { data, error } = await supabaseServer
+      .from('tccc_matches')
+      .insert({ team: 'TT', ...matchFields })
+      .select('id')
+      .single();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    match = data;
+  }
 
   const battingInsert = battingRows.map((r) => ({
     match_id: match.id,
