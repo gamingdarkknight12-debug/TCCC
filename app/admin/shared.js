@@ -17,6 +17,42 @@ export function matchRosterId(name, currentRoster) {
   return found ? found.id : null;
 }
 
+// Drafts a plain-English recap from the reviewed stats — a starting point,
+// not a final copy; the admin can edit it before publishing either way.
+export function generateSummary(form) {
+  const batters = form.battingRows.filter((r) => r.name?.trim());
+  const bowlers = form.bowlingRows.filter((r) => r.name?.trim());
+  const topBatter = [...batters].sort((a, b) => b.runs - a.runs)[0];
+  const topBowler = [...bowlers].sort((a, b) => b.wickets - a.wickets || a.runs - b.runs)[0];
+
+  const parts = [];
+  if (form.resultText?.trim()) {
+    parts.push(form.resultText.trim().replace(/\.?$/, '.'));
+  } else if (form.opponent) {
+    parts.push(`Telugu Titans faced ${form.opponent}.`);
+  }
+
+  if (topBatter && topBatter.runs > 0) {
+    parts.push(
+      `${topBatter.name} top-scored with ${topBatter.runs}${topBatter.balls ? ` off ${topBatter.balls} balls` : ''}${
+        topBatter.notOut ? ' (not out)' : ''
+      }.`
+    );
+  }
+
+  if (topBowler && topBowler.wickets > 0) {
+    parts.push(
+      `${topBowler.name} led the bowling with ${topBowler.wickets} wicket${topBowler.wickets === 1 ? '' : 's'} for ${topBowler.runs} runs.`
+    );
+  }
+
+  if (form.teamScore?.trim()) {
+    parts.push(`Final score: TT ${form.teamScore.trim()}.`);
+  }
+
+  return parts.join(' ');
+}
+
 export function pendingInfoFromMatch(match) {
   return {
     league: match.league,
@@ -100,6 +136,7 @@ export function blankForm(overrides = {}) {
     resultType: '',
     summaryText: '',
     mvpText: '',
+    mvpPlayerId: null,
     sourceType: 'manual',
     sourceFileName: '',
     rawExtraction: null,

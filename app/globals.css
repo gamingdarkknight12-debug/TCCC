@@ -556,6 +556,15 @@ section {
   background: linear-gradient(135deg, rgba(252,211,77,.15), rgba(255,255,255,.05));
 }
 
+.news-main-card-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid rgba(252,211,77,.6);
+  margin-bottom: 14px;
+}
+
 .news-main-card h3,
 .news-small-card h3 {
   color: #fcd34d;

@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { LEAGUES, blankForm, emptyBattingRow, emptyBowlingRow, validateMatch, PENDING_FORM_KEY } from '../shared';
+import { LEAGUES, blankForm, emptyBattingRow, emptyBowlingRow, generateSummary, validateMatch, PENDING_FORM_KEY } from '../shared';
 
 function ReviewPageInner() {
   const router = useRouter();
@@ -59,6 +59,7 @@ function ReviewPageInner() {
               resultType: m.result_type || '',
               summaryText: m.summary_text || '',
               mvpText: m.mvp_text || '',
+              mvpPlayerId: m.mvp_player_id || null,
               battingRows: data.battingRows.length ? data.battingRows : [emptyBattingRow()],
               bowlingRows: data.bowlingRows.length ? data.bowlingRows : [emptyBowlingRow()],
             })
@@ -291,23 +292,46 @@ function ReviewPageInner() {
         </label>
       </div>
 
-      <label className="mt-4 block text-sm text-white/70">
-        News Summary
-        <textarea
-          value={form.summaryText}
-          onChange={(e) => updateForm('summaryText', e.target.value)}
-          className="mt-1 h-24 w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white"
-        />
-      </label>
+      <div className="mt-4 flex items-center justify-between">
+        <label className="text-sm text-white/70">News Summary</label>
+        <button
+          type="button"
+          onClick={() => updateForm('summaryText', generateSummary(form))}
+          className="btn btn-ghost text-xs"
+        >
+          Auto-Generate from Stats
+        </button>
+      </div>
+      <textarea
+        value={form.summaryText}
+        onChange={(e) => updateForm('summaryText', e.target.value)}
+        className="mt-1 h-24 w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white"
+      />
 
-      <label className="mt-4 block text-sm text-white/70">
-        MVP
-        <input
-          value={form.mvpText}
-          onChange={(e) => updateForm('mvpText', e.target.value)}
-          className="mt-1 w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white"
-        />
-      </label>
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <label className="text-sm text-white/70">
+          MVP (news blurb text)
+          <input
+            value={form.mvpText}
+            onChange={(e) => updateForm('mvpText', e.target.value)}
+            placeholder="e.g. Nipun (41 off 48)"
+            className="mt-1 w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white"
+          />
+        </label>
+        <label className="text-sm text-white/70">
+          MVP Player <span className="text-amber-300">(their photo becomes the news image)</span>
+          <select
+            value={form.mvpPlayerId || ''}
+            onChange={(e) => updateForm('mvpPlayerId', e.target.value ? Number(e.target.value) : null)}
+            className="mt-1 w-full rounded-xl border border-white/10 bg-black/40 p-3 text-white"
+          >
+            <option value="">Not selected</option>
+            {roster.map((p) => (
+              <option key={p.id} value={p.id}>{p.canonical_name}</option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       <h4 className="mt-8 text-xl font-bold text-amber-300">Batting</h4>
       <div className="mt-3 space-y-3">

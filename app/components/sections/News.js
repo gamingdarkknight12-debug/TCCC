@@ -48,6 +48,9 @@ export function News() {
               key={item.id}
               className={item.placement === 'main' ? 'news-main-card' : 'news-small-card'}
             >
+              {item.image && item.placement === 'main' && (
+                <img src={item.image} alt={item.title} className="news-main-card-img" />
+              )}
               <div className={item.placement === 'main' ? 'news-pill' : 'news-pill dark'}>
                 {item.tag}
               </div>

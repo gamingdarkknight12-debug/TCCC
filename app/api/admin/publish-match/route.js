@@ -26,6 +26,7 @@ export async function POST(req) {
     resultType,
     summaryText,
     mvpText,
+    mvpPlayerId,
     sourceType,
     sourceFileName,
     rawExtraction,
@@ -56,6 +57,7 @@ export async function POST(req) {
     result_type: resultType || null,
     summary_text: summaryText || null,
     mvp_text: mvpText || null,
+    mvp_player_id: mvpPlayerId || null,
     team_score: teamScore || null,
     opponent_score: opponentScore || null,
     raw_extraction: rawExtraction || null,
@@ -122,6 +124,16 @@ export async function POST(req) {
   }
 
   if (createNews && matchStatus === 'published' && summaryText) {
+    let imagePath = null;
+    if (mvpPlayerId) {
+      const { data: mvpPlayer } = await supabaseServer
+        .from('tccc_players')
+        .select('image_path')
+        .eq('id', mvpPlayerId)
+        .single();
+      imagePath = mvpPlayer?.image_path || null;
+    }
+
     await supabaseServer.from('tccc_news_items').insert({
       team: 'TT',
       match_id: match.id,
@@ -130,9 +142,28 @@ export async function POST(req) {
       tag: newsTag || `${league} Match`,
       title: resultText || `Telugu Titans vs ${opponent}`,
       body: summaryText,
+      image_path: imagePath,
       status: 'published',
       published_at: new Date().toISOString(),
     });
+  }
+
+  if (matchStatus === 'published') {
+    const pollName = `Player of the Match — TT vs ${opponent} (${matchDate})`;
+    const { data: existingPollRows } = await supabaseServer
+      .from('teamhub_polls')
+      .select('id')
+      .eq('poll_name', pollName)
+      .limit(1);
+
+    if (!existingPollRows || existingPollRows.length === 0) {
+      const candidateNames = [...new Set([...battingRows, ...bowlingRows].filter((r) => r.playerId).map((r) => r.name))];
+      if (candidateNames.length > 0) {
+        await supabaseServer.from('teamhub_polls').insert(
+          candidateNames.map((name) => ({ poll_name: pollName, option_name: name, votes: 0 }))
+        );
+      }
+    }
   }
 
   return NextResponse.json({ matchId: match.id });

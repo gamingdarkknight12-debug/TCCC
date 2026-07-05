@@ -15,7 +15,7 @@ export async function GET(req) {
 
   const { data: match, error: matchError } = await supabaseServer
     .from('tccc_matches')
-    .select('id, league, season, opponent, match_date, match_time, ground, home_away, status, team_score, opponent_score, result_text, result_type, summary_text, mvp_text')
+    .select('id, league, season, opponent, match_date, match_time, ground, home_away, status, team_score, opponent_score, result_text, result_type, summary_text, mvp_text, mvp_player_id')
     .eq('id', id)
     .single();
   if (matchError) return NextResponse.json({ error: matchError.message }, { status: 500 });
