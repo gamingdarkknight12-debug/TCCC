@@ -9,7 +9,8 @@ export async function GET() {
     .select('id, kind, placement, tag, title, body, image_path, published_at')
     .eq('team', 'TT')
     .eq('status', 'published')
-    .order('published_at', { ascending: false });
+    .order('published_at', { ascending: false })
+    .limit(12);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

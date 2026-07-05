@@ -3,7 +3,16 @@
 import { useEffect, useState } from 'react';
 import { PageWrap } from '../UI';
 
-const resultOpenDate = new Date("2026-05-17T00:00:00");
+function isPredictionPoll(pollName) {
+  return pollName.startsWith("Predict:");
+}
+
+// Local calendar day as YYYY-MM-DD, so it can be compared directly against
+// the poll's stored match_date string without any UTC/local timezone drift.
+function todayStr() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
 
 export function TeamHub() {
   const [teamHubTab, setTeamHubTab] = useState("Hall of Fame");
@@ -18,8 +27,31 @@ export function TeamHub() {
   const [nicknamePlayer, setNicknamePlayer] = useState("");
   const [nicknameText, setNicknameText] = useState("");
   const [nicknames, setNicknames] = useState([]);
+  const [legendStats, setLegendStats] = useState({ arun: null, srikanth: null });
 
-  const canShowVotingResults = new Date() >= resultOpenDate;
+  useEffect(() => {
+    fetch("/api/stats?season=all")
+      .then((res) => res.json())
+      .then((data) => {
+        const findByPrefix = (rows, prefix) =>
+          (rows || []).find((r) => r.name.toLowerCase().startsWith(prefix.toLowerCase()));
+
+        const arunBowling = findByPrefix(data.bowling, "arun");
+        const srikanthBatting = findByPrefix(data.batting, "srikanth govula");
+        const srikanthBowling = findByPrefix(data.bowling, "srikanth govula");
+
+        setLegendStats({
+          arun: arunBowling
+            ? `${arunBowling.wickets} wickets • ${arunBowling.economy} economy • ${arunBowling.overs} overs`
+            : null,
+          srikanth:
+            srikanthBowling || srikanthBatting
+              ? `${srikanthBowling?.wickets ?? 0} wickets • ${srikanthBatting?.runs ?? 0} runs`
+              : null,
+        });
+      })
+      .catch(() => {});
+  }, []);
 
   async function loadTeamHubData() {
     const res = await fetch("/api/teamhub");
@@ -28,8 +60,8 @@ export function TeamHub() {
     const groupedPolls = {};
 
     data.polls.forEach((p) => {
-      if (!groupedPolls[p.poll_name]) groupedPolls[p.poll_name] = [];
-      groupedPolls[p.poll_name].push({
+      if (!groupedPolls[p.poll_name]) groupedPolls[p.poll_name] = { options: [], matchDate: p.match_date || null };
+      groupedPolls[p.poll_name].options.push({
         id: p.id,
         name: p.option_name,
         votes: p.votes,
@@ -75,7 +107,7 @@ export function TeamHub() {
   }
 
   async function votePoll(pollName, index) {
-    const option = polls[pollName][index];
+    const option = polls[pollName].options[index];
     const pollKey = `voted_${pollName}`;
     if (localStorage.getItem(pollKey)) {
       alert("You already voted for this poll.");
@@ -97,7 +129,7 @@ export function TeamHub() {
 
   function publishVotingResults() {
     const resultsText = Object.entries(polls)
-      .map(([pollName, options]) => {
+      .map(([pollName, { options }]) => {
         if (!options.length) return `${pollName}\nNo votes yet`;
 
         // sort by votes DESC
@@ -229,22 +261,14 @@ export function TeamHub() {
         <div>
           <div teamhub-tabs className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-3 py-2">
             <p className="text-xs text-amber-200">
-              Weekly Highlights will be posted on social media
+              Match predictions reveal their results automatically on match day. Player of the Match voting stays open — use the button to peek at standings.
             </p>
 
             <button
-              onClick={() => {
-                if (!canShowVotingResults) return;
-                setShowVotingResults((prev) => !prev);
-              }}
-              disabled={!canShowVotingResults}
-              className="btn btn-gold disabled:opacity-40 disabled:cursor-not-allowed"
+              onClick={() => setShowVotingResults((prev) => !prev)}
+              className="btn btn-gold"
             >
-              {canShowVotingResults
-                ? showVotingResults
-                  ? "Show Votes"
-                  : "Show Results"
-                : "Results open on match day"}
+              {showVotingResults ? "Show Votes" : "Show Results"}
             </button>
           </div>
 
@@ -253,14 +277,16 @@ export function TeamHub() {
             className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
           >
             {Object.keys(polls).map((pollName) => {
-              const options = polls[pollName] || [];
+              const { options = [], matchDate } = polls[pollName] || {};
               const sorted = [...options].sort((a, b) => b.votes - a.votes);
+              const prediction = isPredictionPoll(pollName);
+              const revealResults = prediction ? !!matchDate && todayStr() >= matchDate : showVotingResults;
 
               return (
                 <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-4 x1:p-5">
-                  <h3 className="text-xl font-black text-amber-300">{pollName}</h3>
+                  <h3 className="text-lg font-black leading-snug text-amber-300 break-words">{pollName}</h3>
 
-                  {showVotingResults ? (
+                  {revealResults ? (
                     <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3">
                       {sorted.length === 0 ? (
                         <p className="text-white/60">No votes yet.</p>
@@ -304,7 +330,7 @@ export function TeamHub() {
                         )}
                       </div>
 
-                      {!showVotingResults && (
+                      {!prediction && (
                         <div className="mt-5 flex gap-2">
                           <input
                             value={pollInputs[pollName] || ""}
@@ -443,7 +469,7 @@ export function TeamHub() {
               </div>
               <h3 className="mt-2 text-2xl font-black text-white">Arun</h3>
               <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
-                18 wickets • 5.98 economy • 48 overs
+                {legendStats.arun || "Loading…"}
               </div>
               <p className="mt-3 text-white/70">
                 One of the strongest bowling performers from the 2024 season and a key name in the team’s early success.
@@ -459,7 +485,7 @@ export function TeamHub() {
                 Govula Srikanth
               </h3>
               <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
-                29 wickets • 314 runs
+                {legendStats.srikanth || "Loading…"}
               </div>
               <p className="mt-3 text-white/70">
                 A true match-winner across seasons — delivering impact with both bat and ball when it matters most.
