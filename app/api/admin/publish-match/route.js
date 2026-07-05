@@ -44,6 +44,25 @@ async function upsertEvergreenCard({ tag, title, body, publishedAt }) {
   }
 }
 
+// There is only ever one "Latest Match" slot in the flow grid — each publish
+// replaces it in place (matched by kind, regardless of league/tag, since the
+// display tag changes match to match) rather than piling up a new recap
+// card every week alongside the evergreen stat cards.
+async function upsertLatestMatchCard(fields) {
+  const { data: existing } = await supabaseServer
+    .from('tccc_news_items')
+    .select('id')
+    .eq('team', 'TT')
+    .eq('kind', 'match_recap')
+    .limit(1);
+
+  if (existing && existing.length > 0) {
+    await supabaseServer.from('tccc_news_items').update(fields).eq('id', existing[0].id);
+  } else {
+    await supabaseServer.from('tccc_news_items').insert({ team: 'TT', kind: 'match_recap', ...fields });
+  }
+}
+
 // Same aggregation as /api/stats?season=, trimmed to just the two totals
 // needed here (top scorer, top wicket-taker) for the season the just-
 // published match belongs to.
@@ -309,10 +328,8 @@ export async function POST(req) {
     // therefore the "main" hero card — regardless of insert/update order.
     const evergreenTimestamp = new Date(now.getTime() - 60000).toISOString();
 
-    await supabaseServer.from('tccc_news_items').insert({
-      team: 'TT',
+    await upsertLatestMatchCard({
       match_id: match.id,
-      kind: 'match_recap',
       placement: 'main',
       tag: newsTag || `${league} Match`,
       title: shortNewsTitle(opponent, resultType),
