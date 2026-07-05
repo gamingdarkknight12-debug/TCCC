@@ -13,8 +13,18 @@ export function News() {
       .catch(() => setItems([]));
   }, []);
 
-  const carouselItems = items.filter((n) => n.placement === 'carousel');
-  const flowItems = items.filter((n) => n.placement === 'main' || n.placement === 'small');
+  // Carousel is a photo strip — a card with no image has nothing to show.
+  const carouselItems = items.filter((n) => n.placement === 'carousel' && n.image);
+
+  // Items already arrive newest-first from the API. Rather than trust
+  // whatever placement got stored at publish time (which would leave every
+  // match recap stacked as an identical full-width card forever), only the
+  // single newest recap is treated as the big "main" story; everything else
+  // becomes a compact "small" card — so the layout always highlights what's
+  // current instead of accumulating a wall of oversized cards.
+  const flowItems = items
+    .filter((n) => n.placement === 'main' || n.placement === 'small')
+    .map((item, i) => ({ ...item, placement: i === 0 ? 'main' : 'small' }));
 
   return (
     <PageWrap

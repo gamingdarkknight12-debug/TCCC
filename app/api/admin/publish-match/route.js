@@ -6,6 +6,105 @@ function isAuthed(req) {
   return !!token && token === process.env.ADMIN_TOKEN;
 }
 
+// A short, punchy headline for the news card — the full blow-by-blow lives
+// in the body via summaryText. Using resultText (a full sentence) as the
+// title made every card read like a wall of text with no visual hierarchy.
+function shortNewsTitle(opponent, resultType) {
+  switch (resultType) {
+    case 'win': return `Titans Beat ${opponent}`;
+    case 'loss': return `Titans Fall to ${opponent}`;
+    case 'tie': return `Titans Tie with ${opponent}`;
+    case 'no_result': return `Match vs ${opponent} Abandoned`;
+    default: return `Telugu Titans vs ${opponent}`;
+  }
+}
+
+// Creates or refreshes a single evergreen card (matched by its tag) instead
+// of inserting a new one every publish — otherwise "Best Batter" would pile
+// up a duplicate every week instead of just staying current.
+async function upsertEvergreenCard({ tag, title, body, publishedAt }) {
+  const { data: existing } = await supabaseServer
+    .from('tccc_news_items')
+    .select('id')
+    .eq('team', 'TT')
+    .eq('tag', tag)
+    .limit(1);
+
+  const fields = { title, body, status: 'published', published_at: publishedAt };
+  if (existing && existing.length > 0) {
+    await supabaseServer.from('tccc_news_items').update(fields).eq('id', existing[0].id);
+  } else {
+    await supabaseServer.from('tccc_news_items').insert({
+      team: 'TT',
+      kind: 'manual',
+      placement: 'small',
+      tag,
+      ...fields,
+    });
+  }
+}
+
+// Same aggregation as /api/stats?season=, trimmed to just the two totals
+// needed here (top scorer, top wicket-taker) for the season the just-
+// published match belongs to.
+async function getSeasonLeaders(season) {
+  const { data: matches } = await supabaseServer.from('tccc_matches').select('id').eq('team', 'TT').eq('season', season);
+  const matchIds = (matches || []).map((m) => m.id);
+  if (matchIds.length === 0) return { topBatter: null, topBowler: null };
+
+  const [{ data: battingRows }, { data: bowlingRows }] = await Promise.all([
+    supabaseServer.from('tccc_batting_innings').select('runs, balls, player_id, tccc_players(canonical_name)').in('match_id', matchIds),
+    supabaseServer.from('tccc_bowling_innings').select('wickets, runs, player_id, tccc_players(canonical_name)').in('match_id', matchIds),
+  ]);
+
+  const battingTotals = new Map();
+  for (const r of battingRows || []) {
+    if (!r.player_id) continue;
+    const name = r.tccc_players?.canonical_name;
+    if (!name) continue;
+    const agg = battingTotals.get(name) || { name, runs: 0, balls: 0 };
+    agg.runs += r.runs || 0;
+    agg.balls += r.balls || 0;
+    battingTotals.set(name, agg);
+  }
+
+  const bowlingTotals = new Map();
+  for (const r of bowlingRows || []) {
+    if (!r.player_id) continue;
+    const name = r.tccc_players?.canonical_name;
+    if (!name) continue;
+    const agg = bowlingTotals.get(name) || { name, wickets: 0, runs: 0 };
+    agg.wickets += r.wickets || 0;
+    agg.runs += r.runs || 0;
+    bowlingTotals.set(name, agg);
+  }
+
+  const topBatter = [...battingTotals.values()].sort((a, b) => b.runs - a.runs)[0] || null;
+  const topBowler = [...bowlingTotals.values()].sort((a, b) => b.wickets - a.wickets)[0] || null;
+  return { topBatter, topBowler };
+}
+
+// Same counting as /api/standings, scoped to one league/season.
+async function getLeagueRecord(league, season) {
+  const { data } = await supabaseServer
+    .from('tccc_matches')
+    .select('result_type')
+    .eq('team', 'TT')
+    .eq('league', league)
+    .eq('season', season)
+    .in('status', ['published', 'cancelled']);
+
+  const rec = { played: 0, won: 0, lost: 0, tie: 0, noResult: 0 };
+  for (const row of data || []) {
+    rec.played += 1;
+    if (row.result_type === 'win') rec.won += 1;
+    else if (row.result_type === 'loss') rec.lost += 1;
+    else if (row.result_type === 'tie') rec.tie += 1;
+    else rec.noResult += 1;
+  }
+  return rec;
+}
+
 // A rotating pool of prediction questions — picking a different 3 each time
 // (seeded by the next match's id) keeps them varied instead of asking the
 // same "who wins" question every week. Player-based ones use the curated,
@@ -204,22 +303,30 @@ export async function POST(req) {
   }
 
   if (createNews && matchStatus === 'published' && summaryText) {
+    const now = new Date();
+    // The evergreen spotlight/update cards below get a timestamp a minute
+    // earlier so this match's own recap always sorts as the newest — and
+    // therefore the "main" hero card — regardless of insert/update order.
+    const evergreenTimestamp = new Date(now.getTime() - 60000).toISOString();
+
     await supabaseServer.from('tccc_news_items').insert({
       team: 'TT',
       match_id: match.id,
       kind: 'match_recap',
       placement: 'main',
       tag: newsTag || `${league} Match`,
-      title: resultText || `Telugu Titans vs ${opponent}`,
+      title: shortNewsTitle(opponent, resultType),
       body: summaryText,
       image_path: mvpPlayer?.image_path || null,
       status: 'published',
-      published_at: new Date().toISOString(),
+      published_at: now.toISOString(),
     });
 
     // A carousel highlight for the MVP, so the featured-player strip stays
     // populated with real standout performances instead of going stale.
-    if (mvpPlayer) {
+    // Skipped without a photo — the carousel is a photo strip, and the
+    // frontend won't render a card with no image anyway.
+    if (mvpPlayer?.image_path) {
       const mvpBatting = battingRows.find((r) => r.playerId === mvpPlayerId);
       const mvpBowling = bowlingRows.find((r) => r.playerId === mvpPlayerId);
       let tag = 'MATCH IMPACT';
@@ -247,7 +354,42 @@ export async function POST(req) {
         body: highlightBody,
         image_path: mvpPlayer.image_path || null,
         status: 'published',
-        published_at: new Date().toISOString(),
+        published_at: now.toISOString(),
+      });
+    }
+
+    // Evergreen spotlight + league-record cards, refreshed (not duplicated)
+    // on every publish so the flow grid always reflects current form instead
+    // of just a lone match recap.
+    const matchSeason = matchFields.season;
+    const { topBatter, topBowler } = await getSeasonLeaders(matchSeason);
+    if (topBatter) {
+      await upsertEvergreenCard({
+        tag: 'Best Batter',
+        title: `${topBatter.name} Leads the Run Charts`,
+        body: `${topBatter.name} has ${topBatter.runs} runs off ${topBatter.balls} balls for Telugu Titans in ${matchSeason} so far.`,
+        publishedAt: evergreenTimestamp,
+      });
+    }
+    if (topBowler) {
+      await upsertEvergreenCard({
+        tag: 'Best Bowler',
+        title: `${topBowler.name} Tops the Wicket Charts`,
+        body: `${topBowler.name} has taken ${topBowler.wickets} wickets for Telugu Titans in ${matchSeason} so far.`,
+        publishedAt: evergreenTimestamp,
+      });
+    }
+
+    const leagueRecord = await getLeagueRecord(league, matchSeason);
+    if (leagueRecord.played > 0) {
+      const parts = [`${leagueRecord.won}W`, `${leagueRecord.lost}L`];
+      if (leagueRecord.tie) parts.push(`${leagueRecord.tie}T`);
+      if (leagueRecord.noResult) parts.push(`${leagueRecord.noResult}NR`);
+      await upsertEvergreenCard({
+        tag: `${league} Update`,
+        title: `${league} Standings Update`,
+        body: `Telugu Titans are ${parts.join('-')} in ${league} this season after ${leagueRecord.played} match${leagueRecord.played === 1 ? '' : 'es'}.`,
+        publishedAt: evergreenTimestamp,
       });
     }
   }
