@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { PageWrap, StatTable } from '../UI';
+import { useEffect, useMemo, useState } from 'react';
+import { PageWrap } from '../UI';
 
 const rowsPerPage = 10;
 
@@ -15,12 +15,10 @@ const matchCounts2026 = [
       'srikanth reddy',
     ],
   },
-
   {
     count: 11,
     names: ['nipun'],
   },
-
   {
     count: 10,
     names: ['varun', 'varun rambha'],
@@ -29,9 +27,8 @@ const matchCounts2026 = [
     count: 10,
     names: ['charan', 'charan teja bandaru'],
   },
-
   {
-    count: 7,
+    count: 8,
     names: ['anand', 'anand chaitanya maddula'],
   },
   {
@@ -46,7 +43,6 @@ const matchCounts2026 = [
     count: 8,
     names: ['vikas', 'vikas tiwari'],
   },
-
   {
     count: 7,
     names: ['aadil', 'adil', 'aadil khan', 'adil khan'],
@@ -63,9 +59,8 @@ const matchCounts2026 = [
     count: 7,
     names: ['martin', 'martin thandhara'],
   },
-
   {
-    count: 5,
+    count: 6,
     names: ['arun', 'arun kumar layam'],
   },
   {
@@ -76,7 +71,6 @@ const matchCounts2026 = [
     count: 6,
     names: ['inderjeet', 'inder', 'inderjeet singh tamber'],
   },
-
   {
     count: 5,
     names: [
@@ -86,7 +80,6 @@ const matchCounts2026 = [
       'venkat krishna teja gurram',
     ],
   },
-
   {
     count: 3,
     names: ['amit', 'amit koul'],
@@ -113,7 +106,6 @@ const matchCounts2026 = [
     count: 3,
     names: ['naresh', 'naresh pendyala'],
   },
-
   {
     count: 1,
     names: ['chaitanya praneeth', 'chaitanya praneeth nadimpalli'],
@@ -154,22 +146,18 @@ const matchCounts2026 = [
     count: 1,
     names: ['sandesh', 'sandesh sudini'],
   },
-
   {
-    count: 2,
+    count: 1,
     names: ['pradhyu g', 'pradyu ghatti', 'pradyu'],
   },
-
   {
-  count: 1,
-  names: ['vikranth nyalakonda', 'vikranth'],
-},
-
+    count: 1,
+    names: ['vikranth nyalakonda', 'vikranth'],
+  },
   {
-  count: 1,
-  names: ['Sreekanth Reddy', 'Sreekanth'],
-},
-
+    count: 1,
+    names: ['sreekanth reddy', 'srekanth reddy'],
+  },
 ];
 
 const normalizePlayerName = (name) =>
@@ -188,12 +176,135 @@ const getMatchCount2026 = (name, existingMatches = 0) => {
   return match ? match.count : existingMatches || 0;
 };
 
+const getSortValue = (value, type) => {
+  if (type === 'text') {
+    return String(value ?? '').toLowerCase();
+  }
+
+  if (value === '-' || value === null || value === undefined || value === '') {
+    return 0;
+  }
+
+  const num = Number(String(value).replace(/[^0-9.-]/g, ''));
+  return Number.isNaN(num) ? 0 : num;
+};
+
+const sortRows = (rows, sortConfig, columns) => {
+  if (!sortConfig?.key) return rows;
+
+  const column = columns.find((c) => c.key === sortConfig.key);
+  const type = column?.type || 'number';
+
+  return [...rows].sort((a, b) => {
+    const aValue = getSortValue(a[sortConfig.key], type);
+    const bValue = getSortValue(b[sortConfig.key], type);
+
+    if (aValue < bValue) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+
+    if (aValue > bValue) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+
+    return 0;
+  });
+};
+
+const getNextSort = (currentSort, column) => {
+  if (currentSort.key === column.key) {
+    return {
+      key: column.key,
+      direction: currentSort.direction === 'asc' ? 'desc' : 'asc',
+    };
+  }
+
+  return {
+    key: column.key,
+    direction: column.type === 'text' ? 'asc' : 'desc',
+  };
+};
+
+function SortableStatTable({ title, columns, rows, sortConfig, onSort }) {
+  const formatValue = (value, column) => {
+    if (column.zeroAsDash && Number(value) === 0) return '-';
+    if (value === null || value === undefined || value === '') return '-';
+
+    if (column.roundNoDecimal) {
+      const num = Number(value);
+      return Number.isNaN(num) ? value : Math.round(num);
+    }
+
+    return value;
+  };
+
+  return (
+    <div>
+      <h3 className="mb-4 text-2xl font-black text-amber-300">{title}</h3>
+
+      <div className="overflow-x-auto rounded-2xl">
+        <table className="min-w-full text-left text-sm">
+          <thead>
+            <tr className="bg-white/10 text-white">
+              {columns.map((column) => {
+                const isActive = sortConfig.key === column.key;
+
+                return (
+                  <th key={column.key} className="px-3 py-3 font-bold">
+                    <button
+                      type="button"
+                      onClick={() => onSort(column)}
+                      className="flex items-center gap-1 text-left font-bold hover:text-amber-300"
+                    >
+                      {column.label}
+                      {isActive && (
+                        <span className="text-xs text-amber-300">
+                          {sortConfig.direction === 'asc' ? '▲' : '▼'}
+                        </span>
+                      )}
+                    </button>
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr
+                key={`${row.name}-${rowIndex}`}
+                className="border-b border-white/10"
+              >
+                {columns.map((column) => (
+                  <td key={column.key} className="px-3 py-3 text-white">
+                    {formatValue(row[column.key], column)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export function Stats() {
   const [season, setSeason] = useState('All-Time');
   const [data, setData] = useState({ batting: [], bowling: [] });
   const [playerSearch, setPlayerSearch] = useState('');
   const [battingPage, setBattingPage] = useState(1);
   const [bowlingPage, setBowlingPage] = useState(1);
+
+  const [battingSort, setBattingSort] = useState({
+    key: 'runs',
+    direction: 'desc',
+  });
+
+  const [bowlingSort, setBowlingSort] = useState({
+    key: 'wickets',
+    direction: 'desc',
+  });
 
   useEffect(() => {
     const seasonParam = season === 'All-Time' ? 'all' : season;
@@ -213,6 +324,47 @@ export function Stats() {
         })
       );
   }, [season]);
+
+  const battingColumns =
+    season === '2026'
+      ? [
+          { key: 'name', label: 'Player', type: 'text' },
+          { key: 'matches', label: 'M', type: 'number' },
+          { key: 'runs', label: 'R', type: 'number' },
+          { key: 'balls', label: 'B', type: 'number' },
+          { key: 'fours', label: '4s', type: 'number', zeroAsDash: true },
+          { key: 'sixes', label: '6s', type: 'number', zeroAsDash: true },
+          { key: 'sr', label: 'SR', type: 'number', roundNoDecimal: true },
+          { key: 'avg', label: 'Avg', type: 'number', roundNoDecimal: true },
+        ]
+      : [
+          { key: 'name', label: 'Player', type: 'text' },
+          { key: 'runs', label: 'Runs', type: 'number' },
+          { key: 'balls', label: 'Balls', type: 'number' },
+          { key: 'fours', label: '4s', type: 'number', zeroAsDash: true },
+          { key: 'sixes', label: '6s', type: 'number', zeroAsDash: true },
+          { key: 'sr', label: 'SR', type: 'number' },
+        ];
+
+  const bowlingColumns =
+    season === '2026'
+      ? [
+          { key: 'name', label: 'Player', type: 'text' },
+          { key: 'matches', label: 'M', type: 'number' },
+          { key: 'overs', label: 'O', type: 'number' },
+          { key: 'runs', label: 'R', type: 'number' },
+          { key: 'wickets', label: 'W', type: 'number' },
+          { key: 'economy', label: 'E', type: 'number' },
+          { key: 'wides', label: 'Wd', type: 'number' },
+          { key: 'noBalls', label: 'NB', type: 'number' },
+        ]
+      : [
+          { key: 'name', label: 'Player', type: 'text' },
+          { key: 'overs', label: 'Overs', type: 'number' },
+          { key: 'runs', label: 'Runs', type: 'number' },
+          { key: 'wickets', label: 'Wickets', type: 'number' },
+          { key: 'economy', label: 'Eco', type: 'number' },
+        ];
 
   const battingRows =
     season === '2026'
@@ -238,24 +390,34 @@ export function Stats() {
     p.name.toLowerCase().includes(playerSearch.toLowerCase())
   );
 
-  const pagedBattingRows = filteredBattingRows.slice(
+  const sortedBattingRows = useMemo(
+    () => sortRows(filteredBattingRows, battingSort, battingColumns),
+    [filteredBattingRows, battingSort, battingColumns]
+  );
+
+  const sortedBowlingRows = useMemo(
+    () => sortRows(filteredBowlingRows, bowlingSort, bowlingColumns),
+    [filteredBowlingRows, bowlingSort, bowlingColumns]
+  );
+
+  const pagedBattingRows = sortedBattingRows.slice(
     (battingPage - 1) * rowsPerPage,
     battingPage * rowsPerPage
   );
 
-  const pagedBowlingRows = filteredBowlingRows.slice(
+  const pagedBowlingRows = sortedBowlingRows.slice(
     (bowlingPage - 1) * rowsPerPage,
     bowlingPage * rowsPerPage
   );
 
   const battingTotalPages = Math.max(
     1,
-    Math.ceil(filteredBattingRows.length / rowsPerPage)
+    Math.ceil(sortedBattingRows.length / rowsPerPage)
   );
 
   const bowlingTotalPages = Math.max(
     1,
-    Math.ceil(filteredBowlingRows.length / rowsPerPage)
+    Math.ceil(sortedBowlingRows.length / rowsPerPage)
   );
 
   return (
@@ -324,34 +486,15 @@ export function Stats() {
           </div>
 
           <div className="table-wrap">
-            <StatTable
+            <SortableStatTable
               title="Batting Leaders"
-              headers={
-                season === '2026'
-                  ? ['Player', 'M', 'R', 'B', '4s', '6s', 'SR', 'Avg']
-                  : ['Player', 'Runs', 'Balls', '4s', '6s', 'SR']
-              }
-              rows={pagedBattingRows.map((p) =>
-                season === '2026'
-                  ? [
-                      p.name,
-                      p.matches,
-                      p.runs,
-                      p.balls,
-                      p.fours || '-',
-                      p.sixes || '-',
-                      p.sr,
-                      p.avg,
-                    ]
-                  : [
-                      p.name,
-                      p.runs,
-                      p.balls,
-                      p.fours || '-',
-                      p.sixes || '-',
-                      p.sr,
-                    ]
-              )}
+              columns={battingColumns}
+              rows={pagedBattingRows}
+              sortConfig={battingSort}
+              onSort={(column) => {
+                setBattingPage(1);
+                setBattingSort((current) => getNextSort(current, column));
+              }}
             />
           </div>
         </div>
@@ -382,28 +525,15 @@ export function Stats() {
           </div>
 
           <div className="table-wrap">
-            <StatTable
+            <SortableStatTable
               title="Bowling Leaders"
-              headers={
-                season === '2026'
-                  ? ['Player', 'M', 'O', 'R', 'W', 'E', 'Dots', 'Wd', 'NB']
-                  : ['Player', 'Overs', 'Runs', 'Wickets', 'Eco']
-              }
-              rows={pagedBowlingRows.map((p) =>
-                season === '2026'
-                  ? [
-                      p.name,
-                      p.matches,
-                      p.overs,
-                      p.runs,
-                      p.wickets,
-                      p.economy,
-                      p.dots,
-                      p.wides,
-                      p.noBalls,
-                    ]
-                  : [p.name, p.overs, p.runs, p.wickets, p.economy]
-              )}
+              columns={bowlingColumns}
+              rows={pagedBowlingRows}
+              sortConfig={bowlingSort}
+              onSort={(column) => {
+                setBowlingPage(1);
+                setBowlingSort((current) => getNextSort(current, column));
+              }}
             />
           </div>
         </div>
