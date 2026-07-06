@@ -9,7 +9,7 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const season = searchParams.get('season') || 'all';
 
-  let matchQuery = supabaseServer.from('tccc_matches').select('id').eq('team', 'TT');
+  let matchQuery = supabaseServer.from('tccc_matches').select('id, league').eq('team', 'TT');
   if (season !== 'all') matchQuery = matchQuery.eq('season', Number(season));
 
   const { data: matches, error: matchError } = await matchQuery;
@@ -18,19 +18,37 @@ export async function GET(req) {
   const matchIds = matches.map((m) => m.id);
   if (matchIds.length === 0) return NextResponse.json({ batting: [], bowling: [] });
 
+  // "SEASON" rows are a single synthetic match standing in for a whole
+  // pre-migration season's totals (no real per-match breakdown exists for
+  // them) — they can't be counted as "1 match played" the way a real match
+  // can, so matches-played only counts real, individually-tracked matches.
+  const realMatchIds = new Set(matches.filter((m) => m.league !== 'SEASON').map((m) => m.id));
+
   const [{ data: battingRows, error: battingError }, { data: bowlingRows, error: bowlingError }] = await Promise.all([
     supabaseServer
       .from('tccc_batting_innings')
-      .select('runs, balls, fours, sixes, innings, not_out, not_out_count, unmatched_name, tccc_players(canonical_name)')
+      .select('match_id, runs, balls, fours, sixes, innings, not_out, not_out_count, unmatched_name, tccc_players(canonical_name)')
       .in('match_id', matchIds),
     supabaseServer
       .from('tccc_bowling_innings')
-      .select('overs, runs, wickets, wides, no_balls, dots, unmatched_name, tccc_players(canonical_name)')
+      .select('match_id, overs, runs, wickets, wides, no_balls, dots, unmatched_name, tccc_players(canonical_name)')
       .in('match_id', matchIds),
   ]);
 
   if (battingError) return NextResponse.json({ error: battingError.message }, { status: 500 });
   if (bowlingError) return NextResponse.json({ error: bowlingError.message }, { status: 500 });
+
+  // Matches played = distinct real matches the player has a batting OR
+  // bowling row in (so a bowler who didn't bat, or vice versa, still counts
+  // the match once rather than needing to appear in both).
+  const matchesByPlayer = new Map();
+  for (const row of [...battingRows, ...bowlingRows]) {
+    if (!realMatchIds.has(row.match_id)) continue;
+    const name = playerName(row);
+    if (!matchesByPlayer.has(name)) matchesByPlayer.set(name, new Set());
+    matchesByPlayer.get(name).add(row.match_id);
+  }
+  const matchesPlayed = (name) => matchesByPlayer.get(name)?.size ?? 0;
 
   const battingMap = new Map();
   for (const row of battingRows) {
@@ -52,6 +70,7 @@ export async function GET(req) {
       const dismissals = p.innings - p.notOuts;
       return {
         name: p.name,
+        matches: matchesPlayed(p.name),
         runs: p.runs,
         balls: p.balls,
         fours: p.fours,
@@ -80,6 +99,7 @@ export async function GET(req) {
   const bowling = [...bowlingMap.values()]
     .map((p) => ({
       name: p.name,
+      matches: matchesPlayed(p.name),
       overs: p.overs,
       runs: p.runs,
       wickets: p.wickets,
