@@ -31,7 +31,7 @@ const matchCounts2026 = [
   },
 
   {
-    count: 8,
+    count: 7,
     names: ['anand', 'anand chaitanya maddula'],
   },
   {
