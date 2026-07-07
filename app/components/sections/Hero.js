@@ -119,7 +119,7 @@ export function Hero() {
 
             <HighlightCard
               className="highlight-card"
-              title="Titan of 2026"
+              title="Emerging Titan of 2026"
               name={titanPlayer?.name}
               stat={`${titanPlayer?.runs || 0} runs + ${titanPlayer?.wickets || 0} wickets`}
               note="This season's standout with bat and ball."
