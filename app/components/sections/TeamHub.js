@@ -137,23 +137,51 @@ function todayStr() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
+function matchNarrativeLine(match) {
+  if (match.result.summary) return match.result.summary;
+
+  const { teamScore, opponentScore, result } = match.result;
+  if (teamScore && opponentScore) {
+    return `Telugu Titans scored ${teamScore} against ${match.opponent}'s ${opponentScore}.${result ? ` ${result}.` : ""}`;
+  }
+  return result ? `${result}.` : `Telugu Titans faced ${match.opponent}.`;
+}
+
+function matchHighlightLine(match) {
+  const { ground, league, homeAway } = match;
+  const venue = ground ? ` at ${ground}` : "";
+  const homeAwayText = homeAway ? ` (${homeAway} fixture)` : "";
+
+  return `${league} matchday${venue}${homeAwayText}.`;
+}
+
 export function TeamHub() {
   const [teamHubTab, setTeamHubTab] = useState("Voting Arena");
   const [showVotingResults, setShowVotingResults] = useState(false);
   const [polls, setPolls] = useState({});
   const [pollInputs, setPollInputs] = useState({});
-  const [lockerNote, setLockerNote] = useState("");
-  const [lockerNotes, setLockerNotes] = useState([]);
   const [captainNote, setCaptainNote] = useState("");
   const [captainNotes, setCaptainNotes] = useState([]);
   const [captainPlayer, setCaptainPlayer] = useState("");
   const [awards, setAwards] = useState([]);
+  const [timelineMatches, setTimelineMatches] = useState([]);
 
   useEffect(() => {
     fetch("/api/stats?season=2026")
       .then((res) => res.json())
       .then((data) => setAwards(computeAwards(data.batting || [], data.bowling || [])))
       .catch(() => setAwards([]));
+
+    fetch("/api/matches?season=2026")
+      .then((res) => res.json())
+      .then((data) =>
+        setTimelineMatches(
+          (data.matches || [])
+            .filter((m) => m.status !== "scheduled")
+            .reverse()
+        )
+      )
+      .catch(() => setTimelineMatches([]));
   }, []);
 
   async function loadTeamHubData() {
@@ -172,7 +200,6 @@ export function TeamHub() {
     });
 
     setPolls(groupedPolls);
-    setLockerNotes(data.lockerNotes.map((x) => x.note));
     setCaptainNotes(
       data.captainNotes.map((x) => ({
         note: x.note,
@@ -247,23 +274,6 @@ export function TeamHub() {
     alert("Voting results copied! Paste in WhatsApp.");
   }
 
-  async function addLockerNote() {
-    const value = lockerNote.trim();
-    if (!value) return;
-
-    await fetch("/api/teamhub", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "lockerNote",
-        note: value,
-      }),
-    });
-
-    setLockerNote("");
-    loadTeamHubData();
-  }
-
   async function addCaptainNote() {
     if (!captainPlayer.trim()) {
       alert("Please enter player name");
@@ -308,7 +318,7 @@ export function TeamHub() {
         {[
           "Voting Arena",
           "Awards Room",
-          "Locker Room",
+          "Season Timeline",
           "War Room",
         ].map((tab) => (
           <button
@@ -421,48 +431,74 @@ export function TeamHub() {
         </div>
       )}
 
-      {teamHubTab === "Locker Room" && (
-        <div teamhub-tabs className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-            <h3 className="text-2xl font-black text-amber-300">Locker Room Wall</h3>
-            <p className="mt-3 text-white/70">
-              Leave fun notes, memories, season goals, promises, jokes, or moments we can look back at later in the season.
-            </p>
+      {teamHubTab === "Season Timeline" && (
+        <div teamhub-tabs>
+          <h2 className="text-4xl font-black text-amber-300">2026 Season Timeline</h2>
+          <p className="mt-2 mb-8 text-white/70">
+            Every match, day one to now — results, MVPs, and scorelines as they were published.
+          </p>
 
-            <textarea
-              value={lockerNote}
-              onChange={(e) => setLockerNote(e.target.value)}
-              placeholder="Write a locker room note..."
-              className="mt-5 h-36 w-full rounded-2xl border border-white/10 bg-black/40 p-4 text-white outline-none"
-            />
+          {timelineMatches.length === 0 ? (
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+              No matches recorded for 2026 yet.
+            </div>
+          ) : (
+            <div className="relative space-y-6 border-l-2 border-amber-300/20 pl-6">
+              {timelineMatches.map((match) => (
+                <div key={match.id} className="relative">
+                  <span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full bg-amber-300" />
 
-            <button onClick={addLockerNote} className="btn btn-gold mt-4">
-              Post Note
-            </button>
-          </div>
+                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+                        {match.league}
+                      </span>
+                      <span className="text-sm text-white/60">
+                        {match.day}, {match.date}
+                      </span>
+                    </div>
 
-          <div className="flex flex-wrap gap-4 lg:col-span-2">
-            {lockerNotes.length === 0 ? (
-              <div className="h-fit w-[260px] rounded-xl border border-white/10 bg-white/5 p-4 text-white/60">
-                No locker room notes yet.
-              </div>
-            ) : (
-              lockerNotes.map((note, i) => (
-                <div
-                  key={i}
-                  className="h-fit w-[260px] rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 shadow-lg"
-                >
-                  <div className="mb-2 text-xs font-black uppercase tracking-widest text-amber-300">
-                    Locker Note #{i + 1}
+                    <h3 className="mt-3 text-xl font-black text-amber-300">
+                      Telugu Titans vs {match.opponent}
+                    </h3>
+
+                    {match.result ? (
+                      <>
+                        <p className="mt-2 font-bold text-white">{match.result.result}</p>
+                        {match.result.teamScore && match.result.opponentScore && (
+                          <p className="mt-1 text-sm text-white/60">
+                            {match.result.teamScore} vs {match.result.opponentScore}
+                          </p>
+                        )}
+                        <p className="mt-3 text-sm leading-6 text-white/75">{matchNarrativeLine(match)}</p>
+                        <p className="mt-1 text-sm leading-6 text-white/75">{matchHighlightLine(match)}</p>
+
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          {match.result.mvp && (
+                            <div className="inline-block rounded-xl border border-amber-300/20 bg-black/30 px-3 py-2 text-sm text-amber-300">
+                              🏆 MVP: {match.result.mvp}
+                            </div>
+                          )}
+                          {match.bestBatter && (
+                            <div className="inline-block rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80">
+                              🏏 Best Batter: {match.bestBatter.name} — {match.bestBatter.runs} runs
+                            </div>
+                          )}
+                          {match.bestBowler && (
+                            <div className="inline-block rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80">
+                              🎯 Best Bowler: {match.bestBowler.name} — {match.bestBowler.wickets} wickets
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="mt-2 text-sm text-white/60">Upcoming — result not posted yet.</p>
+                    )}
                   </div>
-
-                  <p className="break-words text-sm leading-5 text-white/80">
-                    {note}
-                  </p>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

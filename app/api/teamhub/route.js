@@ -2,15 +2,13 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "../../lib/supabaseServer";
 
 export async function GET() {
-  const [polls, locker, captain] = await Promise.all([
+  const [polls, captain] = await Promise.all([
     supabaseServer.from("teamhub_polls").select("id, poll_name, option_name, votes, match_date").order("created_at", { ascending: false }),
-    supabaseServer.from("teamhub_locker_notes").select("*").order("created_at", { ascending: false }),
     supabaseServer.from("teamhub_captain_notes").select("*").order("created_at", { ascending: false }),
   ]);
 
   return NextResponse.json({
     polls: polls.data || [],
-    lockerNotes: locker.data || [],
     captainNotes: captain.data || [],
   });
 }
@@ -47,17 +45,6 @@ export async function POST(req) {
         .from("teamhub_polls")
         .update({ votes: (current?.votes || 0) + 1 })
         .eq("id", body.id)
-        .select()
-        .single();
-
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-      return NextResponse.json(data);
-    }
-
-    if (body.type === "lockerNote") {
-      const { data, error } = await supabaseServer
-        .from("teamhub_locker_notes")
-        .insert({ note: body.note })
         .select()
         .single();
 
