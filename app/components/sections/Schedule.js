@@ -144,7 +144,7 @@ export function Schedule() {
       {selectedSchedule === "STANDINGS" ? (
         <StandingsGrid season={2026} />
       ) : (
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {matches
           .filter((match) => match.league === selectedSchedule)
           .map((match) => {
@@ -157,25 +157,25 @@ export function Schedule() {
                 onClick={() => isFinished && setOpenMatch(match)}
                 className={
                   isFinished
-                    ? 'relative cursor-pointer rounded-3xl border border-white/5 bg-white/[0.02] p-6 opacity-70 transition hover:opacity-100 hover:border-white/20'
-                    : 'relative rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:border-amber-300/40 hover:bg-white/10'
+                    ? 'relative cursor-pointer rounded-2xl border border-white/5 bg-white/[0.02] p-3.5 opacity-70 transition hover:opacity-100 hover:border-white/20'
+                    : 'relative rounded-2xl border border-white/10 bg-white/5 p-3.5 transition hover:border-amber-300/40 hover:bg-white/10'
                 }
               >
                 {badge && (
-                  <span className={`absolute right-6 top-6 inline-flex rounded-full px-3 py-1 text-xs font-black ${badge.className}`}>
+                  <span className={`absolute right-3.5 top-3.5 inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-black ${badge.className}`}>
                     {badge.label}
                   </span>
                 )}
 
-                <div className="mb-3 inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+                <div className="mb-2 inline-flex rounded-full bg-amber-300 px-2.5 py-0.5 text-[11px] font-bold text-black">
                   {match.league}
                 </div>
 
-                <h3 className="text-2xl font-black text-amber-300">
+                <h3 className="text-base font-black text-amber-300">
                   Telugu Titans vs {match.opponent}
                 </h3>
 
-                <div className="mt-5 space-y-3 text-white/80">
+                <div className="mt-2.5 space-y-1.5 text-sm text-white/80">
                   <p>
                     <span className="font-black text-amber-300">Date:</span>{" "}
                     {match.day}, {match.date}
@@ -198,7 +198,7 @@ export function Schedule() {
                 </div>
 
                 {isFinished && (
-                  <p className="mt-4 text-xs font-bold uppercase tracking-widest text-white/40">
+                  <p className="mt-2.5 text-[11px] font-bold uppercase tracking-widest text-white/40">
                     Tap for match summary
                   </p>
                 )}

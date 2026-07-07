@@ -28,7 +28,6 @@ const AWARD_DEFS = [
   {
     icon: "🦾",
     title: "Iron Man",
-    tagline: "Never missed a call-up",
     pick: (players) => topByStat(players, (p) => p.matches),
     stat: (r) => `${r.value} matches played`,
     blurb: (r) => `${r.player.name} showed up more than anyone else this season.`,
@@ -36,7 +35,6 @@ const AWARD_DEFS = [
   {
     icon: "🏆",
     title: "Most Valuable Player",
-    tagline: "Impact with bat and ball",
     pick: (players) => topByStat(players, (p) => (p.runs || 0) + (p.wickets || 0) * 20),
     stat: (r) => `${r.player.runs || 0} runs • ${r.player.wickets || 0} wickets`,
     blurb: (r) => `${r.player.name} swung the game more often than anyone this year.`,
@@ -44,7 +42,6 @@ const AWARD_DEFS = [
   {
     icon: "💥",
     title: "Six Machine",
-    tagline: "Certified boundary hitter",
     pick: (players) => topByStat(players, (p) => p.sixes, (p) => p.sixes > 0),
     stat: (r) => `${r.value} sixes`,
     blurb: (r) => `${r.player.name} keeps sending the ball into the next postal code.`,
@@ -52,7 +49,6 @@ const AWARD_DEFS = [
   {
     icon: "🚀",
     title: "Strike Rate Rocket",
-    tagline: "Fastest hands in the club",
     pick: (players) => topByStat(players, (p) => p.sr, (p) => p.sr !== null && p.balls >= 20),
     stat: (r) => `SR ${r.value.toFixed(1)}`,
     blurb: (r) => `${r.player.name} doesn't believe in dot balls.`,
@@ -60,7 +56,6 @@ const AWARD_DEFS = [
   {
     icon: "🧊",
     title: "The Wall",
-    tagline: "Batting all day, every day",
     pick: (players) => topByStat(players, (p) => p.avg, (p) => p.avg !== null && p.runs >= 100),
     stat: (r) => `Avg ${r.value.toFixed(1)}`,
     blurb: (r) => `${r.player.name} makes the bowlers earn every single wicket.`,
@@ -68,7 +63,6 @@ const AWARD_DEFS = [
   {
     icon: "🔥",
     title: "Wicket Hunter",
-    tagline: "Strikes when it matters",
     pick: (players) => topByStat(players, (p) => p.wickets, (p) => p.wickets > 0),
     stat: (r) => `${r.value} wickets`,
     blurb: (r) => `${r.player.name} keeps ending innings before they get started.`,
@@ -76,7 +70,6 @@ const AWARD_DEFS = [
   {
     icon: "🎯",
     title: "Economy King",
-    tagline: "Miser with every over",
     pick: (players) => topByStat(players, (p) => (p.economy === null ? null : -p.economy), (p) => p.economy !== null && p.overs >= 15),
     stat: (r) => `Economy ${(-r.value).toFixed(1)}`,
     blurb: (r) => `${r.player.name} makes batters work for every run.`,
@@ -84,7 +77,6 @@ const AWARD_DEFS = [
   {
     icon: "😅",
     title: "Extras Donation Award",
-    tagline: "Generous to a fault",
     pick: (players) => topByStat(players, (p) => (p.wides || 0) + (p.noBalls || 0), (p) => (p.wides || 0) + (p.noBalls || 0) > 0),
     stat: (r) => `${r.value} freebies conceded`,
     blurb: (r) => `${r.player.name} is basically sponsoring the opposition's total.`,
@@ -157,7 +149,6 @@ function matchHighlightLine(match) {
 
 export function TeamHub() {
   const [teamHubTab, setTeamHubTab] = useState("Voting Arena");
-  const [showVotingResults, setShowVotingResults] = useState(false);
   const [polls, setPolls] = useState({});
   const [pollInputs, setPollInputs] = useState({});
   const [captainNote, setCaptainNote] = useState("");
@@ -333,45 +324,32 @@ export function TeamHub() {
 
       {teamHubTab === "Voting Arena" && (
         <div>
-          <div teamhub-tabs className="mt-4 flex items-center justify-between rounded-xl border border-amber-300/20 bg-gradient-to-r from-amber-300/10 to-transparent px-3 py-2">
-            <p className="text-xs text-amber-200">
-              Match predictions reveal their results automatically on match day. Player of the Match voting stays open — use the button to peek at standings.
-            </p>
-
-            <button
-              onClick={() => setShowVotingResults((prev) => !prev)}
-              className="btn btn-gold"
-            >
-              {showVotingResults ? "Show Votes" : "Show Results"}
-            </button>
-          </div>
-
           <div
             teamhub-tabs
-            className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+            className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4"
           >
             {Object.keys(polls).map((pollName) => {
               const { options = [], matchDate } = polls[pollName] || {};
               const sorted = [...options].sort((a, b) => b.votes - a.votes);
               const prediction = isPredictionPoll(pollName);
-              const revealResults = prediction ? !!matchDate && todayStr() >= matchDate : showVotingResults;
+              const revealResults = !!matchDate && todayStr() >= matchDate;
 
               return (
-                <div key={pollName} className="rounded-3xl border border-white/10 bg-white/5 p-4 x1:p-5">
-                  <h3 className="text-lg font-black leading-snug text-amber-300 break-words">{pollName}</h3>
+                <div key={pollName} className="rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4 xl:p-5">
+                  <h3 className="text-base font-black leading-snug text-amber-300 break-words sm:text-lg">{pollName}</h3>
 
                   {revealResults ? (
-                    <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3">
+                    <div className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 sm:mt-5 sm:px-4 sm:py-3">
                       {sorted.length === 0 ? (
-                        <p className="text-white/60">No votes yet.</p>
+                        <p className="text-sm text-white/60">No votes yet.</p>
                       ) : (
                         <>
-                          <div className="text-sm font-black text-amber-300">
+                          <div className="text-xs font-black text-amber-300 sm:text-sm">
                             🏆 Winner: {sorted[0].name} - {sorted[0].votes} votes
                           </div>
 
                           {sorted.slice(1, 3).map((item, i) => (
-                            <div key={item.id || item.name} className="mt-2 text-sm font-bold text-white/75">
+                            <div key={item.id || item.name} className="mt-1.5 text-xs font-bold text-white/75 sm:mt-2 sm:text-sm">
                               {i + 2}. {item.name} - {item.votes} votes
                             </div>
                           ))}
@@ -380,9 +358,9 @@ export function TeamHub() {
                     </div>
                   ) : (
                     <>
-                      <div className="mt-5 space-y-3">
+                      <div className="mt-3 space-y-2 sm:mt-5 sm:space-y-3">
                         {options.length === 0 ? (
-                          <p className="rounded-2xl bg-black/30 p-4 text-white/60">
+                          <p className="rounded-xl bg-black/30 p-3 text-sm text-white/60 sm:p-4">
                             No options yet. Add the first name below.
                           </p>
                         ) : (
@@ -395,7 +373,7 @@ export function TeamHub() {
                                   options.findIndex((o) => o.id === option.id)
                                 )
                               }
-                              className="flex w-full items-center justify-between rounded-2xl bg-black/30 px-4 py-3 text-left font-bold text-white/80 hover:bg-amber-300 hover:text-black"
+                              className="flex w-full items-center justify-between rounded-xl bg-black/30 px-3 py-2 text-left text-sm font-bold text-white/80 hover:bg-amber-300 hover:text-black sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
                             >
                               <span>{option.name}</span>
                               <span>{option.votes} votes</span>
@@ -405,7 +383,7 @@ export function TeamHub() {
                       </div>
 
                       {!prediction && (
-                        <div className="mt-5 flex gap-2">
+                        <div className="mt-3 flex gap-2 sm:mt-5">
                           <input
                             value={pollInputs[pollName] || ""}
                             onChange={(e) =>
@@ -415,9 +393,9 @@ export function TeamHub() {
                               }))
                             }
                             placeholder="Add player name"
-                            className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+                            className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
                           />
-                          <button onClick={() => addPollOption(pollName)} className="btn btn-gold">
+                          <button onClick={() => addPollOption(pollName)} className="btn btn-gold px-3 py-2 text-sm sm:px-4 sm:py-3">
                             Add
                           </button>
                         </div>
@@ -439,60 +417,60 @@ export function TeamHub() {
           </p>
 
           {timelineMatches.length === 0 ? (
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/60">
               No matches recorded for 2026 yet.
             </div>
           ) : (
-            <div className="relative space-y-6 border-l-2 border-amber-300/20 pl-6">
+            <div className="relative space-y-3 border-l-2 border-amber-300/20 pl-5">
               {timelineMatches.map((match) => (
                 <div key={match.id} className="relative">
-                  <span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full bg-amber-300" />
+                  <span className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-amber-300" />
 
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="inline-flex rounded-full bg-amber-300 px-3 py-1 text-xs font-bold text-black">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex rounded-full bg-amber-300 px-2.5 py-0.5 text-[11px] font-bold text-black">
                         {match.league}
                       </span>
-                      <span className="text-sm text-white/60">
+                      <span className="text-xs text-white/60">
                         {match.day}, {match.date}
                       </span>
                     </div>
 
-                    <h3 className="mt-3 text-xl font-black text-amber-300">
+                    <h3 className="mt-2 text-base font-black text-amber-300">
                       Telugu Titans vs {match.opponent}
                     </h3>
 
                     {match.result ? (
                       <>
-                        <p className="mt-2 font-bold text-white">{match.result.result}</p>
+                        <p className="mt-1 text-sm font-bold text-white">{match.result.result}</p>
                         {match.result.teamScore && match.result.opponentScore && (
-                          <p className="mt-1 text-sm text-white/60">
+                          <p className="mt-0.5 text-xs text-white/60">
                             {match.result.teamScore} vs {match.result.opponentScore}
                           </p>
                         )}
-                        <p className="mt-3 text-sm leading-6 text-white/75">{matchNarrativeLine(match)}</p>
-                        <p className="mt-1 text-sm leading-6 text-white/75">{matchHighlightLine(match)}</p>
+                        <p className="mt-2 text-xs leading-5 text-white/75">{matchNarrativeLine(match)}</p>
+                        <p className="mt-0.5 text-xs leading-5 text-white/75">{matchHighlightLine(match)}</p>
 
-                        <div className="mt-4 flex flex-wrap gap-3">
+                        <div className="mt-2.5 flex flex-wrap gap-2">
                           {match.result.mvp && (
-                            <div className="inline-block rounded-xl border border-amber-300/20 bg-black/30 px-3 py-2 text-sm text-amber-300">
+                            <div className="inline-block rounded-lg border border-amber-300/20 bg-black/30 px-2.5 py-1.5 text-xs text-amber-300">
                               🏆 MVP: {match.result.mvp}
                             </div>
                           )}
                           {match.bestBatter && (
-                            <div className="inline-block rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80">
+                            <div className="inline-block rounded-lg border border-white/10 bg-black/30 px-2.5 py-1.5 text-xs text-white/80">
                               🏏 Best Batter: {match.bestBatter.name} — {match.bestBatter.runs} runs
                             </div>
                           )}
                           {match.bestBowler && (
-                            <div className="inline-block rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80">
+                            <div className="inline-block rounded-lg border border-white/10 bg-black/30 px-2.5 py-1.5 text-xs text-white/80">
                               🎯 Best Bowler: {match.bestBowler.name} — {match.bestBowler.wickets} wickets
                             </div>
                           )}
                         </div>
                       </>
                     ) : (
-                      <p className="mt-2 text-sm text-white/60">Upcoming — result not posted yet.</p>
+                      <p className="mt-1 text-xs text-white/60">Upcoming — result not posted yet.</p>
                     )}
                   </div>
                 </div>
@@ -558,31 +536,25 @@ export function TeamHub() {
             Auto-crowned straight from this season's batting and bowling numbers — no votes needed.
           </p>
 
-          <div teamhub-tabs className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div teamhub-tabs className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {awards.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-white/60">
                 Not enough 2026 stats yet — check back after a few more matches.
               </div>
             ) : (
               awards.map((award) => (
                 <div
                   key={award.title}
-                  className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6"
+                  className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-5"
                 >
-                  <div className="text-3xl">{award.icon}</div>
-                  <h3 className="mt-2 text-xl font-black text-white">{award.title}</h3>
-                  <div className="text-xs font-bold uppercase tracking-widest text-yellow-400">
-                    {award.tagline}
+                  <div className="flex items-center gap-1.5 text-sm uppercase tracking-widest text-yellow-400">
+                    <span>{award.icon}</span>
+                    <span>{award.title}</span>
                   </div>
 
-                  <div className="mt-4 text-2xl font-black text-amber-300">
-                    {award.result.player.name}
-                  </div>
-                  <div className="mt-1 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
-                    {award.stat(award.result)}
-                  </div>
-
-                  <p className="mt-3 text-white/70">{award.blurb(award.result)}</p>
+                  <h3 className="mt-3 text-xl font-bold text-white">{award.result.player.name}</h3>
+                  <div className="mt-2 text-lg font-semibold text-yellow-300">{award.stat(award.result)}</div>
+                  <p className="mt-3 text-sm leading-6 text-white/60">{award.blurb(award.result)}</p>
                 </div>
               ))
             )}
