@@ -11,10 +11,8 @@ const RESULT_BADGES = {
 };
 
 function resultBadge(match) {
-  if (match.status === 'cancelled') {
-    return { label: 'NO RESULT', className: 'bg-white/20 text-white' };
-  }
-  return RESULT_BADGES[match.result?.resultType] || null;
+  if (match.status === 'scheduled') return null;
+  return RESULT_BADGES[match.result?.resultType] || { label: 'NO RESULT', className: 'bg-white/20 text-white' };
 }
 
 function MatchResultModal({ match, onClose }) {
