@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { PageWrap } from '../UI';
+import { StandingsGrid } from './Standings';
 
 export function Schedule() {
   const [matches, setMatches] = useState([]);
@@ -18,8 +19,8 @@ export function Schedule() {
   return (
     <PageWrap
       id="schedule2026"
-      title="2026 Season Schedule"
-      subtitle="Select BEDCL or MCPL schedule."
+      title="2026 Season"
+      subtitle="Select BEDCL or MCPL schedule, or view the season standings."
     >
       <div className="mb-6 flex flex-wrap gap-3">
         <button
@@ -35,8 +36,18 @@ export function Schedule() {
         >
           MCPL Schedule
         </button>
+
+        <button
+          onClick={() => setSelectedSchedule("STANDINGS")}
+          className={`btn ${selectedSchedule === "STANDINGS" ? "btn-gold" : "btn-ghost"}`}
+        >
+          Standings
+        </button>
       </div>
 
+      {selectedSchedule === "STANDINGS" ? (
+        <StandingsGrid season={2026} />
+      ) : (
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {matches
           .filter((match) => match.league === selectedSchedule)
@@ -128,6 +139,7 @@ export function Schedule() {
             );
           })}
       </div>
+      )}
     </PageWrap>
   );
 }

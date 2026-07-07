@@ -6,7 +6,6 @@ import { Hero } from './components/sections/Hero';
 import { News } from './components/sections/News';
 import { TeamHub } from './components/sections/TeamHub';
 import { Seasons } from './components/sections/Seasons';
-import { Standings } from './components/sections/Standings';
 import { Schedule } from './components/sections/Schedule';
 import { Stats } from './components/sections/Stats';
 import { Players } from './components/sections/Players';
@@ -41,8 +40,7 @@ export default function Home() {
       {activeSection === "news" && <News />}
       {activeSection === "teamhub" && <TeamHub />}
       {activeSection === "seasons" && <Seasons />}
-      {activeSection === "standings" && <Standings />}
-      {activeSection === "schedule2026" && <Schedule />}
+      {(activeSection === "schedule2026" || activeSection === "standings") && <Schedule />}
       {activeSection === "stats" && <Stats />}
       {activeSection === "players" && <Players />}
       {activeSection === "about" && <About />}

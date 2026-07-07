@@ -24,7 +24,16 @@ export async function GET(req) {
   // can, so matches-played only counts real, individually-tracked matches.
   const realMatchIds = new Set(matches.filter((m) => m.league !== 'SEASON').map((m) => m.id));
 
-  const [{ data: battingRows, error: battingError }, { data: bowlingRows, error: bowlingError }] = await Promise.all([
+  let adjustmentQuery = supabaseServer
+    .from('tccc_player_match_adjustments')
+    .select('season, extra_matches, tccc_players(canonical_name)');
+  if (season !== 'all') adjustmentQuery = adjustmentQuery.eq('season', Number(season));
+
+  const [
+    { data: battingRows, error: battingError },
+    { data: bowlingRows, error: bowlingError },
+    { data: adjustmentRows, error: adjustmentError },
+  ] = await Promise.all([
     supabaseServer
       .from('tccc_batting_innings')
       .select('match_id, runs, balls, fours, sixes, innings, not_out, not_out_count, unmatched_name, tccc_players(canonical_name)')
@@ -33,14 +42,18 @@ export async function GET(req) {
       .from('tccc_bowling_innings')
       .select('match_id, overs, runs, wickets, wides, no_balls, dots, unmatched_name, tccc_players(canonical_name)')
       .in('match_id', matchIds),
+    adjustmentQuery,
   ]);
 
   if (battingError) return NextResponse.json({ error: battingError.message }, { status: 500 });
   if (bowlingError) return NextResponse.json({ error: bowlingError.message }, { status: 500 });
+  if (adjustmentError) return NextResponse.json({ error: adjustmentError.message }, { status: 500 });
 
   // Matches played = distinct real matches the player has a batting OR
   // bowling row in (so a bowler who didn't bat, or vice versa, still counts
-  // the match once rather than needing to appear in both).
+  // the match once rather than needing to appear in both), plus any manual
+  // tccc_player_match_adjustments correction for matches that never produced
+  // a stat row at all (see that table's comment for why those exist).
   const matchesByPlayer = new Map();
   for (const row of [...battingRows, ...bowlingRows]) {
     if (!realMatchIds.has(row.match_id)) continue;
@@ -48,7 +61,16 @@ export async function GET(req) {
     if (!matchesByPlayer.has(name)) matchesByPlayer.set(name, new Set());
     matchesByPlayer.get(name).add(row.match_id);
   }
-  const matchesPlayed = (name) => matchesByPlayer.get(name)?.size ?? 0;
+
+  const adjustmentsByPlayer = new Map();
+  for (const row of adjustmentRows || []) {
+    const name = row.tccc_players?.canonical_name;
+    if (!name) continue;
+    adjustmentsByPlayer.set(name, (adjustmentsByPlayer.get(name) || 0) + (row.extra_matches || 0));
+  }
+
+  const matchesPlayed = (name) =>
+    (matchesByPlayer.get(name)?.size ?? 0) + (adjustmentsByPlayer.get(name) ?? 0);
 
   const battingMap = new Map();
   for (const row of battingRows) {

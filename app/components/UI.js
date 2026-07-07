@@ -90,10 +90,7 @@ useEffect(() => {
             Seasons Overview
           </a>
           <a href="#schedule2026" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
-            2026 Season Schedule
-          </a>
-          <a href="#standings" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
-            Standings
+            2026 Season
           </a>
         </div>
       </div>
@@ -199,19 +196,7 @@ useEffect(() => {
               : "border border-white/10 bg-white/[0.06] text-white"
           }`}
         >
-          2026 Season Schedule
-        </a>
-
-        <a
-          href="#standings"
-          onClick={() => setMenuOpen(false)}
-          className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
-            active === "Seasons"
-              ? "bg-amber-300 text-black"
-              : "border border-white/10 bg-white/[0.06] text-white"
-          }`}
-        >
-          Standings
+          2026 Season
         </a>
       </div>
     ) : p === "Players" ? (
