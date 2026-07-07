@@ -157,8 +157,8 @@ export function Schedule() {
                 onClick={() => isFinished && setOpenMatch(match)}
                 className={
                   isFinished
-                    ? 'relative cursor-pointer rounded-2xl border border-white/5 bg-white/[0.02] p-3.5 opacity-70 transition hover:opacity-100 hover:border-white/20'
-                    : 'relative rounded-2xl border border-white/10 bg-white/5 p-3.5 transition hover:border-amber-300/40 hover:bg-white/10'
+                    ? 'schedule-match-card relative cursor-pointer rounded-2xl border border-white/5 bg-white/[0.02] p-3.5 opacity-70 transition hover:opacity-100 hover:border-white/20'
+                    : 'schedule-match-card relative rounded-2xl border border-white/10 bg-white/5 p-3.5 transition hover:border-amber-300/40 hover:bg-white/10'
                 }
               >
                 {badge && (

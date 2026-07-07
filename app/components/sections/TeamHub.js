@@ -426,7 +426,7 @@ export function TeamHub() {
                 <div key={match.id} className="relative">
                   <span className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-amber-300" />
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
+                  <div className="timeline-match-card rounded-2xl border border-white/10 bg-white/5 p-3.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="inline-flex rounded-full bg-amber-300 px-2.5 py-0.5 text-[11px] font-bold text-black">
                         {match.league}
@@ -545,7 +545,7 @@ export function TeamHub() {
               awards.map((award) => (
                 <div
                   key={award.title}
-                  className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-5"
+                  className="award-card rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-5"
                 >
                   <div className="flex items-center gap-1.5 text-sm uppercase tracking-widest text-yellow-400">
                     <span>{award.icon}</span>

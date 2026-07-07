@@ -164,10 +164,12 @@ async function createPredictionPolls(afterMatchDate) {
 
   const { data: existingPredictionRows } = await supabaseServer
     .from('teamhub_polls')
-    .select('id')
+    .select('id, match_date')
     .ilike('poll_name', `Predict:%${suffix}`)
     .limit(1);
-  if (existingPredictionRows && existingPredictionRows.length > 0) return; // already created for this match
+  // Already created for this match — unless those rows predate match_date being
+  // tracked (null), in which case fall through and recreate them properly.
+  if (existingPredictionRows && existingPredictionRows.length > 0 && existingPredictionRows[0].match_date) return;
 
   const { data: rosterPlayers } = await supabaseServer
     .from('tccc_players')
@@ -416,7 +418,7 @@ export async function POST(req) {
     const pollName = `POTM vs ${opponent} (${shortDate})`;
     const { data: existingPollRows } = await supabaseServer
       .from('teamhub_polls')
-      .select('id')
+      .select('id, match_date')
       .eq('poll_name', pollName)
       .limit(1);
 
@@ -427,6 +429,10 @@ export async function POST(req) {
           candidateNames.map((name) => ({ poll_name: pollName, option_name: name, votes: 0, match_date: matchDate }))
         );
       }
+    } else if (!existingPollRows[0].match_date) {
+      // Existing poll predates match_date tracking — backfill it in place so
+      // it can still auto-reveal, without touching votes/options.
+      await supabaseServer.from('teamhub_polls').update({ match_date: matchDate }).eq('poll_name', pollName);
     }
 
     await createPredictionPolls(matchDate);
