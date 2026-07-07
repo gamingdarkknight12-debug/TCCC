@@ -7,6 +7,129 @@ function isPredictionPoll(pollName) {
   return pollName.startsWith("Predict:");
 }
 
+const parseStatNum = (v) => {
+  if (v === undefined || v === null || v === "-") return null;
+  const n = Number(v);
+  return Number.isNaN(n) ? null : n;
+};
+
+function topByStat(players, valueFn, minFn) {
+  let best = null;
+  for (const p of players) {
+    if (minFn && !minFn(p)) continue;
+    const value = valueFn(p);
+    if (value === null || value === undefined) continue;
+    if (!best || value > best.value) best = { player: p, value };
+  }
+  return best;
+}
+
+const AWARD_DEFS = [
+  {
+    icon: "🦾",
+    title: "Iron Man",
+    tagline: "Never missed a call-up",
+    pick: (players) => topByStat(players, (p) => p.matches),
+    stat: (r) => `${r.value} matches played`,
+    blurb: (r) => `${r.player.name} showed up more than anyone else this season.`,
+  },
+  {
+    icon: "🏆",
+    title: "Most Valuable Player",
+    tagline: "Impact with bat and ball",
+    pick: (players) => topByStat(players, (p) => (p.runs || 0) + (p.wickets || 0) * 20),
+    stat: (r) => `${r.player.runs || 0} runs • ${r.player.wickets || 0} wickets`,
+    blurb: (r) => `${r.player.name} swung the game more often than anyone this year.`,
+  },
+  {
+    icon: "💥",
+    title: "Six Machine",
+    tagline: "Certified boundary hitter",
+    pick: (players) => topByStat(players, (p) => p.sixes, (p) => p.sixes > 0),
+    stat: (r) => `${r.value} sixes`,
+    blurb: (r) => `${r.player.name} keeps sending the ball into the next postal code.`,
+  },
+  {
+    icon: "🚀",
+    title: "Strike Rate Rocket",
+    tagline: "Fastest hands in the club",
+    pick: (players) => topByStat(players, (p) => p.sr, (p) => p.sr !== null && p.balls >= 20),
+    stat: (r) => `SR ${r.value.toFixed(1)}`,
+    blurb: (r) => `${r.player.name} doesn't believe in dot balls.`,
+  },
+  {
+    icon: "🧊",
+    title: "The Wall",
+    tagline: "Batting all day, every day",
+    pick: (players) => topByStat(players, (p) => p.avg, (p) => p.avg !== null && p.runs >= 100),
+    stat: (r) => `Avg ${r.value.toFixed(1)}`,
+    blurb: (r) => `${r.player.name} makes the bowlers earn every single wicket.`,
+  },
+  {
+    icon: "🔥",
+    title: "Wicket Hunter",
+    tagline: "Strikes when it matters",
+    pick: (players) => topByStat(players, (p) => p.wickets, (p) => p.wickets > 0),
+    stat: (r) => `${r.value} wickets`,
+    blurb: (r) => `${r.player.name} keeps ending innings before they get started.`,
+  },
+  {
+    icon: "🎯",
+    title: "Economy King",
+    tagline: "Miser with every over",
+    pick: (players) => topByStat(players, (p) => (p.economy === null ? null : -p.economy), (p) => p.economy !== null && p.overs >= 15),
+    stat: (r) => `Economy ${(-r.value).toFixed(1)}`,
+    blurb: (r) => `${r.player.name} makes batters work for every run.`,
+  },
+  {
+    icon: "😅",
+    title: "Extras Donation Award",
+    tagline: "Generous to a fault",
+    pick: (players) => topByStat(players, (p) => (p.wides || 0) + (p.noBalls || 0), (p) => (p.wides || 0) + (p.noBalls || 0) > 0),
+    stat: (r) => `${r.value} freebies conceded`,
+    blurb: (r) => `${r.player.name} is basically sponsoring the opposition's total.`,
+  },
+];
+
+function buildAwardPlayers(batting, bowling) {
+  const map = new Map();
+  const get = (name) => {
+    if (!map.has(name)) map.set(name, { name, matches: 0 });
+    return map.get(name);
+  };
+
+  for (const b of batting) {
+    const p = get(b.name);
+    p.matches = Math.max(p.matches, b.matches || 0);
+    p.runs = b.runs || 0;
+    p.balls = b.balls || 0;
+    p.sixes = b.sixes || 0;
+    p.sr = parseStatNum(b.sr);
+    p.avg = parseStatNum(b.avg);
+  }
+
+  for (const w of bowling) {
+    const p = get(w.name);
+    p.matches = Math.max(p.matches, w.matches || 0);
+    p.wickets = w.wickets || 0;
+    p.overs = w.overs || 0;
+    p.economy = parseStatNum(w.economy);
+    p.wides = w.wides || 0;
+    p.noBalls = w.noBalls || 0;
+  }
+
+  return [...map.values()];
+}
+
+function computeAwards(batting, bowling) {
+  const players = buildAwardPlayers(batting, bowling);
+  return AWARD_DEFS.map((def) => {
+    const result = def.pick(players);
+    if (!result) return null;
+    return { ...def, result };
+  }).filter(Boolean);
+}
+
 // Local calendar day as YYYY-MM-DD, so it can be compared directly against
 // the poll's stored match_date string without any UTC/local timezone drift.
 function todayStr() {
@@ -15,7 +138,7 @@ function todayStr() {
 }
 
 export function TeamHub() {
-  const [teamHubTab, setTeamHubTab] = useState("Hall of Fame");
+  const [teamHubTab, setTeamHubTab] = useState("Voting Arena");
   const [showVotingResults, setShowVotingResults] = useState(false);
   const [polls, setPolls] = useState({});
   const [pollInputs, setPollInputs] = useState({});
@@ -24,33 +147,13 @@ export function TeamHub() {
   const [captainNote, setCaptainNote] = useState("");
   const [captainNotes, setCaptainNotes] = useState([]);
   const [captainPlayer, setCaptainPlayer] = useState("");
-  const [nicknamePlayer, setNicknamePlayer] = useState("");
-  const [nicknameText, setNicknameText] = useState("");
-  const [nicknames, setNicknames] = useState([]);
-  const [legendStats, setLegendStats] = useState({ arun: null, srikanth: null });
+  const [awards, setAwards] = useState([]);
 
   useEffect(() => {
-    fetch("/api/stats?season=all")
+    fetch("/api/stats?season=2026")
       .then((res) => res.json())
-      .then((data) => {
-        const findByPrefix = (rows, prefix) =>
-          (rows || []).find((r) => r.name.toLowerCase().startsWith(prefix.toLowerCase()));
-
-        const arunBowling = findByPrefix(data.bowling, "arun");
-        const srikanthBatting = findByPrefix(data.batting, "srikanth govula");
-        const srikanthBowling = findByPrefix(data.bowling, "srikanth govula");
-
-        setLegendStats({
-          arun: arunBowling
-            ? `${arunBowling.wickets} wickets • ${arunBowling.economy} economy • ${arunBowling.overs} overs`
-            : null,
-          srikanth:
-            srikanthBowling || srikanthBatting
-              ? `${srikanthBowling?.wickets ?? 0} wickets • ${srikanthBatting?.runs ?? 0} runs`
-              : null,
-        });
-      })
-      .catch(() => {});
+      .then((data) => setAwards(computeAwards(data.batting || [], data.bowling || [])))
+      .catch(() => setAwards([]));
   }, []);
 
   async function loadTeamHubData() {
@@ -74,12 +177,6 @@ export function TeamHub() {
       data.captainNotes.map((x) => ({
         note: x.note,
         player: x.player_name,
-      }))
-    );
-    setNicknames(
-      data.roastNames.map((x) => ({
-        player: x.player_name,
-        nickname: x.roast_name,
       }))
     );
   }
@@ -201,38 +298,6 @@ export function TeamHub() {
     loadTeamHubData();
   }
 
-  async function addNickname() {
-    const playerName = nicknamePlayer.trim();
-    const roastName = nicknameText.trim();
-
-    if (!playerName || !roastName) {
-      alert("Please enter both player name and roast name");
-      return;
-    }
-
-    const res = await fetch("/api/teamhub", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "roastName",
-        playerName,
-        roastName,
-      }),
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      alert("Save failed: " + result.error);
-      console.error(result);
-      return;
-    }
-
-    setNicknamePlayer("");
-    setNicknameText("");
-    await loadTeamHubData();
-  }
-
   return (
     <PageWrap
       id="teamhub"
@@ -241,11 +306,10 @@ export function TeamHub() {
     >
       <div className=" teamhub-tabs mb-8 flex flex-wrap gap-3">
         {[
-          "Hall of Fame",
           "Voting Arena",
+          "Awards Room",
           "Locker Room",
           "War Room",
-          "Roast & Name",
         ].map((tab) => (
           <button
             key={tab}
@@ -451,88 +515,38 @@ export function TeamHub() {
         </div>
       )}
 
-      {teamHubTab === "Hall of Fame" && (
+      {teamHubTab === "Awards Room" && (
         <div teamhub-tabs>
-          <h2 className="text-4xl font-black text-amber-300">
-            Legends of Our Team
-          </h2>
-
+          <h2 className="text-4xl font-black text-amber-300">2026 Season Awards</h2>
           <p className="mt-2 mb-8 text-white/70">
-            Honouring players who built the foundation of the team.
+            Auto-crowned straight from this season's batting and bowling numbers — no votes needed.
           </p>
 
-          <div teamhub-tabs className="grid gap-6 md:grid-cols-2">
-            {/* Arun */}
-            <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
-              <div className="text-xs font-bold text-yellow-400">
-                BOWLING PILLAR
-              </div>
-              <h3 className="mt-2 text-2xl font-black text-white">Arun</h3>
-              <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
-                {legendStats.arun || "Loading…"}
-              </div>
-              <p className="mt-3 text-white/70">
-                One of the strongest bowling performers from the 2024 season and a key name in the team’s early success.
-              </p>
-            </div>
-
-            {/* Govula Srikanth */}
-            <div className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6">
-              <div className="text-xs font-bold text-yellow-400">
-                ALL-TIME IMPACT PLAYER
-              </div>
-              <h3 className="mt-2 text-2xl font-black text-white">
-                Govula Srikanth
-              </h3>
-              <div className="mt-3 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
-                {legendStats.srikanth || "Loading…"}
-              </div>
-              <p className="mt-3 text-white/70">
-                A true match-winner across seasons — delivering impact with both bat and ball when it matters most.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {teamHubTab === "Roast & Name" && (
-        <div teamhub-tabs className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-            <h3 className="text-2xl font-black text-amber-300">Suggest a Name</h3>
-
-            <input
-              value={nicknamePlayer}
-              onChange={(e) => setNicknamePlayer(e.target.value)}
-              placeholder="Player name"
-              className="mt-5 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
-            />
-
-            <input
-              value={nicknameText}
-              onChange={(e) => setNicknameText(e.target.value)}
-              placeholder="Roastingname"
-              className="mt-3 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
-            />
-
-            <button onClick={addNickname} className="btn btn-gold mt-4">
-              Submit
-            </button>
-          </div>
-
-          <div className="grid gap-4 lg:col-span-2 md:grid-cols-2">
-            {nicknames.length === 0 ? (
-              <div className="min-h-[70px]rounded-2xl border border-white/10 bg-white/5 p-3 text-white/60">
-                No nicknames added yet.
+          <div teamhub-tabs className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {awards.length === 0 ? (
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/60">
+                Not enough 2026 stats yet — check back after a few more matches.
               </div>
             ) : (
-              nicknames.map((item, i) => (
-                <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                  <div className="text-sm font-black uppercase tracking-widest text-amber-300">
-                    {item.player}
+              awards.map((award) => (
+                <div
+                  key={award.title}
+                  className="rounded-3xl border border-yellow-400/20 bg-gradient-to-br from-yellow-500/10 to-transparent p-6"
+                >
+                  <div className="text-3xl">{award.icon}</div>
+                  <h3 className="mt-2 text-xl font-black text-white">{award.title}</h3>
+                  <div className="text-xs font-bold uppercase tracking-widest text-yellow-400">
+                    {award.tagline}
                   </div>
-                  <div className="mt-1 text-xl font-black text-white">
-                    {item.nickname}
+
+                  <div className="mt-4 text-2xl font-black text-amber-300">
+                    {award.result.player.name}
                   </div>
+                  <div className="mt-1 rounded-xl bg-black/40 px-3 py-2 text-sm text-yellow-300">
+                    {award.stat(award.result)}
+                  </div>
+
+                  <p className="mt-3 text-white/70">{award.blurb(award.result)}</p>
                 </div>
               ))
             )}

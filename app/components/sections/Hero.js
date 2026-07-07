@@ -7,12 +7,18 @@ import { NextMatchCard } from '../NextMatchCard';
 
 export function Hero() {
   const [allTime, setAllTime] = useState(null);
+  const [season2026, setSeason2026] = useState(null);
 
   useEffect(() => {
     fetch('/api/stats?season=all')
       .then((res) => res.json())
       .then((data) => setAllTime(data))
       .catch(() => setAllTime({ batting: [], bowling: [] }));
+
+    fetch('/api/stats?season=2026')
+      .then((res) => res.json())
+      .then((data) => setSeason2026(data))
+      .catch(() => setSeason2026({ batting: [], bowling: [] }));
   }, []);
 
   const topBatter = allTime?.batting?.[0];
@@ -26,16 +32,12 @@ export function Hero() {
     wickets: impactPlayerBowl?.wickets || 0,
   };
 
-  const emergingPlayerBat =
-    allTime?.batting?.find((p) => p.name === "Kapil Sai Darshi") ||
-    allTime?.batting?.find((p) => p.name === "Kapil");
-  const emergingPlayerBowl =
-    allTime?.bowling?.find((p) => p.name === "Kapil Sai Darshi") ||
-    allTime?.bowling?.find((p) => p.name === "Kapil");
-  const emergingPlayer = {
-    name: "Kapil Sai Darshi",
-    runs: emergingPlayerBat?.runs || 0,
-    wickets: emergingPlayerBowl?.wickets || 0,
+  const titanBat = season2026?.batting?.find((p) => p.name === "Martin Thandhara");
+  const titanBowl = season2026?.bowling?.find((p) => p.name === "Martin Thandhara");
+  const titanPlayer = {
+    name: "Martin Thandhara",
+    runs: titanBat?.runs || 0,
+    wickets: titanBowl?.wickets || 0,
   };
 
   const hasStats = allTime && allTime.batting.length > 0;
@@ -117,10 +119,10 @@ export function Hero() {
 
             <HighlightCard
               className="highlight-card"
-              title="Emerging Force of 2025"
-              name={emergingPlayer?.name}
-              stat={`${emergingPlayer?.wickets || 0} wickets + ${emergingPlayer?.runs || 0} runs`}
-              note="Useful lower-order and bowling impact option."
+              title="Titan of 2026"
+              name={titanPlayer?.name}
+              stat={`${titanPlayer?.runs || 0} runs + ${titanPlayer?.wickets || 0} wickets`}
+              note="This season's standout with bat and ball."
             />
           </div>
         )}

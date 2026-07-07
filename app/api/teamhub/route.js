@@ -2,18 +2,16 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "../../lib/supabaseServer";
 
 export async function GET() {
-  const [polls, locker, captain, roast] = await Promise.all([
+  const [polls, locker, captain] = await Promise.all([
     supabaseServer.from("teamhub_polls").select("id, poll_name, option_name, votes, match_date").order("created_at", { ascending: false }),
     supabaseServer.from("teamhub_locker_notes").select("*").order("created_at", { ascending: false }),
     supabaseServer.from("teamhub_captain_notes").select("*").order("created_at", { ascending: false }),
-    supabaseServer.from("teamhub_roast_names").select("*").order("created_at", { ascending: false }),
   ]);
 
   return NextResponse.json({
     polls: polls.data || [],
     lockerNotes: locker.data || [],
     captainNotes: captain.data || [],
-    roastNames: roast.data || [],
   });
 }
 
@@ -73,20 +71,6 @@ export async function POST(req) {
         .insert({
           note: body.note,
           player_name: body.player_name,
-        })
-        .select()
-        .single();
-
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-      return NextResponse.json(data);
-    }
-
-    if (body.type === "roastName") {
-      const { data, error } = await supabaseServer
-        .from("teamhub_roast_names")
-        .insert({
-          player_name: body.playerName,
-          roast_name: body.roastName,
         })
         .select()
         .single();
