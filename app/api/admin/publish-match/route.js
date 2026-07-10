@@ -438,5 +438,11 @@ export async function POST(req) {
     await createPredictionPolls(matchDate);
   }
 
+  // Explicit Supabase keep-alive touch. Publishing already writes heavily to
+  // Supabase above, which alone resets the free-tier 7-day inactivity clock —
+  // this call is redundant for that purpose, kept only so every scorecard
+  // update visibly pings the project regardless of how the writes above change.
+  await supabaseServer.from('tccc_matches').select('id').limit(1);
+
   return NextResponse.json({ matchId: match.id });
 }
