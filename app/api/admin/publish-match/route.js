@@ -445,58 +445,12 @@ export async function POST(req) {
     }
   }
 
+  // POTM voting (fan vote for who was Player of the Match) was removed:
+  // Awards Room already auto-crowns standout performers straight from real
+  // stats, and the POTM polls never got real engagement (mostly 0 votes,
+  // partly because of a since-fixed reveal-timing bug, but mainly because
+  // nobody used it) — so it was cut rather than kept as unused clutter.
   if (matchStatus === 'published') {
-    const shortDate = new Date(matchDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
-    const pollName = `POTM vs ${opponent} (${shortDate})`;
-    const { data: existingPollRows } = await supabaseServer
-      .from('teamhub_polls')
-      .select('id, match_date')
-      .eq('poll_name', pollName)
-      .limit(1);
-
-    if (!existingPollRows || existingPollRows.length === 0) {
-      // Resolve names from playerId via the roster, not the client-submitted
-      // r.name — that field holds whatever OCR originally read and isn't
-      // updated when the reviewer picks a different player from the dropdown,
-      // which could leave it blank/stale for a matched row. Capped to the top
-      // 5 contributors (runs + wickets*20) so the poll stays short, not one
-      // button per player who was in the XI.
-      const impactByPlayerId = new Map();
-      for (const r of battingRows) {
-        if (!r.playerId) continue;
-        impactByPlayerId.set(r.playerId, (impactByPlayerId.get(r.playerId) || 0) + (r.runs || 0));
-      }
-      for (const r of bowlingRows) {
-        if (!r.playerId) continue;
-        impactByPlayerId.set(r.playerId, (impactByPlayerId.get(r.playerId) || 0) + (r.wickets || 0) * 20);
-      }
-
-      const playerIds = [...impactByPlayerId.keys()];
-      if (playerIds.length > 0) {
-        const { data: players } = await supabaseServer
-          .from('tccc_players')
-          .select('id, canonical_name')
-          .in('id', playerIds);
-        const nameById = new Map((players || []).map((p) => [p.id, p.canonical_name]));
-
-        const candidateNames = playerIds
-          .filter((id) => nameById.has(id))
-          .sort((a, b) => impactByPlayerId.get(b) - impactByPlayerId.get(a))
-          .slice(0, 5)
-          .map((id) => nameById.get(id));
-
-        if (candidateNames.length > 0) {
-          await supabaseServer.from('teamhub_polls').insert(
-            candidateNames.map((name) => ({ poll_name: pollName, option_name: name, votes: 0, match_date: matchDate }))
-          );
-        }
-      }
-    } else if (!existingPollRows[0].match_date) {
-      // Existing poll predates match_date tracking — backfill it in place so
-      // it can still auto-reveal, without touching votes/options.
-      await supabaseServer.from('teamhub_polls').update({ match_date: matchDate }).eq('poll_name', pollName);
-    }
-
     await createPredictionPolls(matchDate);
   }
 

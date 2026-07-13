@@ -129,22 +129,6 @@ function todayStr() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
-function isPotmPoll(pollName) {
-  return pollName.startsWith("POTM");
-}
-
-// POTM polls are created right when a match that already happened gets
-// published, so match_date is already today-or-earlier the moment they're
-// born — reveal-on-match-date (correct for future-match predictions) would
-// give them a zero-second voting window. Give POTM polls a few days after
-// the match instead before locking in a result.
-const POTM_VOTING_WINDOW_DAYS = 3;
-
-function addDaysToDateStr(dateStr, days) {
-  const d = new Date(`${dateStr}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
 
 function matchNarrativeLine(match) {
   if (match.result.summary) return match.result.summary;
@@ -350,10 +334,7 @@ export function TeamHub() {
               const sorted = [...options].sort((a, b) => b.votes - a.votes);
               const totalVotes = sorted.reduce((sum, o) => sum + (o.votes || 0), 0);
               const prediction = isPredictionPoll(pollName);
-              const revealDate = matchDate && isPotmPoll(pollName)
-                ? addDaysToDateStr(matchDate, POTM_VOTING_WINDOW_DAYS)
-                : matchDate;
-              const revealResults = !!revealDate && todayStr() >= revealDate;
+              const revealResults = !!matchDate && todayStr() >= matchDate;
 
               return (
                 <div key={pollName} className="rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4 xl:p-5">
