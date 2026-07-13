@@ -331,6 +331,7 @@ export function TeamHub() {
             {Object.keys(polls).map((pollName) => {
               const { options = [], matchDate } = polls[pollName] || {};
               const sorted = [...options].sort((a, b) => b.votes - a.votes);
+              const totalVotes = sorted.reduce((sum, o) => sum + (o.votes || 0), 0);
               const prediction = isPredictionPoll(pollName);
               const revealResults = !!matchDate && todayStr() >= matchDate;
 
@@ -340,8 +341,8 @@ export function TeamHub() {
 
                   {revealResults ? (
                     <div className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/10 px-3 py-2 sm:mt-5 sm:px-4 sm:py-3">
-                      {sorted.length === 0 ? (
-                        <p className="text-sm text-white/60">No votes yet.</p>
+                      {sorted.length === 0 || totalVotes === 0 ? (
+                        <p className="text-sm text-white/60">No votes were cast for this one.</p>
                       ) : (
                         <>
                           <div className="text-xs font-black text-amber-300 sm:text-sm">
