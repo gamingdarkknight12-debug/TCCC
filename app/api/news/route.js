@@ -36,5 +36,8 @@ export async function GET() {
     image: n.image_path,
   }));
 
-  return NextResponse.json({ items });
+  return NextResponse.json(
+    { items },
+    { headers: { 'Cache-Control': 'no-store, max-age=0, must-revalidate' } }
+  );
 }

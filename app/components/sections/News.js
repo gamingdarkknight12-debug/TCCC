@@ -7,7 +7,7 @@ export function News() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    fetch('/api/news')
+    fetch('/api/news', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => setItems(data.items || []))
       .catch(() => setItems([]));
