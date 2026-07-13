@@ -2,8 +2,17 @@ import { NextResponse } from 'next/server';
 import { supabaseServer } from '../../lib/supabaseServer';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
-export async function GET() {
+export async function GET(request) {
+  // Referencing a request-derived value (even unused) is what makes Next.js
+  // treat this route as unambiguously dynamic — the other API routes in this
+  // app all read from `request` for this same reason. Without it, this route
+  // (the only one with no request-dependent code at all) was apparently
+  // still serving a frozen response in production despite force-dynamic.
+  void request.headers.get('x-forwarded-for');
+
   const base = () =>
     supabaseServer
       .from('tccc_news_items')
