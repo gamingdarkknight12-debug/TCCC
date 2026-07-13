@@ -411,7 +411,13 @@ export async function POST(req) {
 
     // Evergreen spotlight + league-record cards, refreshed (not duplicated)
     // on every publish so the flow grid always reflects current form instead
-    // of just a lone match recap.
+    // of just a lone match recap. Each gets a distinct 1-second-apart offset
+    // (instead of sharing one timestamp) so their relative order in the flow
+    // grid is deterministic rather than depending on undefined tie-break
+    // behavior for equal published_at values.
+    const offsetEvergreen = (secondsEarlier) =>
+      new Date(new Date(evergreenTimestamp).getTime() - secondsEarlier * 1000).toISOString();
+
     const matchSeason = matchFields.season;
     const { topBatter, topBowler } = await getSeasonLeaders(matchSeason);
     if (topBatter) {
@@ -419,7 +425,7 @@ export async function POST(req) {
         tag: 'Best Batter',
         title: `${topBatter.name} Leads the Run Charts`,
         body: `${topBatter.name} has ${topBatter.runs} runs off ${topBatter.balls} balls for Telugu Titans in ${matchSeason} so far.`,
-        publishedAt: evergreenTimestamp,
+        publishedAt: offsetEvergreen(2),
       });
     }
     if (topBowler) {
@@ -427,21 +433,28 @@ export async function POST(req) {
         tag: 'Best Bowler',
         title: `${topBowler.name} Tops the Wicket Charts`,
         body: `${topBowler.name} has taken ${topBowler.wickets} wickets for Telugu Titans in ${matchSeason} so far.`,
-        publishedAt: evergreenTimestamp,
+        publishedAt: offsetEvergreen(3),
       });
     }
 
-    const leagueRecord = await getLeagueRecord(league, matchSeason);
-    if (leagueRecord.played > 0) {
-      const parts = [`${leagueRecord.won}W`, `${leagueRecord.lost}L`];
-      if (leagueRecord.tie) parts.push(`${leagueRecord.tie}T`);
-      if (leagueRecord.noResult) parts.push(`${leagueRecord.noResult}NR`);
-      await upsertEvergreenCard({
-        tag: `${league} Update`,
-        title: `${league} Standings Update`,
-        body: `Telugu Titans are ${parts.join('-')} in ${league} this season after ${leagueRecord.played} match${leagueRecord.played === 1 ? '' : 'es'}.`,
-        publishedAt: evergreenTimestamp,
-      });
+    // Refresh BOTH league standings cards on every publish (not just the
+    // league that was just played) so BEDCL Update and MCPL Update always
+    // stay paired/adjacent in the flow grid, instead of drifting apart based
+    // on whichever league last happened to have a match.
+    const ALL_LEAGUES = ['BEDCL', 'MCPL'];
+    for (const [i, lg] of ALL_LEAGUES.entries()) {
+      const leagueRecord = await getLeagueRecord(lg, matchSeason);
+      if (leagueRecord.played > 0) {
+        const parts = [`${leagueRecord.won}W`, `${leagueRecord.lost}L`];
+        if (leagueRecord.tie) parts.push(`${leagueRecord.tie}T`);
+        if (leagueRecord.noResult) parts.push(`${leagueRecord.noResult}NR`);
+        await upsertEvergreenCard({
+          tag: `${lg} Update`,
+          title: `${lg} Standings Update`,
+          body: `Telugu Titans are ${parts.join('-')} in ${lg} this season after ${leagueRecord.played} match${leagueRecord.played === 1 ? '' : 'es'}.`,
+          publishedAt: offsetEvergreen(i),
+        });
+      }
     }
   }
 
