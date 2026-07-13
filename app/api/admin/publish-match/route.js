@@ -63,13 +63,14 @@ async function upsertLatestMatchCard(fields) {
   }
 }
 
-// Same aggregation as /api/stats?season=, trimmed to just the two totals
-// needed here (top scorer, top wicket-taker) for the season the just-
-// published match belongs to.
+// Same aggregation as /api/stats?season=, trimmed to just the totals needed
+// here (top scorers/wicket-takers) for the season the just-published match
+// belongs to. Also used to build a short, curated options list for prediction
+// polls instead of dumping the entire roster in as options.
 async function getSeasonLeaders(season) {
   const { data: matches } = await supabaseServer.from('tccc_matches').select('id').eq('team', 'TT').eq('season', season);
   const matchIds = (matches || []).map((m) => m.id);
-  if (matchIds.length === 0) return { topBatter: null, topBowler: null };
+  if (matchIds.length === 0) return { topBatter: null, topBowler: null, topBatters: [], topBowlers: [] };
 
   const [{ data: battingRows }, { data: bowlingRows }] = await Promise.all([
     supabaseServer.from('tccc_batting_innings').select('runs, balls, player_id, tccc_players(canonical_name)').in('match_id', matchIds),
@@ -98,9 +99,14 @@ async function getSeasonLeaders(season) {
     bowlingTotals.set(name, agg);
   }
 
-  const topBatter = [...battingTotals.values()].sort((a, b) => b.runs - a.runs)[0] || null;
-  const topBowler = [...bowlingTotals.values()].sort((a, b) => b.wickets - a.wickets)[0] || null;
-  return { topBatter, topBowler };
+  const battingSorted = [...battingTotals.values()].sort((a, b) => b.runs - a.runs);
+  const bowlingSorted = [...bowlingTotals.values()].sort((a, b) => b.wickets - a.wickets);
+  return {
+    topBatter: battingSorted[0] || null,
+    topBowler: bowlingSorted[0] || null,
+    topBatters: battingSorted.slice(0, 5).map((b) => b.name),
+    topBowlers: bowlingSorted.slice(0, 5).map((b) => b.name),
+  };
 }
 
 // Same counting as /api/standings, scoped to one league/season.
@@ -124,20 +130,44 @@ async function getLeagueRecord(league, season) {
   return rec;
 }
 
+// Names of our own players who were named MVP in the last few played
+// matches (most recent first, deduped) — used as the options for the
+// "who will be Player of the Match" prediction poll instead of the whole
+// roster. Opponent MVPs (mvp_player_id null, e.g. their player won it)
+// are skipped since they'd never be a valid TT answer anyway.
+async function getRecentMvpNames(limit = 5) {
+  const { data } = await supabaseServer
+    .from('tccc_matches')
+    .select('mvp_player_id, match_date, tccc_players(canonical_name)')
+    .eq('team', 'TT')
+    .eq('status', 'published')
+    .not('mvp_player_id', 'is', null)
+    .order('match_date', { ascending: false })
+    .limit(20);
+
+  const names = [];
+  for (const row of data || []) {
+    const name = row.tccc_players?.canonical_name;
+    if (name && !names.includes(name)) names.push(name);
+    if (names.length >= limit) break;
+  }
+  return names;
+}
+
 // A rotating pool of prediction questions — picking a different 3 each time
 // (seeded by the next match's id) keeps them varied instead of asking the
-// same "who wins" question every week. Player-based ones use the curated,
-// photographed roster (not every stats-only name OCR has ever created),
-// since a 70-option poll button list would be unusable.
-function predictionTemplates(opponent, suffix, rosterNames) {
+// same "who wins" question every week. Player-based ones use a short, smart
+// shortlist (top 5 by the relevant stat, or the last 5 real MVPs) instead of
+// the full roster, since a 15+ option poll button list is unusable.
+function predictionTemplates(opponent, suffix, { topBatters, topBowlers, recentMvps }) {
   return [
     { q: `Will TT beat ${opponent}?`, options: ['Win', 'Loss', 'Tie / No Result'] },
-    { q: `Who scores the most runs ${suffix}?`, options: rosterNames },
-    { q: `Who takes the most wickets ${suffix}?`, options: rosterNames },
+    { q: `Who scores the most runs ${suffix}?`, options: topBatters },
+    { q: `Who takes the most wickets ${suffix}?`, options: topBowlers },
     { q: `Will TT post 150+ runs ${suffix}?`, options: ['Yes', 'No'] },
-    { q: `Who will be Player of the Match ${suffix}?`, options: rosterNames },
+    { q: `Who will be Player of the Match ${suffix}?`, options: recentMvps },
     { q: `Will the match ${suffix} be a close finish?`, options: ['Yes, nail-biter', 'No, one-sided'] },
-  ];
+  ].filter((t) => t.options.length > 0);
 }
 
 // Triggered right after publishing a match (no cron/scheduling needed) —
@@ -149,7 +179,7 @@ function predictionTemplates(opponent, suffix, rosterNames) {
 async function createPredictionPolls(afterMatchDate) {
   const { data: nextMatchRows } = await supabaseServer
     .from('tccc_matches')
-    .select('id, opponent, match_date')
+    .select('id, season, opponent, match_date')
     .eq('team', 'TT')
     .eq('status', 'scheduled')
     .gt('match_date', afterMatchDate)
@@ -171,23 +201,25 @@ async function createPredictionPolls(afterMatchDate) {
   // tracked (null), in which case fall through and recreate them properly.
   if (existingPredictionRows && existingPredictionRows.length > 0 && existingPredictionRows[0].match_date) return;
 
-  const { data: rosterPlayers } = await supabaseServer
-    .from('tccc_players')
-    .select('canonical_name')
-    .eq('team', 'TT')
-    .eq('active', true)
-    .not('image_path', 'is', null)
-    .order('canonical_name');
-  const rosterNames = (rosterPlayers || []).map((p) => p.canonical_name);
-  if (rosterNames.length === 0) return;
+  const [{ topBatters, topBowlers }, recentMvps] = await Promise.all([
+    getSeasonLeaders(nextMatch.season),
+    getRecentMvpNames(5),
+  ]);
+  if (topBatters.length === 0 && topBowlers.length === 0 && recentMvps.length === 0) return;
 
   // Clear out whatever prediction polls were made for the previous "next
   // match" — they're for a match that's now been played, so they're stale.
   await supabaseServer.from('teamhub_polls').delete().ilike('poll_name', 'Predict:%');
 
-  const templates = predictionTemplates(nextMatch.opponent, suffix, rosterNames);
+  const templates = predictionTemplates(nextMatch.opponent, suffix, { topBatters, topBowlers, recentMvps });
+  if (templates.length === 0) return;
+
+  // Rotate which questions get picked so it's not the same 3 every week, while
+  // guaranteeing no duplicates even when only a few templates have options
+  // (e.g. early season, before top-5/MVP lists have much data yet).
+  const count = Math.min(3, templates.length);
   const start = nextMatch.id % templates.length;
-  const picks = [templates[start], templates[(start + 2) % templates.length], templates[(start + 4) % templates.length]];
+  const picks = Array.from({ length: count }, (_, i) => templates[(start + i) % templates.length]);
 
   const rows = [];
   picks.forEach(({ q, options }) => {
@@ -423,11 +455,41 @@ export async function POST(req) {
       .limit(1);
 
     if (!existingPollRows || existingPollRows.length === 0) {
-      const candidateNames = [...new Set([...battingRows, ...bowlingRows].filter((r) => r.playerId).map((r) => r.name))];
-      if (candidateNames.length > 0) {
-        await supabaseServer.from('teamhub_polls').insert(
-          candidateNames.map((name) => ({ poll_name: pollName, option_name: name, votes: 0, match_date: matchDate }))
-        );
+      // Resolve names from playerId via the roster, not the client-submitted
+      // r.name — that field holds whatever OCR originally read and isn't
+      // updated when the reviewer picks a different player from the dropdown,
+      // which could leave it blank/stale for a matched row. Capped to the top
+      // 5 contributors (runs + wickets*20) so the poll stays short, not one
+      // button per player who was in the XI.
+      const impactByPlayerId = new Map();
+      for (const r of battingRows) {
+        if (!r.playerId) continue;
+        impactByPlayerId.set(r.playerId, (impactByPlayerId.get(r.playerId) || 0) + (r.runs || 0));
+      }
+      for (const r of bowlingRows) {
+        if (!r.playerId) continue;
+        impactByPlayerId.set(r.playerId, (impactByPlayerId.get(r.playerId) || 0) + (r.wickets || 0) * 20);
+      }
+
+      const playerIds = [...impactByPlayerId.keys()];
+      if (playerIds.length > 0) {
+        const { data: players } = await supabaseServer
+          .from('tccc_players')
+          .select('id, canonical_name')
+          .in('id', playerIds);
+        const nameById = new Map((players || []).map((p) => [p.id, p.canonical_name]));
+
+        const candidateNames = playerIds
+          .filter((id) => nameById.has(id))
+          .sort((a, b) => impactByPlayerId.get(b) - impactByPlayerId.get(a))
+          .slice(0, 5)
+          .map((id) => nameById.get(id));
+
+        if (candidateNames.length > 0) {
+          await supabaseServer.from('teamhub_polls').insert(
+            candidateNames.map((name) => ({ poll_name: pollName, option_name: name, votes: 0, match_date: matchDate }))
+          );
+        }
       }
     } else if (!existingPollRows[0].match_date) {
       // Existing poll predates match_date tracking — backfill it in place so
