@@ -130,6 +130,125 @@ async function getLeagueRecord(league, season) {
   return rec;
 }
 
+// Round-number career milestones worth celebrating. Runs go by 250s/500s
+// once past 1000 (a "reached 1500" card matters more often at that level);
+// wickets by smaller, more frequent steps since totals run much lower.
+const BATTING_MILESTONES = [50, 100, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000];
+const BOWLING_MILESTONES = [10, 25, 50, 75, 100, 150, 200, 250, 300];
+
+function milestoneCrossed(before, after, milestones) {
+  return milestones.find((m) => before < m && after >= m) || null;
+}
+
+function nextMilestone(current, milestones) {
+  return milestones.find((m) => m > current) || null;
+}
+
+// Career (all-time, every season) totals per player — includes the
+// pre-migration "SEASON" aggregate rows, unlike matches-played counting,
+// since a milestone is about cumulative runs/wickets, not games attended.
+async function getAllTimePlayerTotals() {
+  const { data: matches } = await supabaseServer.from('tccc_matches').select('id').eq('team', 'TT');
+  const matchIds = (matches || []).map((m) => m.id);
+  const totals = new Map(); // name -> { runs, wickets }
+  if (matchIds.length === 0) return totals;
+
+  const [{ data: bat }, { data: bowl }] = await Promise.all([
+    supabaseServer.from('tccc_batting_innings').select('runs, player_id, tccc_players(canonical_name)').in('match_id', matchIds),
+    supabaseServer.from('tccc_bowling_innings').select('wickets, player_id, tccc_players(canonical_name)').in('match_id', matchIds),
+  ]);
+  for (const r of bat || []) {
+    const name = r.tccc_players?.canonical_name;
+    if (!r.player_id || !name) continue;
+    if (!totals.has(name)) totals.set(name, { runs: 0, wickets: 0 });
+    totals.get(name).runs += r.runs || 0;
+  }
+  for (const r of bowl || []) {
+    const name = r.tccc_players?.canonical_name;
+    if (!r.player_id || !name) continue;
+    if (!totals.has(name)) totals.set(name, { runs: 0, wickets: 0 });
+    totals.get(name).wickets += r.wickets || 0;
+  }
+  return totals;
+}
+
+// One "Milestone Watch" card (upserted, never more than one): celebrates
+// whichever player crossed a round-number career milestone in the match
+// that was just published, or — if nobody did — teases whoever across the
+// whole roster is currently closest to their next one.
+async function upsertMilestoneCard(battingInsert, bowlingInsert, publishedAt) {
+  const allTime = await getAllTimePlayerTotals(); // already includes this match's rows
+
+  const thisMatchRuns = new Map();
+  for (const r of battingInsert) {
+    if (!r.player_id) continue;
+    thisMatchRuns.set(r.player_id, (thisMatchRuns.get(r.player_id) || 0) + (r.runs || 0));
+  }
+  const thisMatchWickets = new Map();
+  for (const r of bowlingInsert) {
+    if (!r.player_id) continue;
+    thisMatchWickets.set(r.player_id, (thisMatchWickets.get(r.player_id) || 0) + (r.wickets || 0));
+  }
+
+  const playerIds = [...new Set([...thisMatchRuns.keys(), ...thisMatchWickets.keys()])];
+  const nameById = new Map();
+  if (playerIds.length > 0) {
+    const { data: players } = await supabaseServer.from('tccc_players').select('id, canonical_name').in('id', playerIds);
+    for (const p of players || []) nameById.set(p.id, p.canonical_name);
+  }
+
+  let reached = null; // { name, stat, milestone }
+  for (const [playerId, runsThisMatch] of thisMatchRuns) {
+    const name = nameById.get(playerId);
+    if (!name) continue;
+    const after = allTime.get(name)?.runs || 0;
+    const crossed = milestoneCrossed(after - runsThisMatch, after, BATTING_MILESTONES);
+    if (crossed && (!reached || crossed > reached.milestone)) reached = { name, stat: 'runs', milestone: crossed };
+  }
+  for (const [playerId, wicketsThisMatch] of thisMatchWickets) {
+    const name = nameById.get(playerId);
+    if (!name) continue;
+    const after = allTime.get(name)?.wickets || 0;
+    const crossed = milestoneCrossed(after - wicketsThisMatch, after, BOWLING_MILESTONES);
+    if (crossed && (!reached || crossed > reached.milestone)) reached = { name, stat: 'wickets', milestone: crossed };
+  }
+
+  if (reached) {
+    const statLabel = reached.stat === 'runs' ? 'Runs' : 'Wickets';
+    await upsertEvergreenCard({
+      tag: 'Milestone Watch',
+      title: `🎉 ${reached.name} Reaches ${reached.milestone} ${statLabel}!`,
+      body: `${reached.name} has now reached ${reached.milestone} career ${reached.stat} for Telugu Titans.`,
+      publishedAt,
+    });
+    return;
+  }
+
+  let closest = null; // { name, stat, gap, target }
+  for (const [name, totals] of allTime) {
+    const nextRuns = nextMilestone(totals.runs, BATTING_MILESTONES);
+    if (nextRuns) {
+      const gap = nextRuns - totals.runs;
+      if (!closest || gap < closest.gap) closest = { name, stat: 'runs', gap, target: nextRuns };
+    }
+    const nextWkts = nextMilestone(totals.wickets, BOWLING_MILESTONES);
+    if (nextWkts) {
+      const gap = nextWkts - totals.wickets;
+      if (!closest || gap < closest.gap) closest = { name, stat: 'wickets', gap, target: nextWkts };
+    }
+  }
+
+  if (closest) {
+    const statWord = closest.stat === 'runs' ? (closest.gap === 1 ? 'run' : 'runs') : (closest.gap === 1 ? 'wicket' : 'wickets');
+    await upsertEvergreenCard({
+      tag: 'Milestone Watch',
+      title: `${closest.name} Closing In on ${closest.target} ${closest.stat === 'runs' ? 'Runs' : 'Wickets'}`,
+      body: `${closest.name} is just ${closest.gap} ${statWord} away from ${closest.target} career ${closest.stat === 'runs' ? 'runs' : 'wickets'} for Telugu Titans.`,
+      publishedAt,
+    });
+  }
+}
+
 // Names of our own players who were named MVP in the last few played
 // matches (most recent first, deduped) — used as the options for the
 // "who will be Player of the Match" prediction poll instead of the whole
@@ -419,23 +538,13 @@ export async function POST(req) {
       new Date(new Date(evergreenTimestamp).getTime() - secondsEarlier * 1000).toISOString();
 
     const matchSeason = matchFields.season;
-    const { topBatter, topBowler } = await getSeasonLeaders(matchSeason);
-    if (topBatter) {
-      await upsertEvergreenCard({
-        tag: 'Best Batter',
-        title: `${topBatter.name} Leads the Run Charts`,
-        body: `${topBatter.name} has ${topBatter.runs} runs off ${topBatter.balls} balls for Telugu Titans in ${matchSeason} so far.`,
-        publishedAt: offsetEvergreen(2),
-      });
-    }
-    if (topBowler) {
-      await upsertEvergreenCard({
-        tag: 'Best Bowler',
-        title: `${topBowler.name} Tops the Wicket Charts`,
-        body: `${topBowler.name} has taken ${topBowler.wickets} wickets for Telugu Titans in ${matchSeason} so far.`,
-        publishedAt: offsetEvergreen(3),
-      });
-    }
+
+    // Single "Milestone Watch" card instead of separate Best Batter/Best
+    // Bowler cards — those duplicated leaderboards already shown on the
+    // Stats page and Team Hub's Awards Room. This is something genuinely
+    // new: celebrates whoever just crossed a round-number career milestone,
+    // or teases whoever's closest to one if nobody did this match.
+    await upsertMilestoneCard(battingInsert, bowlingInsert, offsetEvergreen(2));
 
     // Refresh BOTH league standings cards on every publish (not just the
     // league that was just played) so BEDCL Update and MCPL Update always
