@@ -155,6 +155,7 @@ export function TeamHub() {
   const [captainNote, setCaptainNote] = useState("");
   const [captainNotes, setCaptainNotes] = useState([]);
   const [captainPlayer, setCaptainPlayer] = useState("");
+  const [captainFromPlayer, setCaptainFromPlayer] = useState("");
   const [awards, setAwards] = useState([]);
   const [timelineMatches, setTimelineMatches] = useState([]);
 
@@ -267,8 +268,13 @@ export function TeamHub() {
   }
 
   async function addCaptainNote() {
+    if (!captainFromPlayer.trim()) {
+      alert("Please enter your name");
+      return;
+    }
+
     if (!captainPlayer.trim()) {
-      alert("Please enter player name");
+      alert("Please enter who this is for");
       return;
     }
 
@@ -283,7 +289,7 @@ export function TeamHub() {
       body: JSON.stringify({
         type: "captainNote",
         note: captainNote,
-        player_name: captainPlayer,
+        player_name: `${captainFromPlayer.trim()} -> ${captainPlayer.trim()}`,
       }),
     });
 
@@ -296,6 +302,7 @@ export function TeamHub() {
 
     setCaptainNote("");
     setCaptainPlayer("");
+    setCaptainFromPlayer("");
 
     loadTeamHubData();
   }
@@ -491,12 +498,20 @@ export function TeamHub() {
             <p className="mt-3 text-white/70">
               Share match Strategy, plans, suggestions and ideas for the captain
             </p>
-            <input
-              value={captainPlayer}
-              onChange={(e) => setCaptainPlayer(e.target.value)}
-              placeholder="Player name"
-              className="mt-5 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
-            />
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <input
+                value={captainFromPlayer}
+                onChange={(e) => setCaptainFromPlayer(e.target.value)}
+                placeholder="From (your name)"
+                className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+              />
+              <input
+                value={captainPlayer}
+                onChange={(e) => setCaptainPlayer(e.target.value)}
+                placeholder="To (player name)"
+                className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none"
+              />
+            </div>
             <textarea
               value={captainNote}
               onChange={(e) => setCaptainNote(e.target.value)}
@@ -512,17 +527,20 @@ export function TeamHub() {
           <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
             <h3 className="text-2xl font-black text-amber-300">Submitted Notes</h3>
 
-            <div className="mt-5 space-y-3">
+            <div className="mt-5 space-y-4">
               {captainNotes.length === 0 ? (
                 <p className="text-white/60">No Strategies yet.</p>
               ) : (
                 captainNotes.map((item, i) => (
-                  <div key={i} className="rounded-xl bg-black/30 p-3 text-smtext-white/75">
-                    <div className="mb-1 text-xs font-black uppercase tracking-widest text-amber-300">
+                  <div
+                    key={i}
+                    className="rounded-2xl border border-white/10 bg-black/30 p-4 shadow-lg"
+                  >
+                    <div className="mb-2 text-xs font-black uppercase tracking-widest text-amber-300">
                       {item.player}
                     </div>
 
-                    <div>{item.note}</div>
+                    <div className="text-sm leading-6 text-white/80">{item.note}</div>
                   </div>
                 ))
               )}
