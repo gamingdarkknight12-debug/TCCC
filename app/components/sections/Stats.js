@@ -260,7 +260,7 @@ export function Stats() {
 
       <div>
         <div className="mb-6 flex flex-wrap gap-3">
-          {['All-Time', '2026', '2025', '2024'].map((s) => (
+          {['All-Time', '2026', '2025', '2024', '2023'].map((s) => (
             <button
               key={s}
               onClick={() => {

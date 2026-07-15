@@ -1,0 +1,420 @@
+{
+  "batting": [
+    {
+      "name": "Nipun Rattan",
+      "runs": 471,
+      "balls": 483,
+      "fours": 40,
+      "sixes": 21,
+      "innings": 14
+    },
+    {
+      "name": "Venky Kesaraju",
+      "runs": 97,
+      "balls": 98,
+      "fours": 9,
+      "sixes": 3,
+      "innings": 7
+    },
+    {
+      "name": "Sai Ram Dhanam",
+      "runs": 30,
+      "balls": 28,
+      "fours": 1,
+      "sixes": 2,
+      "innings": 4
+    },
+    {
+      "name": "Aadilkhan Pathan",
+      "runs": 145,
+      "balls": 127,
+      "fours": 14,
+      "sixes": 4,
+      "innings": 12
+    },
+    {
+      "name": "Bhanu Musunuru",
+      "runs": 66,
+      "balls": 55,
+      "fours": 6,
+      "sixes": 3,
+      "innings": 7
+    },
+    {
+      "name": "Gitarth Rattan",
+      "runs": 119,
+      "balls": 104,
+      "fours": 10,
+      "sixes": 4,
+      "innings": 8
+    },
+    {
+      "name": "Ravi kiran Konujula",
+      "runs": 28,
+      "balls": 30,
+      "fours": 1,
+      "sixes": 0,
+      "innings": 2
+    },
+    {
+      "name": "Abhishek Tippireddy",
+      "runs": 142,
+      "balls": 126,
+      "fours": 7,
+      "sixes": 6,
+      "innings": 11
+    },
+    {
+      "name": "Sai Kiran Reddy Vanteru",
+      "runs": 45,
+      "balls": 38,
+      "fours": 2,
+      "sixes": 2,
+      "innings": 6
+    },
+    {
+      "name": "Vikas Tiwari",
+      "runs": 24,
+      "balls": 35,
+      "fours": 1,
+      "sixes": 1,
+      "innings": 4
+    },
+    {
+      "name": "Shanthan A",
+      "runs": 55,
+      "balls": 63,
+      "fours": 5,
+      "sixes": 0,
+      "innings": 5
+    },
+    {
+      "name": "Anand Maddula",
+      "runs": 492,
+      "balls": 428,
+      "fours": 34,
+      "sixes": 22,
+      "innings": 12
+    },
+    {
+      "name": "Ram Sandeep Chimata",
+      "runs": 46,
+      "balls": 53,
+      "fours": 4,
+      "sixes": 0,
+      "innings": 6
+    },
+    {
+      "name": "Sumit Sinha",
+      "runs": 71,
+      "balls": 111,
+      "fours": 5,
+      "sixes": 0,
+      "innings": 5
+    },
+    {
+      "name": "Arnab Sinha",
+      "runs": 4,
+      "balls": 16,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 3
+    },
+    {
+      "name": "Sumanth Repaka",
+      "runs": 7,
+      "balls": 14,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 2
+    },
+    {
+      "name": "Vikranth Nyalakonda",
+      "runs": 7,
+      "balls": 18,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 4
+    },
+    {
+      "name": "Charan Teja Bandaru",
+      "runs": 68,
+      "balls": 75,
+      "fours": 7,
+      "sixes": 2,
+      "innings": 4
+    },
+    {
+      "name": "Sree harsha Ramanavarapu",
+      "runs": 2,
+      "balls": 7,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 2
+    },
+    {
+      "name": "Ram Khanna",
+      "runs": 57,
+      "balls": 95,
+      "fours": 2,
+      "sixes": 2,
+      "innings": 8
+    },
+    {
+      "name": "Arun Kumar Layam",
+      "runs": 17,
+      "balls": 39,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 5
+    },
+    {
+      "name": "Suresh Kuna",
+      "runs": 83,
+      "balls": 147,
+      "fours": 5,
+      "sixes": 1,
+      "innings": 10
+    },
+    {
+      "name": "Nagesh Kowligi",
+      "runs": 15,
+      "balls": 15,
+      "fours": 2,
+      "sixes": 0,
+      "innings": 1
+    },
+    {
+      "name": "Dheeraj Arcot",
+      "runs": 47,
+      "balls": 49,
+      "fours": 5,
+      "sixes": 0,
+      "innings": 2
+    },
+    {
+      "name": "Ramkiran Nersu",
+      "runs": 49,
+      "balls": 49,
+      "fours": 0,
+      "sixes": 2,
+      "innings": 5
+    },
+    {
+      "name": "Srikanth Govula",
+      "runs": 272,
+      "balls": 169,
+      "fours": 22,
+      "sixes": 19,
+      "innings": 9
+    },
+    {
+      "name": "Dhruv Sharma",
+      "runs": 2,
+      "balls": 2,
+      "fours": 0,
+      "sixes": 0,
+      "innings": 1
+    },
+    {
+      "name": "Sai Kiran Galva",
+      "runs": 22,
+      "balls": 37,
+      "fours": 1,
+      "sixes": 0,
+      "innings": 1
+    },
+    {
+      "name": "Raghunath Soogoor",
+      "runs": 126,
+      "balls": 60,
+      "fours": 9,
+      "sixes": 9,
+      "innings": 2
+    },
+    {
+      "name": "Vinay Kumar Devisetty",
+      "runs": 23,
+      "balls": 16,
+      "fours": 1,
+      "sixes": 2,
+      "innings": 1
+    }
+  ],
+  "bowling": [
+    {
+      "name": "Shanthan A",
+      "oversBalls": 162,
+      "runs": 171,
+      "wickets": 6
+    },
+    {
+      "name": "Sai Kiran Reddy Vanteru",
+      "oversBalls": 208,
+      "runs": 234,
+      "wickets": 8
+    },
+    {
+      "name": "Aadilkhan Pathan",
+      "oversBalls": 293,
+      "runs": 308,
+      "wickets": 21
+    },
+    {
+      "name": "Sai Ram Dhanam",
+      "oversBalls": 12,
+      "runs": 27,
+      "wickets": 0
+    },
+    {
+      "name": "Ravi kiran Konujula",
+      "oversBalls": 66,
+      "runs": 93,
+      "wickets": 1
+    },
+    {
+      "name": "Hazarathaiah Muthuru",
+      "oversBalls": 3,
+      "runs": 12,
+      "wickets": 0
+    },
+    {
+      "name": "Ram Sandeep Chimata",
+      "oversBalls": 66,
+      "runs": 124,
+      "wickets": 0
+    },
+    {
+      "name": "Sumit Sinha",
+      "oversBalls": 6,
+      "runs": 12,
+      "wickets": 0
+    },
+    {
+      "name": "Vikranth Nyalakonda",
+      "oversBalls": 6,
+      "runs": 13,
+      "wickets": 0
+    },
+    {
+      "name": "Arnab Sinha",
+      "oversBalls": 14,
+      "runs": 45,
+      "wickets": 0
+    },
+    {
+      "name": "Gitarth Rattan",
+      "oversBalls": 48,
+      "runs": 46,
+      "wickets": 3
+    },
+    {
+      "name": "Nipun Rattan",
+      "oversBalls": 32,
+      "runs": 37,
+      "wickets": 3
+    },
+    {
+      "name": "Vikas Tiwari",
+      "oversBalls": 150,
+      "runs": 184,
+      "wickets": 8
+    },
+    {
+      "name": "Ram Khanna",
+      "oversBalls": 60,
+      "runs": 62,
+      "wickets": 4
+    },
+    {
+      "name": "Arun Kumar Layam",
+      "oversBalls": 223,
+      "runs": 264,
+      "wickets": 20
+    },
+    {
+      "name": "Sree harsha Ramanavarapu",
+      "oversBalls": 12,
+      "runs": 27,
+      "wickets": 1
+    },
+    {
+      "name": "Nagesh Kowligi",
+      "oversBalls": 18,
+      "runs": 48,
+      "wickets": 0
+    },
+    {
+      "name": "Suresh Kuna",
+      "oversBalls": 90,
+      "runs": 143,
+      "wickets": 5
+    },
+    {
+      "name": "Anand Maddula",
+      "oversBalls": 93,
+      "runs": 129,
+      "wickets": 4
+    },
+    {
+      "name": "Charan Teja Bandaru",
+      "oversBalls": 12,
+      "runs": 16,
+      "wickets": 0
+    },
+    {
+      "name": "Srikanth Govula",
+      "oversBalls": 234,
+      "runs": 247,
+      "wickets": 11
+    },
+    {
+      "name": "Ramkiran Nersu",
+      "oversBalls": 54,
+      "runs": 104,
+      "wickets": 2
+    },
+    {
+      "name": "Dheeraj Arcot",
+      "oversBalls": 36,
+      "runs": 45,
+      "wickets": 4
+    },
+    {
+      "name": "Bhanu Musunuru",
+      "oversBalls": 34,
+      "runs": 36,
+      "wickets": 1
+    },
+    {
+      "name": "Dhruv Sharma",
+      "oversBalls": 145,
+      "runs": 171,
+      "wickets": 5
+    },
+    {
+      "name": "Venky Kesaraju",
+      "oversBalls": 36,
+      "runs": 29,
+      "wickets": 1
+    },
+    {
+      "name": "Sai Krishna Adusumilli",
+      "oversBalls": 30,
+      "runs": 22,
+      "wickets": 3
+    },
+    {
+      "name": "Venkata Ramana Vepa",
+      "oversBalls": 58,
+      "runs": 59,
+      "wickets": 4
+    },
+    {
+      "name": "Raghunath Soogoor",
+      "oversBalls": 27,
+      "runs": 31,
+      "wickets": 4
+    }
+  ]
+}
