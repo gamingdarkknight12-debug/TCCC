@@ -9,7 +9,12 @@ export function Seasons() {
       title="Seasons"
       subtitle="Telugu Titans league journey across BEDCL, HDCL, and MCPL."
     >
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <InfoCard
+          title="2022 Season"
+          text="MCPL Division 2: Telugu Titans finished 6th of 9 teams with 30 points (5W-7L, NRR -0.010)."
+        />
+
         <InfoCard
           title="2023 Season"
           text=" MCPL: Telugu Titans fielded two teams - Telugu Titans-A finished 7th in the Meadowvale Conference with 42 points (7W-5L), and Telugu Titans-B finished 13th in the Heartland Conference with 12 points (1W-9L)."
