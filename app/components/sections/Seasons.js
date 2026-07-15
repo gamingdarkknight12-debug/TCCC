@@ -12,12 +12,12 @@ export function Seasons() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <InfoCard
           title="2023 Season"
-          text="Standings details coming soon."
+          text=" MCPL: Telugu Titans fielded two teams - Telugu Titans-A finished 7th in the Meadowvale Conference with 42 points (7W-5L), and Telugu Titans-B finished 13th in the Heartland Conference with 12 points (1W-9L)."
         />
 
         <InfoCard
           title="2024 Season"
-          text="BEDCL: Telugu Titans finished 6th in Division E - Conference A with 25 points. HDCL: Telugu Titans finished 8th in Group C with 30 points. MCPL: Telugu Titans fielded two teams - Telugu Titans-A finished 7th in the Meadowvale Conference with 42 points (7W-5L), and Telugu Titans-B finished 13th in the Heartland Conference with 12 points (1W-9L)."
+          text="BEDCL: Telugu Titans finished 6th in Division E - Conference A with 25 points. HDCL: Telugu Titans finished 8th in Group C with 30 points."
         />
 
         <InfoCard

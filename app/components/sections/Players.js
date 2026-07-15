@@ -5,6 +5,12 @@ import { PageWrap } from '../UI';
 
 const playersPerPage = 6;
 
+const rolePriority = (role) => {
+  if (role === 'Captain') return 0;
+  if (role === 'Vice Captain') return 1;
+  return 2;
+};
+
 export function Players() {
   const [players, setPlayers] = useState([]);
   const [playerCardSearch, setPlayerCardSearch] = useState("");
@@ -17,9 +23,13 @@ export function Players() {
       .catch(() => setPlayers([]));
   }, []);
 
-  const filteredPlayers = players.filter((p) =>
-    p.name.toLowerCase().includes(playerCardSearch.toLowerCase())
-  );
+  const filteredPlayers = players
+    .filter((p) => p.name.toLowerCase().includes(playerCardSearch.toLowerCase()))
+    .sort((a, b) => {
+      const priorityDiff = rolePriority(a.role) - rolePriority(b.role);
+      if (priorityDiff !== 0) return priorityDiff;
+      return a.name.localeCompare(b.name);
+    });
 
   const pagedPlayers = filteredPlayers.slice(
     (playerPage - 1) * playersPerPage,
