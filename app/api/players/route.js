@@ -9,7 +9,6 @@ export async function GET() {
     .select('canonical_name, role, skill, image_path')
     .eq('team', 'TT')
     .eq('active', true)
-    .not('image_path', 'is', null)
     .order('canonical_name');
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

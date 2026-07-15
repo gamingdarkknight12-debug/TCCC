@@ -70,12 +70,23 @@ export function Players() {
             key={`${p.name}-${i}`}
             className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
           >
-            <img
-              src={p.image}
-              alt={p.name}
-              className="h-72 w-full object-cover"
-              style={{ objectPosition: "50% 25%" }}
-            />
+            {p.image ? (
+              <img
+                src={p.image}
+                alt={p.name}
+                className="h-72 w-full object-cover"
+                style={{ objectPosition: "50% 25%" }}
+              />
+            ) : (
+              <div className="flex h-72 w-full items-center justify-center bg-white/10 text-4xl font-black text-white/30">
+                {p.name
+                  .split(' ')
+                  .map((word) => word[0])
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase()}
+              </div>
+            )}
 
             <div className="p-4">
               <h3 className="text-xl font-bold text-amber-300">{p.name}</h3>
