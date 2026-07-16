@@ -277,7 +277,9 @@ async function getRecentMvpNames(limit = 5) {
 // (seeded by the next match's id) keeps them varied instead of asking the
 // same "who wins" question every week. Player-based ones use a short, smart
 // shortlist (top 5 by the relevant stat, or the last 5 real MVPs) instead of
-// the full roster, since a 15+ option poll button list is unusable.
+// the full roster, since a 15+ option poll button list is unusable. Requires
+// at least 2 options — a poll with a single candidate (e.g. only one MVP
+// recorded so far this season) isn't a real prediction.
 function predictionTemplates(opponent, suffix, { topBatters, topBowlers, recentMvps }) {
   return [
     { q: `Will TT beat ${opponent}?`, options: ['Win', 'Loss', 'Tie / No Result'] },
@@ -286,7 +288,27 @@ function predictionTemplates(opponent, suffix, { topBatters, topBowlers, recentM
     { q: `Will TT post 150+ runs ${suffix}?`, options: ['Yes', 'No'] },
     { q: `Who will be Player of the Match ${suffix}?`, options: recentMvps },
     { q: `Will the match ${suffix} be a close finish?`, options: ['Yes, nail-biter', 'No, one-sided'] },
-  ].filter((t) => t.options.length > 0);
+  ].filter((t) => t.options.length > 1);
+}
+
+// Deterministic seeded shuffle (mulberry32) so the 3 picked questions vary
+// week to week without being random on every request — same match id always
+// produces the same shuffle, but consecutive match ids land on different
+// permutations of the pool instead of an adjacent, thematically-similar slice.
+function seededShuffle(items, seed) {
+  let state = seed;
+  const next = () => {
+    state |= 0; state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 // Triggered right after publishing a match (no cron/scheduling needed) —
@@ -333,12 +355,12 @@ async function createPredictionPolls(afterMatchDate) {
   const templates = predictionTemplates(nextMatch.opponent, suffix, { topBatters, topBowlers, recentMvps });
   if (templates.length === 0) return;
 
-  // Rotate which questions get picked so it's not the same 3 every week, while
-  // guaranteeing no duplicates even when only a few templates have options
-  // (e.g. early season, before top-5/MVP lists have much data yet).
-  const count = Math.min(3, templates.length);
-  const start = nextMatch.id % templates.length;
-  const picks = Array.from({ length: count }, (_, i) => templates[(start + i) % templates.length]);
+  // Rotate which questions get picked so it's not the same 3 every week —
+  // shuffle the whole eligible pool (seeded by the next match's id) and take
+  // the first 3, rather than a contiguous slice, so the picks aren't always
+  // adjacent, thematically-similar entries when the pool has shrunk (e.g.
+  // early season, before top-5/MVP lists have much data yet).
+  const picks = seededShuffle(templates, nextMatch.id).slice(0, Math.min(3, templates.length));
 
   const rows = [];
   picks.forEach(({ q, options }) => {
