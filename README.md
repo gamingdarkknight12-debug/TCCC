@@ -6,11 +6,15 @@
 3. Add Environment Variables:
    - `ADMIN_PASSWORD` = your private admin password
    - `ADMIN_TOKEN` = a long random string, for example `tccc-2026-super-secret-token-8943`
+   - `FANTASY_PASSWORD` = the password you share with friends for the Fantasy League tab
+   - `FANTASY_TOKEN` = a separate long random string, for example `tccc-2026-fantasy-token-1472`
 4. Deploy.
 
 ## Important
 The public website will NOT show the Add Score page.
 Only `/admin` has Add Score access. The admin page is protected by a server-side password check and an HttpOnly cookie.
+
+The Team Hub's Fantasy League tab is protected the same way, with its own separate password/cookie — entering the fantasy password does not grant `/admin` access.
 
 ## Local run
 ```bash

@@ -375,6 +375,50 @@ async function createPredictionPolls(afterMatchDate) {
   await supabaseServer.from('teamhub_polls').insert(rows);
 }
 
+// Fantasy scoring: 1 point per run, 20 points per wicket, Captain's total
+// points x2, Vice-Captain's x1.5. Recomputed on every published match
+// (upsert on (fantasy_team_id, match_id), so re-publishing a corrected
+// scorecard just overwrites that match's score rather than double-counting).
+// A team becomes "locked" for editing once it has any fantasy_scores row —
+// so a team only gets a row here if at least one of its own 4 picks actually
+// appears in this match; a team whose picks all sat this one out shouldn't
+// get locked over a match that had nothing to do with them.
+async function recalculateFantasyPoints(matchId) {
+  const [{ data: battingRows }, { data: bowlingRows }, { data: teams }] = await Promise.all([
+    supabaseServer.from('tccc_batting_innings').select('player_id, runs').eq('match_id', matchId),
+    supabaseServer.from('tccc_bowling_innings').select('player_id, wickets').eq('match_id', matchId),
+    supabaseServer.from('fantasy_teams').select('id, batter1_id, batter2_id, bowler1_id, bowler2_id, captain_player_id, vice_captain_player_id'),
+  ]);
+  if (!teams || teams.length === 0) return;
+
+  const pointsByPlayer = new Map();
+  for (const r of battingRows || []) {
+    if (!r.player_id) continue;
+    pointsByPlayer.set(r.player_id, (pointsByPlayer.get(r.player_id) || 0) + (r.runs || 0) * 1);
+  }
+  for (const r of bowlingRows || []) {
+    if (!r.player_id) continue;
+    pointsByPlayer.set(r.player_id, (pointsByPlayer.get(r.player_id) || 0) + (r.wickets || 0) * 20);
+  }
+  if (pointsByPlayer.size === 0) return;
+
+  const rows = teams
+    .filter((t) => [t.batter1_id, t.batter2_id, t.bowler1_id, t.bowler2_id].some((id) => pointsByPlayer.has(id)))
+    .map((t) => {
+      const picks = [t.batter1_id, t.batter2_id, t.bowler1_id, t.bowler2_id];
+      const points = picks.reduce((sum, playerId) => {
+        const base = pointsByPlayer.get(playerId) || 0;
+        const multiplier = playerId === t.captain_player_id ? 2 : playerId === t.vice_captain_player_id ? 1.5 : 1;
+        return sum + base * multiplier;
+      }, 0);
+      return { fantasy_team_id: t.id, match_id: matchId, points };
+    });
+  if (rows.length === 0) return;
+
+  const { error } = await supabaseServer.from('fantasy_scores').upsert(rows, { onConflict: 'fantasy_team_id,match_id' });
+  if (error) throw error;
+}
+
 export async function POST(req) {
   if (!isAuthed(req)) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
 
@@ -633,6 +677,7 @@ export async function POST(req) {
   // nobody used it) — so it was cut rather than kept as unused clutter.
   if (matchStatus === 'published') {
     await createPredictionPolls(matchDate);
+    await recalculateFantasyPoints(match.id);
   }
 
   // Explicit Supabase keep-alive touch. Publishing already writes heavily to

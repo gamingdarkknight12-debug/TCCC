@@ -6,7 +6,7 @@ export const players = [
   { name: "Srikanth", skill: "All-rounder", image: "/players/26.jpeg" },
   { name: "Arun", skill: "Bowler", image: "/players/3.jpg" },
   { name: "Amit Koul", skill: "All-rounder", image: "/players/1.jpeg" },
-  { name: "Anand Chaitanya", skill: "All-rounder", image: "/players/2.jpeg" },
+  { name: "Anand Chaitanya Maddula", skill: "All-rounder", image: "/players/2.jpeg" },
   { name: "Chari", skill: "All-rounder", image: "/players/6.jpeg" },
   { name: "Dheeraj N", skill: "Bowler", image: "/players/23.jpeg" },
   { name: "Inderjeet", skill: "Bowler", image: "/players/22.jpeg" },
