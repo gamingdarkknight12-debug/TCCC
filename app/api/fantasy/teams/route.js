@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '../../../lib/supabaseServer';
 import { isFantasyAuthed } from '../../../lib/fantasyAuth';
+import { isFantasyLocked } from '../../../lib/matchLock';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -61,6 +62,11 @@ export async function GET(req) {
 
 export async function POST(req) {
   if (!isFantasyAuthed(req)) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+
+  // Belt-and-suspenders: the UI already hides the form while locked, but a
+  // direct API call shouldn't be able to bypass that.
+  const lock = await isFantasyLocked();
+  if (lock.locked) return NextResponse.json({ error: lock.reason }, { status: 409 });
 
   const body = await req.json();
   const { id, ownerName, batter1Id, batter2Id, bowler1Id, bowler2Id, captainId, viceCaptainId } = body;

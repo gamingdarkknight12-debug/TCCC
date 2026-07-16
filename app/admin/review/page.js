@@ -21,9 +21,26 @@ function ReviewPageInner() {
   // clobbering the freshly-scanned data.
   const loadedRef = useRef(false);
 
+  // Fantasy League: only players actually picked by some squad are worth
+  // asking about, not the whole roster. Submitted together with the
+  // scorecard — one publish does batting/bowling + fielding + scoring, no
+  // separate follow-up step to remember.
+  const [fantasyPlayers, setFantasyPlayers] = useState([]);
+  const [fielding, setFielding] = useState({}); // playerId -> { catches, runOuts }
+  const [fantasyResult, setFantasyResult] = useState(null);
+  const [fantasyStandings, setFantasyStandings] = useState([]);
+
   useEffect(() => {
     fetch('/api/admin/players').then((r) => r.json()).then((d) => setRoster(d.players || []));
+    fetch('/api/admin/fantasy-picked-players').then((r) => r.json()).then((d) => setFantasyPlayers(d.players || []));
   }, []);
+
+  function updateFielding(playerId, field, value) {
+    setFielding((f) => ({
+      ...f,
+      [playerId]: { ...f[playerId], [field]: Math.max(0, Number(value) || 0) },
+    }));
+  }
 
   useEffect(() => {
     if (loadedRef.current) return;
@@ -119,16 +136,32 @@ function ReviewPageInner() {
     setPublishing(true);
     setPublishMessage('');
 
+    const fieldingEntries = fantasyPlayers.map((p) => ({
+      playerId: p.id,
+      catches: fielding[p.id]?.catches || 0,
+      runOuts: fielding[p.id]?.runOuts || 0,
+    }));
+
     const res = await fetch('/api/admin/publish-match', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, status, createNews: status === 'published' }),
+      body: JSON.stringify({ ...form, status, createNews: status === 'published', fieldingEntries }),
     });
     const data = await res.json();
     setPublishing(false);
 
     if (!res.ok) {
       setPublishMessage(data.error || 'Publish failed.');
+      return;
+    }
+
+    // A real publish (with any fantasy squads actually eligible this match)
+    // already ran fantasy scoring, catches/run-outs included — show the
+    // result right here instead of navigating away, so there's no separate
+    // step to remember to come back for.
+    if (status === 'published' && data.fantasyResult) {
+      setFantasyResult(data.fantasyResult);
+      setFantasyStandings(data.fantasyStandings || []);
       return;
     }
 
@@ -139,6 +172,56 @@ function ReviewPageInner() {
     return (
       <div className="card p-6">
         <p className="text-white/60">Loading…</p>
+      </div>
+    );
+  }
+
+  if (fantasyResult) {
+    return (
+      <div className="grid gap-6">
+        <div className="card p-6">
+          <h3 className="text-2xl font-bold text-amber-300">Match Published</h3>
+          <p className="mt-2 text-white/65">Fantasy points recalculated with the fielding stats you entered.</p>
+          <h4 className="mt-5 text-xl font-bold text-amber-300">
+            {fantasyResult.winners.length === 0
+              ? 'No fantasy squad had a pick in this match.'
+              : fantasyResult.winners.length === 1
+              ? `🏆 ${fantasyResult.winners[0]} won this match`
+              : `🏆 Tied for the win: ${fantasyResult.winners.join(', ')}`}
+          </h4>
+          {fantasyResult.teamScores.length > 0 && (
+            <div className="mt-4 grid gap-2">
+              {fantasyResult.teamScores.map((t) => (
+                <div key={t.ownerName} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 p-3 text-sm">
+                  <span className={t.won ? 'font-bold text-amber-300' : 'text-white/75'}>{t.ownerName}</span>
+                  <span className="text-white/60">{t.rawScore} pts this match</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="card p-6">
+          <h3 className="text-2xl font-bold text-amber-300">Season Leaderboard</h3>
+          <div className="mt-4 grid gap-2">
+            {fantasyStandings.length === 0 ? (
+              <p className="text-white/60">No squads submitted yet.</p>
+            ) : (
+              fantasyStandings.map((s, i) => (
+                <div key={s.ownerName} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 p-3 text-sm">
+                  <span className={i === 0 ? 'font-bold text-amber-300' : 'text-white/75'}>
+                    {i + 1}. {s.ownerName}
+                  </span>
+                  <span className="text-white/60">{s.points} pts</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <Link href="/admin" className="btn btn-gold w-fit">
+          Back to Admin
+        </Link>
       </div>
     );
   }
@@ -442,6 +525,42 @@ function ReviewPageInner() {
           + Add bowling row
         </button>
       </div>
+
+      {fantasyPlayers.length > 0 && (
+        <>
+          <h4 className="mt-8 text-xl font-bold text-amber-300">Fielding (Fantasy League)</h4>
+          <p className="mt-1 text-sm text-white/60">
+            Catches/run-outs by players picked in a fantasy squad — 5 points each. Leave at 0 if none.
+          </p>
+          <div className="mt-3 grid gap-2">
+            {fantasyPlayers.map((p) => (
+              <div key={p.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
+                <span className="text-white/85">{p.name}</span>
+                <label className="flex items-center gap-2 text-sm text-white/60">
+                  Catches
+                  <input
+                    type="number"
+                    min="0"
+                    value={fielding[p.id]?.catches ?? 0}
+                    onChange={(e) => updateFielding(p.id, 'catches', e.target.value)}
+                    className="w-16 rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-white outline-none"
+                  />
+                </label>
+                <label className="flex items-center gap-2 text-sm text-white/60">
+                  Run-outs
+                  <input
+                    type="number"
+                    min="0"
+                    value={fielding[p.id]?.runOuts ?? 0}
+                    onChange={(e) => updateFielding(p.id, 'runOuts', e.target.value)}
+                    className="w-16 rounded-lg border border-white/10 bg-black/40 px-2 py-1 text-white outline-none"
+                  />
+                </label>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <h4 className="mt-8 text-xl font-bold text-amber-300">Data Validation</h4>
       <div className="mt-3 rounded-xl border border-white/10 bg-black/30 p-4">

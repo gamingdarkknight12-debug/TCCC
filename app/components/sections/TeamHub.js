@@ -130,6 +130,10 @@ function todayStr() {
 }
 
 
+function formatMatchDate(dateStr) {
+  return new Date(`${dateStr}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 function matchNarrativeLine(match) {
   if (match.result.summary) return match.result.summary;
 
@@ -178,6 +182,7 @@ export function TeamHub() {
   const [fantasyStandings, setFantasyStandings] = useState([]);
   const [fantasyForm, setFantasyForm] = useState(emptyFantasyForm);
   const [fantasyFormMessage, setFantasyFormMessage] = useState("");
+  const [fantasyLock, setFantasyLock] = useState({ locked: false, reason: null, upcomingMatches: [] });
 
   useEffect(() => {
     fetch("/api/fantasy-session")
@@ -187,16 +192,18 @@ export function TeamHub() {
   }, []);
 
   async function loadFantasyData() {
-    const [rosterRes, teamsRes, standingsRes] = await Promise.all([
+    const [rosterRes, teamsRes, standingsRes, lockRes] = await Promise.all([
       fetch("/api/fantasy/roster"),
       fetch("/api/fantasy/teams"),
       fetch("/api/fantasy/standings"),
+      fetch("/api/fantasy/lock-status"),
     ]);
     setFantasyRoster(await rosterRes.json());
     const teamsData = await teamsRes.json();
     setFantasyTeams(teamsData.teams || []);
     const standingsData = await standingsRes.json();
     setFantasyStandings(standingsData.standings || []);
+    setFantasyLock(await lockRes.json());
   }
 
   useEffect(() => {
@@ -727,6 +734,21 @@ export function TeamHub() {
                   1 point per run, 20 points per wicket. Locked once your squad earns its first point.
                 </p>
 
+                {fantasyLock.upcomingMatches?.length > 0 && (
+                  <p className="mt-3 text-sm font-semibold text-amber-300">
+                    {fantasyLock.upcomingMatches.length === 1
+                      ? `These picks are for: vs ${fantasyLock.upcomingMatches[0].opponent} (${formatMatchDate(fantasyLock.upcomingMatches[0].matchDate)})`
+                      : `These picks are for: ${fantasyLock.upcomingMatches
+                          .map((m) => `vs ${m.opponent} (${formatMatchDate(m.matchDate)})`)
+                          .join(", ")}`}
+                  </p>
+                )}
+
+                {fantasyLock.locked ? (
+                  <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm text-amber-200">
+                    🔒 {fantasyLock.reason}
+                  </div>
+                ) : (
                 <form onSubmit={submitFantasyTeam} className="mt-5 grid gap-3">
                   <input
                     value={fantasyForm.ownerName}
@@ -826,6 +848,7 @@ export function TeamHub() {
                     <div className="rounded-2xl bg-black/30 p-4 text-sm text-white/75">{fantasyFormMessage}</div>
                   )}
                 </form>
+                )}
               </div>
 
               <div className="grid gap-6">
@@ -857,6 +880,8 @@ export function TeamHub() {
                           </div>
                           {team.locked ? (
                             <div className="mt-2 text-xs font-semibold text-amber-300">Locked</div>
+                          ) : fantasyLock.locked ? (
+                            <div className="mt-2 text-xs text-white/50">Picks closed for now</div>
                           ) : (
                             <button
                               onClick={() => editFantasyTeam(team)}
