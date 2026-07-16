@@ -176,7 +176,7 @@ const emptyFantasyForm = {
 };
 
 export function TeamHub() {
-  const [teamHubTab, setTeamHubTab] = useState("Voting Arena");
+  const [teamHubTab, setTeamHubTab] = useState("Fantasy League");
   const [polls, setPolls] = useState({});
   const [pollInputs, setPollInputs] = useState({});
   const [captainNote, setCaptainNote] = useState("");
@@ -445,11 +445,11 @@ export function TeamHub() {
     >
       <div className=" teamhub-tabs mb-8 flex flex-wrap gap-3">
         {[
+          "Fantasy League",
           "Voting Arena",
           "Awards Room",
           "Season Timeline",
           "War Room",
-          "Fantasy League",
         ].map((tab) => (
           <button
             key={tab}
