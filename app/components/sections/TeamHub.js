@@ -13,13 +13,25 @@ const parseStatNum = (v) => {
   return Number.isNaN(n) ? null : n;
 };
 
-function topByStat(players, valueFn, minFn) {
+// tiebreakFn (optional): when two players are exactly equal on the primary
+// stat (e.g. both took 15 wickets), whoever has the higher tiebreak value
+// wins instead of it being whichever player happened to be encountered
+// first while iterating — that was previously arbitrary (DB row order),
+// which is how Srikanth Govula beat Shanthan Akkiraju for "Wicket Hunter"
+// despite Shanthan's economy being clearly better on the same 15 wickets.
+function topByStat(players, valueFn, minFn, tiebreakFn) {
   let best = null;
   for (const p of players) {
     if (minFn && !minFn(p)) continue;
     const value = valueFn(p);
     if (value === null || value === undefined) continue;
-    if (!best || value > best.value) best = { player: p, value };
+    if (!best || value > best.value) {
+      best = { player: p, value };
+    } else if (value === best.value && tiebreakFn) {
+      const tb = tiebreakFn(p);
+      const bestTb = tiebreakFn(best.player);
+      if (tb !== null && bestTb !== null && tb > bestTb) best = { player: p, value };
+    }
   }
   return best;
 }
@@ -28,49 +40,49 @@ const AWARD_DEFS = [
   {
     icon: "🦾",
     title: "Iron Man",
-    pick: (players) => topByStat(players, (p) => p.matches),
+    pick: (players) => topByStat(players, (p) => p.matches, null, (p) => (p.runs || 0) + (p.wickets || 0) * 20),
     stat: (r) => `${r.value} matches played`,
     blurb: (r) => `${r.player.name} showed up more than anyone else this season.`,
   },
   {
     icon: "🏆",
     title: "Most Valuable Player",
-    pick: (players) => topByStat(players, (p) => (p.runs || 0) + (p.wickets || 0) * 20),
+    pick: (players) => topByStat(players, (p) => (p.runs || 0) + (p.wickets || 0) * 20, null, (p) => -p.matches),
     stat: (r) => `${r.player.runs || 0} runs • ${r.player.wickets || 0} wickets`,
     blurb: (r) => `${r.player.name} swung the game more often than anyone this year.`,
   },
   {
     icon: "💥",
     title: "Six Machine",
-    pick: (players) => topByStat(players, (p) => p.sixes, (p) => p.sixes > 0),
+    pick: (players) => topByStat(players, (p) => p.sixes, (p) => p.sixes > 0, (p) => p.sr),
     stat: (r) => `${r.value} sixes`,
     blurb: (r) => `${r.player.name} keeps sending the ball into the next postal code.`,
   },
   {
     icon: "🚀",
     title: "Strike Rate Rocket",
-    pick: (players) => topByStat(players, (p) => p.sr, (p) => p.sr !== null && p.balls >= 20),
+    pick: (players) => topByStat(players, (p) => p.sr, (p) => p.sr !== null && p.balls >= 20, (p) => p.runs),
     stat: (r) => `SR ${r.value.toFixed(1)}`,
     blurb: (r) => `${r.player.name} doesn't believe in dot balls.`,
   },
   {
     icon: "🧊",
     title: "The Wall",
-    pick: (players) => topByStat(players, (p) => p.avg, (p) => p.avg !== null && p.runs >= 100),
+    pick: (players) => topByStat(players, (p) => p.avg, (p) => p.avg !== null && p.runs >= 100, (p) => p.runs),
     stat: (r) => `Avg ${r.value.toFixed(1)}`,
     blurb: (r) => `${r.player.name} makes the bowlers earn every single wicket.`,
   },
   {
     icon: "🔥",
     title: "Wicket Hunter",
-    pick: (players) => topByStat(players, (p) => p.wickets, (p) => p.wickets > 0),
+    pick: (players) => topByStat(players, (p) => p.wickets, (p) => p.wickets > 0, (p) => (p.economy === null ? null : -p.economy)),
     stat: (r) => `${r.value} wickets`,
     blurb: (r) => `${r.player.name} keeps ending innings before they get started.`,
   },
   {
     icon: "🎯",
     title: "Economy King",
-    pick: (players) => topByStat(players, (p) => (p.economy === null ? null : -p.economy), (p) => p.economy !== null && p.overs >= 15),
+    pick: (players) => topByStat(players, (p) => (p.economy === null ? null : -p.economy), (p) => p.economy !== null && p.overs >= 15, (p) => p.wickets),
     stat: (r) => `Economy ${(-r.value).toFixed(1)}`,
     blurb: (r) => `${r.player.name} makes batters work for every run.`,
   },
