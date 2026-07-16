@@ -13,8 +13,7 @@ export function News() {
       .catch(() => setItems([]));
   }, []);
 
-  // Carousel is a photo strip — a card with no image has nothing to show.
-  const carouselItems = items.filter((n) => n.placement === 'carousel' && n.image);
+  const carouselItems = items.filter((n) => n.placement === 'carousel');
 
   // Items already arrive newest-first from the API. Rather than trust
   // whatever placement got stored at publish time (which would leave every
@@ -39,7 +38,18 @@ export function News() {
             {carouselItems.map((item) => (
               <div key={item.id} className="news-player-card">
                 <div className="news-player-img-wrap">
-                  <img src={item.image} className="news-player-img" style={{ objectPosition: "50% 20%" }} />
+                  {item.image ? (
+                    <img src={item.image} className="news-player-img" style={{ objectPosition: "50% 20%" }} />
+                  ) : (
+                    <div className="news-player-img news-player-img-placeholder">
+                      {item.title
+                        .split(' ')
+                        .map((word) => word[0])
+                        .slice(0, 2)
+                        .join('')
+                        .toUpperCase()}
+                    </div>
+                  )}
                   <div className="news-player-tag">{item.tag}</div>
                 </div>
                 <div className="news-player-content">

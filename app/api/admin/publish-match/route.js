@@ -275,19 +275,25 @@ async function getRecentMvpNames(limit = 5) {
 
 // A rotating pool of prediction questions — picking a different 3 each time
 // (seeded by the next match's id) keeps them varied instead of asking the
-// same "who wins" question every week. Player-based ones use a short, smart
-// shortlist (top 5 by the relevant stat, or the last 5 real MVPs) instead of
-// the full roster, since a 15+ option poll button list is unusable. Requires
-// at least 2 options — a poll with a single candidate (e.g. only one MVP
-// recorded so far this season) isn't a real prediction.
+// same question every week. Player-based ones use a short, smart shortlist
+// (top 5 by the relevant stat, or the last 5 real MVPs) instead of the full
+// roster, since a 15+ option poll button list is unusable. Requires at least
+// 2 options — a poll with a single candidate (e.g. only one MVP recorded so
+// far this season) isn't a real prediction. Deliberately no "Will TT beat
+// {opponent}?" or outcome-doubting templates (e.g. "will it be one-sided?")
+// — asking teammates to vote Win/Loss/Tie or bet against a close game reads
+// as betting against your own team; every template here is something to be
+// excited about regardless of the result.
 function predictionTemplates(opponent, suffix, { topBatters, topBowlers, recentMvps }) {
   return [
-    { q: `Will TT beat ${opponent}?`, options: ['Win', 'Loss', 'Tie / No Result'] },
     { q: `Who scores the most runs ${suffix}?`, options: topBatters },
     { q: `Who takes the most wickets ${suffix}?`, options: topBowlers },
     { q: `Will TT post 150+ runs ${suffix}?`, options: ['Yes', 'No'] },
     { q: `Who will be Player of the Match ${suffix}?`, options: recentMvps },
-    { q: `Will the match ${suffix} be a close finish?`, options: ['Yes, nail-biter', 'No, one-sided'] },
+    { q: `Will a Titans batter hit a half-century (50+) ${suffix}?`, options: ['Yes', 'No'] },
+    { q: `How many sixes will Titans hit ${suffix}?`, options: ['Under 3', '3 to 6', '7+'] },
+    { q: `Who takes the first wicket ${suffix}?`, options: topBowlers },
+    { q: `Will Titans win the toss ${suffix}?`, options: ['Yes', 'No'] },
   ].filter((t) => t.options.length > 1);
 }
 
@@ -487,6 +493,7 @@ export async function POST(req) {
   }
 
   let mvpPlayer = null;
+  let resolvedMvpPlayerId = mvpPlayerId || null;
   if (mvpPlayerId) {
     const { data } = await supabaseServer
       .from('tccc_players')
@@ -494,6 +501,27 @@ export async function POST(req) {
       .eq('id', mvpPlayerId)
       .single();
     mvpPlayer = data || null;
+  }
+
+  // No MVP explicitly chosen during review — auto-pick this match's standout
+  // performer (best knock vs best bowling spell, weighting a wicket roughly
+  // like 20 runs of impact) so the carousel still gets a highlight every
+  // match instead of silently doing nothing.
+  if (!mvpPlayer) {
+    const bestBat = [...battingRows].filter((r) => r.playerId).sort((a, b) => (b.runs || 0) - (a.runs || 0))[0];
+    const bestBowl = [...bowlingRows].filter((r) => r.playerId).sort((a, b) => (b.wickets || 0) - (a.wickets || 0))[0];
+    const batScore = bestBat?.runs || 0;
+    const bowlScore = (bestBowl?.wickets || 0) * 20;
+    const standoutId = bowlScore > batScore ? bestBowl?.playerId : (bestBat?.playerId || bestBowl?.playerId);
+    if (standoutId) {
+      const { data } = await supabaseServer
+        .from('tccc_players')
+        .select('canonical_name, image_path')
+        .eq('id', standoutId)
+        .single();
+      mvpPlayer = data || null;
+      resolvedMvpPlayerId = standoutId;
+    }
   }
 
   if (createNews && matchStatus === 'published' && summaryText) {
@@ -514,13 +542,15 @@ export async function POST(req) {
       published_at: now.toISOString(),
     });
 
-    // A carousel highlight for the MVP, so the featured-player strip stays
-    // populated with real standout performances instead of going stale.
-    // Skipped without a photo — the carousel is a photo strip, and the
-    // frontend won't render a card with no image anyway.
-    if (mvpPlayer?.image_path) {
-      const mvpBatting = battingRows.find((r) => r.playerId === mvpPlayerId);
-      const mvpBowling = bowlingRows.find((r) => r.playerId === mvpPlayerId);
+    // A carousel highlight for this match's standout, so the featured-player
+    // strip stays populated with real performances instead of going stale.
+    // No longer gated on having a photo — a highlight with no image just
+    // renders with an initials placeholder on the frontend until one's added.
+    // If this player already has a carousel card from an earlier match, that
+    // old one is replaced (not stacked) so the strip shows their latest form.
+    if (mvpPlayer) {
+      const mvpBatting = battingRows.find((r) => r.playerId === resolvedMvpPlayerId);
+      const mvpBowling = bowlingRows.find((r) => r.playerId === resolvedMvpPlayerId);
       let tag = 'MATCH IMPACT';
       if (mvpBowling?.wickets >= 3) tag = `${mvpBowling.wickets}-WICKET IMPACT`;
       else if (mvpBatting?.runs >= 40) tag = 'TOP KNOCK';
@@ -535,6 +565,13 @@ export async function POST(req) {
           .filter(Boolean)
           .join(', ') ||
         `Standout performance vs ${opponent}.`;
+
+      await supabaseServer
+        .from('tccc_news_items')
+        .delete()
+        .eq('team', 'TT')
+        .eq('placement', 'carousel')
+        .eq('title', mvpPlayer.canonical_name);
 
       await supabaseServer.from('tccc_news_items').insert({
         team: 'TT',

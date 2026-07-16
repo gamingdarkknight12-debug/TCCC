@@ -508,6 +508,16 @@ section {
   object-fit: cover;
 }
 
+.news-player-img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 48px;
+  font-weight: 900;
+}
+
 .news-player-tag {
   position: absolute;
   left: 16px;
