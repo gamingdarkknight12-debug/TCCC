@@ -91,8 +91,7 @@ export default async function PlayerProfilePage({ params }) {
               <img
                 src={player.image_path}
                 alt={player.canonical_name}
-                className="h-40 w-40 rounded-3xl object-cover"
-                style={{ objectPosition: '50% 50%' }}
+                className="h-40 w-40 rounded-3xl bg-black/20 object-contain"
               />
             ) : (
               <div className="flex h-40 w-40 items-center justify-center rounded-3xl bg-white/10 text-5xl font-black text-white/30">

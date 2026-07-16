@@ -106,8 +106,7 @@ export function Players() {
               <img
                 src={p.image}
                 alt={p.name}
-                className="h-72 w-full object-cover"
-                style={{ objectPosition: "50% 50%" }}
+                className="h-72 w-full bg-black/20 object-contain"
               />
             ) : (
               <div className="flex h-72 w-full items-center justify-center bg-white/10 text-4xl font-black text-white/30">
