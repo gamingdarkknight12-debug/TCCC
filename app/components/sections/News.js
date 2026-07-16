@@ -39,7 +39,7 @@ export function News() {
               <div key={item.id} className="news-player-card">
                 <div className="news-player-img-wrap">
                   {item.image ? (
-                    <img src={item.image} className="news-player-img" style={{ objectPosition: "50% 20%" }} />
+                    <img src={item.image} className="news-player-img" style={{ objectPosition: "50% 50%" }} />
                   ) : (
                     <div className="news-player-img news-player-img-placeholder">
                       {item.title
