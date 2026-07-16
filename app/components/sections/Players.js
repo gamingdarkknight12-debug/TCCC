@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { PageWrap } from '../UI';
+import { slugify } from '../../lib/slugify';
 
-const playersPerPage = 6;
+const playersPerPage = 9;
 
 const rolePriority = (role) => {
   if (role === 'Captain') return 0;
@@ -15,6 +16,7 @@ export function Players() {
   const [players, setPlayers] = useState([]);
   const [playerCardSearch, setPlayerCardSearch] = useState("");
   const [playerPage, setPlayerPage] = useState(1);
+  const [tab, setTab] = useState("active");
 
   useEffect(() => {
     fetch('/api/players')
@@ -24,6 +26,7 @@ export function Players() {
   }, []);
 
   const filteredPlayers = players
+    .filter((p) => (tab === "active" ? p.recent : !p.recent))
     .filter((p) => p.name.toLowerCase().includes(playerCardSearch.toLowerCase()))
     .sort((a, b) => {
       const priorityDiff = rolePriority(a.role) - rolePriority(b.role);
@@ -44,6 +47,24 @@ export function Players() {
       title="Players"
       subtitle="Meet the Telugu Titans squad under TCCC banner."
     >
+      <div className="mb-6 flex flex-wrap gap-3">
+        {[
+          { key: "active", label: "Active Players" },
+          { key: "alumni", label: "Former Players" },
+        ].map((t) => (
+          <button
+            key={t.key}
+            onClick={() => {
+              setTab(t.key);
+              setPlayerPage(1);
+            }}
+            className={`btn ${tab === t.key ? "btn-gold" : "btn-ghost"}`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       <input
         value={playerCardSearch}
         onChange={(e) => {
@@ -76,9 +97,10 @@ export function Players() {
       </div>
       <div className="player-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {pagedPlayers.map((p, i) => (
-          <div
+          <a
             key={`${p.name}-${i}`}
-            className="overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+            href={`/players/${slugify(p.name)}`}
+            className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 transition hover:border-amber-300/50"
           >
             {p.image ? (
               <img
@@ -109,7 +131,7 @@ export function Players() {
 
               <p className="mt-1 text-white/70">{p.skill}</p>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </PageWrap>
