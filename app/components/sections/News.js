@@ -75,7 +75,7 @@ export function News() {
                 {item.tag}
               </div>
               <h3>{item.title}</h3>
-              <p>{item.body}</p>
+              <p style={{ whiteSpace: 'pre-line' }}>{item.body}</p>
             </div>
           ))}
         </div>

@@ -110,32 +110,28 @@ async function getSeasonLeaders(season) {
   };
 }
 
-// Same counting as /api/standings, scoped to one league/season.
-async function getLeagueRecord(league, season) {
+// The last couple of real, played matches — standings are already a whole
+// page (Seasons/Standings), so this card is about what actually happened on
+// the pitch (one match, or a full weekend of two) rather than a W-L tally
+// that duplicates a page that already exists.
+async function getRecentMatchResults(season, limit = 2) {
   const { data } = await supabaseServer
     .from('tccc_matches')
-    .select('result_type')
+    .select('opponent, league, result_text')
     .eq('team', 'TT')
-    .eq('league', league)
     .eq('season', season)
-    .in('status', ['published', 'cancelled']);
-
-  const rec = { played: 0, won: 0, lost: 0, tie: 0, noResult: 0 };
-  for (const row of data || []) {
-    rec.played += 1;
-    if (row.result_type === 'win') rec.won += 1;
-    else if (row.result_type === 'loss') rec.lost += 1;
-    else if (row.result_type === 'tie') rec.tie += 1;
-    else rec.noResult += 1;
-  }
-  return rec;
+    .neq('league', 'SEASON')
+    .eq('status', 'published')
+    .order('match_date', { ascending: false })
+    .limit(limit);
+  return data || [];
 }
 
-// Round-number career milestones worth celebrating. Runs go by 250s/500s
-// once past 1000 (a "reached 1500" card matters more often at that level);
-// wickets by smaller, more frequent steps since totals run much lower.
-const BATTING_MILESTONES = [50, 100, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000];
-const BOWLING_MILESTONES = [10, 25, 50, 75, 100, 150, 200, 250, 300];
+// Round-number career milestones worth celebrating. Kept to thresholds that
+// actually mean something at club level — 50 runs or 10 wickets happens too
+// often to be a real "milestone" card.
+const BATTING_MILESTONES = [500, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
+const BOWLING_MILESTONES = [50, 100, 150, 200, 250, 300];
 
 function milestoneCrossed(before, after, milestones) {
   return milestones.find((m) => before < m && after >= m) || null;
@@ -607,24 +603,19 @@ export async function POST(req) {
     // or teases whoever's closest to one if nobody did this match.
     await upsertMilestoneCard(battingInsert, bowlingInsert, offsetEvergreen(2));
 
-    // Refresh BOTH league standings cards on every publish (not just the
-    // league that was just played) so BEDCL Update and MCPL Update always
-    // stay paired/adjacent in the flow grid, instead of drifting apart based
-    // on whichever league last happened to have a match.
-    const ALL_LEAGUES = ['BEDCL', 'MCPL'];
-    for (const [i, lg] of ALL_LEAGUES.entries()) {
-      const leagueRecord = await getLeagueRecord(lg, matchSeason);
-      if (leagueRecord.played > 0) {
-        const parts = [`${leagueRecord.won}W`, `${leagueRecord.lost}L`];
-        if (leagueRecord.tie) parts.push(`${leagueRecord.tie}T`);
-        if (leagueRecord.noResult) parts.push(`${leagueRecord.noResult}NR`);
-        await upsertEvergreenCard({
-          tag: `${lg} Update`,
-          title: `${lg} Standings Update`,
-          body: `Telugu Titans are ${parts.join('-')} in ${lg} this season after ${leagueRecord.played} match${leagueRecord.played === 1 ? '' : 'es'}.`,
-          publishedAt: offsetEvergreen(i),
-        });
-      }
+    // Recent Results: the last couple of played matches, one line each —
+    // replaces the old per-league W-L standings cards (Standings/Seasons
+    // pages already cover that; this is about what actually happened on the
+    // pitch). Shows both matches when there were two in the same stretch
+    // (e.g. a weekend double-header), just the one otherwise.
+    const recentMatches = await getRecentMatchResults(matchSeason);
+    if (recentMatches.length > 0) {
+      await upsertEvergreenCard({
+        tag: 'Recent Results',
+        title: recentMatches.length > 1 ? "Latest Results" : 'Latest Result',
+        body: recentMatches.map((m) => `${m.league} vs ${m.opponent}: ${m.result_text}`).join('\n'),
+        publishedAt: offsetEvergreen(0),
+      });
     }
   }
 
