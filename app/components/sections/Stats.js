@@ -154,11 +154,19 @@ export function Stats() {
       );
   }, [season]);
 
+  // Matches-played is only reliable for seasons with real per-match rows
+  // (2026) or a hand-reconstructed-and-cross-checked scorecard scan (2022,
+  // 2023). 2024/2025 are single SEASON aggregate rows with no match count,
+  // and All-Time would mix in those unknowns, so the M column is hidden
+  // there rather than showing a misleading total.
+  const hasReliableMatchCount = ['2026', '2023', '2022'].includes(season);
+  const matchesColumn = { key: 'matches', label: 'M', type: 'number' };
+
   const battingColumns =
     season === '2026'
       ? [
           { key: 'name', label: 'Player', type: 'text' },
-          { key: 'matches', label: 'M', type: 'number' },
+          ...(hasReliableMatchCount ? [matchesColumn] : []),
           { key: 'runs', label: 'R', type: 'number' },
           { key: 'balls', label: 'B', type: 'number' },
           { key: 'fours', label: '4s', type: 'number', zeroAsDash: true },
@@ -168,7 +176,7 @@ export function Stats() {
         ]
       : [
           { key: 'name', label: 'Player', type: 'text' },
-          { key: 'matches', label: 'M', type: 'number' },
+          ...(hasReliableMatchCount ? [matchesColumn] : []),
           { key: 'runs', label: 'Runs', type: 'number' },
           { key: 'balls', label: 'Balls', type: 'number' },
           { key: 'fours', label: '4s', type: 'number', zeroAsDash: true },
@@ -180,7 +188,7 @@ export function Stats() {
     season === '2026'
       ? [
           { key: 'name', label: 'Player', type: 'text' },
-          { key: 'matches', label: 'M', type: 'number' },
+          ...(hasReliableMatchCount ? [matchesColumn] : []),
           { key: 'overs', label: 'O', type: 'number' },
           { key: 'runs', label: 'R', type: 'number' },
           { key: 'wickets', label: 'W', type: 'number' },
@@ -190,7 +198,7 @@ export function Stats() {
         ]
       : [
           { key: 'name', label: 'Player', type: 'text' },
-          { key: 'matches', label: 'M', type: 'number' },
+          ...(hasReliableMatchCount ? [matchesColumn] : []),
           { key: 'overs', label: 'Overs', type: 'number' },
           { key: 'runs', label: 'Runs', type: 'number' },
           { key: 'wickets', label: 'Wickets', type: 'number' },
