@@ -92,11 +92,11 @@ export async function getPlayerCareer(canonicalName) {
       balls: bat.balls,
       fours: bat.fours,
       sixes: bat.sixes,
-      sr: bat.balls > 0 ? ((bat.runs / bat.balls) * 100).toFixed(1) : '-',
-      avg: dismissals > 0 ? (bat.runs / dismissals).toFixed(1) : '-',
+      sr: bat.balls > 0 ? Math.round((bat.runs / bat.balls) * 100) : '-',
+      avg: dismissals > 0 ? Math.round(bat.runs / dismissals) : '-',
       overs: bowl.overs,
       wickets: bowl.wickets,
-      economy: bowl.overs > 0 ? (bowl.runs / bowl.overs).toFixed(1) : '-',
+      economy: bowl.overs > 0 ? Math.round(bowl.runs / bowl.overs) : '-',
     };
   });
 
@@ -120,8 +120,8 @@ export async function getPlayerCareer(canonicalName) {
     matches: totals.matches,
     runs: totals.runs,
     wickets: totals.wickets,
-    avg: careerDismissals > 0 ? (totals.runs / careerDismissals).toFixed(1) : '-',
-    economy: totals.overs > 0 ? (totals.bowlingRuns / totals.overs).toFixed(1) : '-',
+    avg: careerDismissals > 0 ? Math.round(totals.runs / careerDismissals) : '-',
+    economy: totals.overs > 0 ? Math.round(totals.bowlingRuns / totals.overs) : '-',
   };
 
   return { seasons, career };
