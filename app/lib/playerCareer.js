@@ -1,4 +1,5 @@
 import { supabaseServer } from './supabaseServer';
+import { oversToBalls, ballsToOvers, ballsToDecimalOvers } from './oversMath';
 
 // Season-by-season + career totals for one player, on a single canonical
 // roster name. Mirrors the matches-played logic in app/api/stats/route.js
@@ -70,8 +71,8 @@ export async function getPlayerCareer(canonicalName) {
   const bowlingBySeason = new Map();
   for (const row of myBowling) {
     const season = seasonByMatchId.get(row.match_id);
-    const agg = bowlingBySeason.get(season) || { overs: 0, runs: 0, wickets: 0 };
-    agg.overs += row.overs || 0;
+    const agg = bowlingBySeason.get(season) || { balls: 0, runs: 0, wickets: 0 };
+    agg.balls += oversToBalls(row.overs || 0);
     agg.runs += row.runs || 0;
     agg.wickets += row.wickets || 0;
     bowlingBySeason.set(season, agg);
@@ -83,8 +84,10 @@ export async function getPlayerCareer(canonicalName) {
 
   const seasons = seasonNumbers.map((season) => {
     const bat = battingBySeason.get(season) || { runs: 0, balls: 0, fours: 0, sixes: 0, innings: 0, notOuts: 0 };
-    const bowl = bowlingBySeason.get(season) || { overs: 0, runs: 0, wickets: 0 };
+    const bowl = bowlingBySeason.get(season) || { balls: 0, runs: 0, wickets: 0 };
     const dismissals = bat.innings - bat.notOuts;
+    const overs = ballsToOvers(bowl.balls); // display notation, e.g. 16.5
+    const decimalOvers = ballsToDecimalOvers(bowl.balls); // true decimal for rate math
     return {
       season,
       matches: matchesPlayed(season),
@@ -94,34 +97,41 @@ export async function getPlayerCareer(canonicalName) {
       sixes: bat.sixes,
       sr: bat.balls > 0 ? Math.round((bat.runs / bat.balls) * 100) : '-',
       avg: dismissals > 0 ? Math.round(bat.runs / dismissals) : '-',
-      overs: bowl.overs,
+      overs,
       wickets: bowl.wickets,
-      economy: bowl.overs > 0 ? Math.round(bowl.runs / bowl.overs) : '-',
+      economy: decimalOvers > 0 ? Math.round(bowl.runs / decimalOvers) : '-',
     };
   });
 
-  const totals = seasons.reduce(
-    (acc, s) => {
-      acc.matches += s.matches;
-      acc.runs += s.runs;
-      acc.balls += s.balls;
-      acc.wickets += s.wickets;
-      acc.overs += s.overs;
-      acc.bowlingRuns += bowlingBySeason.get(s.season)?.runs || 0;
-      acc.innings += battingBySeason.get(s.season)?.innings || 0;
-      acc.notOuts += battingBySeason.get(s.season)?.notOuts || 0;
+  // Bowling balls are tracked separately from the per-season "overs" figure
+  // (which is already in ball-count notation, not a decimal) — summing balls
+  // as plain integers avoids the same overs-as-decimal bug this whole file
+  // exists to avoid; overs are only converted back to notation once, here.
+  const totals = seasonNumbers.reduce(
+    (acc, season) => {
+      const bat = battingBySeason.get(season) || { runs: 0, balls: 0, innings: 0, notOuts: 0 };
+      const bowl = bowlingBySeason.get(season) || { balls: 0, runs: 0, wickets: 0 };
+      acc.matches += matchesPlayed(season);
+      acc.runs += bat.runs;
+      acc.balls += bat.balls;
+      acc.wickets += bowl.wickets;
+      acc.bowlingBalls += bowl.balls;
+      acc.bowlingRuns += bowl.runs;
+      acc.innings += bat.innings;
+      acc.notOuts += bat.notOuts;
       return acc;
     },
-    { matches: 0, runs: 0, balls: 0, wickets: 0, overs: 0, bowlingRuns: 0, innings: 0, notOuts: 0 }
+    { matches: 0, runs: 0, balls: 0, wickets: 0, bowlingBalls: 0, bowlingRuns: 0, innings: 0, notOuts: 0 }
   );
   const careerDismissals = totals.innings - totals.notOuts;
+  const careerDecimalOvers = ballsToDecimalOvers(totals.bowlingBalls);
 
   const career = {
     matches: totals.matches,
     runs: totals.runs,
     wickets: totals.wickets,
     avg: careerDismissals > 0 ? Math.round(totals.runs / careerDismissals) : '-',
-    economy: totals.overs > 0 ? Math.round(totals.bowlingRuns / totals.overs) : '-',
+    economy: careerDecimalOvers > 0 ? Math.round(totals.bowlingRuns / careerDecimalOvers) : '-',
   };
 
   return { seasons, career };

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '../../lib/supabaseServer';
+import { oversToBalls, ballsToOvers, ballsToDecimalOvers } from '../../lib/oversMath';
 
 function playerName(row) {
   return row.tccc_players?.canonical_name || row.unmatched_name || 'Unknown';
@@ -107,10 +108,10 @@ export async function GET(req) {
   for (const row of bowlingRows) {
     const name = playerName(row);
     if (!bowlingMap.has(name)) {
-      bowlingMap.set(name, { name, overs: 0, runs: 0, wickets: 0, wides: 0, noBalls: 0, dots: 0 });
+      bowlingMap.set(name, { name, balls: 0, runs: 0, wickets: 0, wides: 0, noBalls: 0, dots: 0 });
     }
     const agg = bowlingMap.get(name);
-    agg.overs += row.overs || 0;
+    agg.balls += oversToBalls(row.overs || 0);
     agg.runs += row.runs || 0;
     agg.wickets += row.wickets || 0;
     agg.wides += row.wides || 0;
@@ -119,17 +120,21 @@ export async function GET(req) {
   }
 
   const bowling = [...bowlingMap.values()]
-    .map((p) => ({
-      name: p.name,
-      matches: matchesPlayed(p.name),
-      overs: p.overs,
-      runs: p.runs,
-      wickets: p.wickets,
-      economy: p.overs > 0 ? (p.runs / p.overs).toFixed(1) : '-',
-      dots: p.dots,
-      wides: p.wides,
-      noBalls: p.noBalls,
-    }))
+    .map((p) => {
+      const overs = ballsToOvers(p.balls); // display notation, e.g. 16.5
+      const decimalOvers = ballsToDecimalOvers(p.balls); // true decimal for rate math
+      return {
+        name: p.name,
+        matches: matchesPlayed(p.name),
+        overs,
+        runs: p.runs,
+        wickets: p.wickets,
+        economy: decimalOvers > 0 ? (p.runs / decimalOvers).toFixed(1) : '-',
+        dots: p.dots,
+        wides: p.wides,
+        noBalls: p.noBalls,
+      };
+    })
     .sort((a, b) => b.wickets - a.wickets);
 
   return NextResponse.json({ batting, bowling });
