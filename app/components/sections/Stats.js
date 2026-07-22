@@ -168,6 +168,7 @@ export function Stats() {
         ]
       : [
           { key: 'name', label: 'Player', type: 'text' },
+          { key: 'matches', label: 'M', type: 'number' },
           { key: 'runs', label: 'Runs', type: 'number' },
           { key: 'balls', label: 'Balls', type: 'number' },
           { key: 'fours', label: '4s', type: 'number', zeroAsDash: true },
@@ -189,6 +190,7 @@ export function Stats() {
         ]
       : [
           { key: 'name', label: 'Player', type: 'text' },
+          { key: 'matches', label: 'M', type: 'number' },
           { key: 'overs', label: 'Overs', type: 'number' },
           { key: 'runs', label: 'Runs', type: 'number' },
           { key: 'wickets', label: 'Wickets', type: 'number' },
