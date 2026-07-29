@@ -442,8 +442,9 @@ export function TeamHub() {
       id="teamhub"
       title="Team Hub"
       subtitle="Titans digital dressing room — votes, fun, memories, goals, and team culture."
+      compactHeader
     >
-      <div className=" teamhub-tabs mb-8 flex flex-wrap gap-3">
+      <div className="teamhub-tabs no-scrollbar mb-6 flex gap-2 overflow-x-auto sm:mb-8 sm:flex-wrap sm:gap-3 sm:overflow-visible">
         {[
           "Fantasy League",
           "Voting Arena",
@@ -454,7 +455,7 @@ export function TeamHub() {
           <button
             key={tab}
             onClick={() => setTeamHubTab(tab)}
-            className={`btn ${teamHubTab === tab ? "btn-gold" : "btn-ghost"}`}
+            className={`btn shrink-0 whitespace-nowrap ${teamHubTab === tab ? "btn-gold" : "btn-ghost"}`}
           >
             {tab}
           </button>
@@ -463,10 +464,7 @@ export function TeamHub() {
 
       {teamHubTab === "Voting Arena" && (
         <div>
-          <div
-            teamhub-tabs
-            className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4"
-          >
+          <div className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
             {Object.keys(polls).map((pollName) => {
               const { options = [], matchDate } = polls[pollName] || {};
               const sorted = [...options].sort((a, b) => b.votes - a.votes);
@@ -550,9 +548,9 @@ export function TeamHub() {
       )}
 
       {teamHubTab === "Season Timeline" && (
-        <div teamhub-tabs>
-          <h2 className="text-4xl font-black text-amber-300">2026 Season Timeline</h2>
-          <p className="mt-2 mb-8 text-white/70">
+        <div>
+          <h2 className="text-2xl font-black text-amber-300 sm:text-4xl">2026 Season Timeline</h2>
+          <p className="mt-2 mb-8 text-sm text-white/70 sm:text-base">
             Every match, day one to now — results, MVPs, and scorelines as they were published.
           </p>
 
@@ -621,12 +619,12 @@ export function TeamHub() {
       )}
 
       {teamHubTab === "War Room" && (
-        <div teamhub-tabs className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <h3 className="text-3xl font-black text-amber-300">
+            <h3 className="text-xl font-black text-amber-300 sm:text-3xl">
               War Room Strategy Note
             </h3>
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-sm text-white/70 sm:text-base">
               Share match Strategy, plans, suggestions and ideas for the captain
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -656,7 +654,7 @@ export function TeamHub() {
           </div>
 
           <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-            <h3 className="text-2xl font-black text-amber-300">Submitted Notes</h3>
+            <h3 className="text-lg font-black text-amber-300 sm:text-2xl">Submitted Notes</h3>
 
             <div className="mt-5 space-y-4">
               {captainNotes.length === 0 ? (
@@ -681,13 +679,13 @@ export function TeamHub() {
       )}
 
       {teamHubTab === "Awards Room" && (
-        <div teamhub-tabs>
-          <h2 className="text-4xl font-black text-amber-300">2026 Season Awards</h2>
-          <p className="mt-2 mb-8 text-white/70">
+        <div>
+          <h2 className="text-2xl font-black text-amber-300 sm:text-4xl">2026 Season Awards</h2>
+          <p className="mt-2 mb-8 text-sm text-white/70 sm:text-base">
             Auto-crowned straight from this season's batting and bowling numbers — no votes needed.
           </p>
 
-          <div teamhub-tabs className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {awards.length === 0 ? (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-white/60">
                 Not enough 2026 stats yet — check back after a few more matches.
@@ -714,11 +712,11 @@ export function TeamHub() {
       )}
 
       {teamHubTab === "Fantasy League" && (
-        <div teamhub-tabs>
+        <div>
           {!fantasyAuthed ? (
             <form onSubmit={fantasyLogin} className="card max-w-lg p-6">
-              <h3 className="text-2xl font-bold text-amber-300">Fantasy League</h3>
-              <p className="mt-3 text-white/65">
+              <h3 className="text-xl font-bold text-amber-300 sm:text-2xl">Fantasy League</h3>
+              <p className="mt-3 text-sm text-white/65 sm:text-base">
                 Private to the friend group — enter the fantasy password to join or view standings.
               </p>
               <input
@@ -737,17 +735,17 @@ export function TeamHub() {
             </form>
           ) : (
             <div className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <h3 className="text-3xl font-black text-amber-300">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
+                <h3 className="text-xl font-black text-amber-300 sm:text-3xl">
                   {fantasyForm.id ? "Edit Your Squad" : "Build Your Squad"}
                 </h3>
-                <p className="mt-3 text-white/70">
+                <p className="mt-3 text-sm text-white/70 sm:text-base">
                   Pick 2 batters, 2 bowlers, then choose a Captain (2x points) and Vice-Captain (1.5x) from those 4.
                   1 point per run, 20 points per wicket. Locked once your squad earns its first point.
                 </p>
 
                 {fantasyLock.upcomingMatches?.length > 0 && (
-                  <p className="mt-3 text-sm font-semibold text-amber-300">
+                  <p className="mt-3 text-xs font-semibold text-amber-300 sm:text-sm">
                     {fantasyLock.upcomingMatches.length === 1
                       ? `These picks are for: vs ${fantasyLock.upcomingMatches[0].opponent} (${formatMatchDate(fantasyLock.upcomingMatches[0].matchDate)})`
                       : `These picks are for: ${fantasyLock.upcomingMatches
@@ -870,8 +868,8 @@ export function TeamHub() {
                   rows={fantasyStandings.map((s, i) => [i + 1, s.ownerName, s.points])}
                 />
 
-                <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-6">
-                  <h3 className="text-2xl font-black text-amber-300">All Squads</h3>
+                <div className="rounded-3xl border border-amber-300/20 bg-amber-300/10 p-4 sm:p-6">
+                  <h3 className="text-lg font-black text-amber-300 sm:text-2xl">All Squads</h3>
                   <div className="mt-5 space-y-4">
                     {fantasyTeams.length === 0 ? (
                       <p className="text-white/60">No squads submitted yet.</p>

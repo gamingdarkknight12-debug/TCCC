@@ -256,11 +256,16 @@ useEffect(() => {
   );
 }
 
-export function PageWrap({ id, title, subtitle, children }) {
+// compactHeader: the nav item that links here already says the section name
+// (e.g. "Team Hub"), so repeating it as a full-size heading right above a
+// row of tabs is pure redundancy on a small screen — hide title+subtitle
+// below sm and let the tabs be the first thing visible, same as it stays
+// on desktop where there's room for the context.
+export function PageWrap({ id, title, subtitle, children, compactHeader = false }) {
   return (
     <section id={id} className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-      <div className="mb-8">
-        <h2 className="text-4xl font-black text-amber-300 md:text-5xl">{title}</h2>
+      <div className={compactHeader ? 'mb-4 hidden sm:mb-8 sm:block' : 'mb-8'}>
+        <h2 className="text-2xl font-black text-amber-300 sm:text-4xl md:text-5xl">{title}</h2>
         <p className="mt-3 max-w-3xl text-white/70">{subtitle}</p>
       </div>
       {children}
