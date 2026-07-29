@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PageWrap, StatTable } from '../UI';
 
 function isPredictionPoll(pollName) {
@@ -177,6 +177,35 @@ const emptyFantasyForm = {
 
 export function TeamHub() {
   const [teamHubTab, setTeamHubTab] = useState("Fantasy League");
+  const tabStripRef = useRef(null);
+  // The mobile tab strip scrolls horizontally instead of wrapping (5 tab
+  // names don't fit on screen at a readable size), which hides "War Room"
+  // off the right edge with nothing to signal it's there — this fade hint
+  // shows only while there's more to scroll to, and clears once the strip
+  // is scrolled to the end so it never lingers as noise.
+  const [tabStripHasMore, setTabStripHasMore] = useState(false);
+
+  useEffect(() => {
+    const el = tabStripRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      setTabStripHasMore(el.scrollWidth - el.scrollLeft - el.clientWidth > 8);
+    };
+
+    // Checked once immediately, then again next frame — on first mount the
+    // strip can still be at its pre-webfont-swap width, which would measure
+    // as "no overflow" and leave the hint stuck off.
+    checkOverflow();
+    const raf = requestAnimationFrame(checkOverflow);
+    el.addEventListener("scroll", checkOverflow);
+    window.addEventListener("resize", checkOverflow);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("scroll", checkOverflow);
+      window.removeEventListener("resize", checkOverflow);
+    };
+  }, []);
   const [polls, setPolls] = useState({});
   const [pollInputs, setPollInputs] = useState({});
   const [captainNote, setCaptainNote] = useState("");
@@ -444,22 +473,31 @@ export function TeamHub() {
       subtitle="Titans digital dressing room — votes, fun, memories, goals, and team culture."
       compactHeader
     >
-      <div className="teamhub-tabs no-scrollbar mb-6 flex gap-2 overflow-x-auto sm:mb-8 sm:flex-wrap sm:gap-3 sm:overflow-visible">
-        {[
-          "Fantasy League",
-          "Voting Arena",
-          "Awards Room",
-          "Season Timeline",
-          "War Room",
-        ].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setTeamHubTab(tab)}
-            className={`btn shrink-0 whitespace-nowrap ${teamHubTab === tab ? "btn-gold" : "btn-ghost"}`}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="relative mb-6 sm:mb-8">
+        <div
+          ref={tabStripRef}
+          className="teamhub-tabs no-scrollbar flex gap-2 overflow-x-auto sm:flex-wrap sm:gap-3 sm:overflow-visible"
+        >
+          {[
+            "Fantasy League",
+            "Voting Arena",
+            "Awards Room",
+            "Season Timeline",
+            "War Room",
+          ].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setTeamHubTab(tab)}
+              className={`btn shrink-0 whitespace-nowrap ${teamHubTab === tab ? "btn-gold" : "btn-ghost"}`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {tabStripHasMore && (
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[#090b10] to-transparent sm:hidden" />
+        )}
       </div>
 
       {teamHubTab === "Voting Arena" && (
