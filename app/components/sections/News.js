@@ -3,11 +3,7 @@
 import { useEffect, useState } from 'react';
 import { PageWrap, TabStrip } from '../UI';
 
-function formatMatchDate(dateStr) {
-  return new Date(`${dateStr}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-const TABS = ['MCPL', 'BEDCL', 'Milestones', 'Blood Donation', 'Upcoming Fixture'];
+const TABS = ['MCPL', 'BEDCL', 'Milestones', 'Blood Donation'];
 
 function UpdateCard({ tag, title, body, image, children }) {
   return (
@@ -31,7 +27,6 @@ function EmptyTab({ children }) {
 
 export function News() {
   const [items, setItems] = useState([]);
-  const [upcoming, setUpcoming] = useState(null);
   const [tab, setTab] = useState('MCPL');
 
   useEffect(() => {
@@ -39,14 +34,6 @@ export function News() {
       .then((res) => res.json())
       .then((data) => setItems(data.items || []))
       .catch(() => setItems([]));
-
-    // Reuses the same public /api/matches feed the Season Timeline runs on
-    // (it already includes 'scheduled' matches) rather than a new endpoint
-    // — the earliest scheduled match across both leagues is "up next".
-    fetch('/api/matches?season=2026', { cache: 'no-store' })
-      .then((res) => res.json())
-      .then((data) => setUpcoming((data.matches || []).find((m) => m.status === 'scheduled') || null))
-      .catch(() => setUpcoming(null));
   }, []);
 
   const carouselItems = items.filter((n) => n.placement === 'carousel');
@@ -120,25 +107,13 @@ export function News() {
 
         {tab === 'Blood Donation' && (
           bloodDonation ? (
-            <a href="/community/blood-donation" className="block">
+            <a href="#gallery/2026/blood-donation" className="block">
               <UpdateCard tag={bloodDonation.tag} title={bloodDonation.title} body={bloodDonation.body} image={bloodDonation.image}>
                 <div className="mt-3 text-sm font-bold text-amber-300">View photo gallery →</div>
               </UpdateCard>
             </a>
           ) : (
             <EmptyTab>No community event posted right now.</EmptyTab>
-          )
-        )}
-
-        {tab === 'Upcoming Fixture' && (
-          upcoming ? (
-            <UpdateCard
-              tag={`${upcoming.league} Match`}
-              title={`Telugu Titans vs ${upcoming.opponent}`}
-              body={`${upcoming.day}, ${formatMatchDate(upcoming.date)}${upcoming.ground ? ` at ${upcoming.ground}` : ''}${upcoming.homeAway ? ` (${upcoming.homeAway} fixture)` : ''}.`}
-            />
-          ) : (
-            <EmptyTab>No upcoming fixture scheduled yet.</EmptyTab>
           )
         )}
       </div>

@@ -9,6 +9,7 @@ import { Seasons } from './components/sections/Seasons';
 import { Schedule } from './components/sections/Schedule';
 import { Stats } from './components/sections/Stats';
 import { Players } from './components/sections/Players';
+import { Gallery } from './components/sections/Gallery';
 import { About } from './components/sections/About';
 
 export default function Home() {
@@ -16,7 +17,10 @@ export default function Home() {
 
   useEffect(() => {
     const updateSection = () => {
-      const hash = window.location.hash.replace("#", "");
+      // Gallery uses a compound hash ("gallery/2026/blood-donation") to
+      // deep-link a specific year/sub-tab — only the first segment routes
+      // which section renders; Gallery itself re-reads the full hash.
+      const hash = window.location.hash.replace("#", "").split("/")[0];
       setActiveSection(hash || "home");
     };
 
@@ -43,6 +47,7 @@ export default function Home() {
       {(activeSection === "schedule2026" || activeSection === "standings") && <Schedule />}
       {activeSection === "stats" && <Stats />}
       {activeSection === "players" && <Players />}
+      {activeSection === "gallery" && <Gallery />}
       {activeSection === "about" && <About />}
 
       <footer className="border-t border-white/10 bg-black/40 px-4 py-8 text-center text-sm text-white/60">

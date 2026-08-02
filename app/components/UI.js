@@ -7,7 +7,7 @@ export function Header() {
   const [active, setActive] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'About Us'];
+const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Gallery', 'About Us'];
   const hrefs = {
     Home: '#home',
     News: '#news',
@@ -15,6 +15,7 @@ const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'About Us'];
     'Player Stats': '#stats',
     Seasons: '#seasons',
     Players: '#players',
+    Gallery: '#gallery',
     'About Us': '#about',
   };
 
@@ -27,7 +28,10 @@ const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'About Us'];
 
 useEffect(() => {
   const updateActive = () => {
-    const hash = window.location.hash.replace("#", "");
+    // Gallery uses a compound hash (e.g. "gallery/2026/blood-donation") to
+    // deep-link into a specific year/sub-tab — only the first segment is
+    // the section name, the rest is Gallery's own state to parse.
+    const hash = window.location.hash.replace("#", "").split("/")[0];
 
     const hashMap = {
       news: "News",
@@ -37,6 +41,7 @@ useEffect(() => {
       standings: "Seasons",
       schedule2026: "Seasons",
       players: "Players",
+      gallery: "Gallery",
       about: "About Us",
     };
 
