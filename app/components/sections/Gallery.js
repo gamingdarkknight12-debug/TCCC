@@ -63,6 +63,16 @@ const MEDIA = {
     type: 'image',
     src: `/gallery/2023/blood-donation/${i + 1}.jpg`,
   })),
+  '2023:Game Pictures': [
+    ...Array.from({ length: 6 }, (_, i) => ({
+      type: 'image',
+      src: `/gallery/2023/game-pictures/${i + 1}.jpg`,
+    })),
+    ...Array.from({ length: 19 }, (_, i) => ({
+      type: 'video',
+      src: `/gallery/2023/game-pictures/${i + 1}.mp4`,
+    })),
+  ],
 };
 
 function slugify(name) {
