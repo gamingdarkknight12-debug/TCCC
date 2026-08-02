@@ -97,9 +97,75 @@ function parseHash() {
   return { year: yearPart, subTab: subTab || subTabs?.[0] || null };
 }
 
+// Full-size viewer for a photo, with left/right buttons (and arrow keys) to
+// step through the rest of the current tab's media without closing back out
+// to the grid every time.
+function Lightbox({ media, index, onClose, onStep }) {
+  const item = media[index];
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onStep(-1);
+      if (e.key === 'ArrowRight') onStep(1);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose, onStep]);
+
+  if (!item) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[999] flex items-center justify-center bg-black/90 p-4"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20"
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onStep(-1);
+        }}
+        className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20 sm:left-6"
+        aria-label="Previous"
+      >
+        &#8249;
+      </button>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onStep(1);
+        }}
+        className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20 sm:right-6"
+        aria-label="Next"
+      >
+        &#8250;
+      </button>
+
+      <div className="max-h-[85vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
+        {item.type === 'video' ? (
+          <video src={item.src} controls autoPlay className="max-h-[85vh] max-w-[90vw] rounded-xl" />
+        ) : (
+          <img src={item.src} alt={item.caption || 'Gallery photo'} className="max-h-[85vh] max-w-[90vw] rounded-xl object-contain" />
+        )}
+        {item.caption && <p className="mt-3 text-center text-sm text-white/70">{item.caption}</p>}
+      </div>
+    </div>
+  );
+}
+
 export function Gallery() {
   const [year, setYear] = useState('2026');
   const [subTab, setSubTab] = useState(GALLERY['2026'].subTabs[0]);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     const deepLink = parseHash();
@@ -112,6 +178,10 @@ export function Gallery() {
   const yearConfig = GALLERY[year];
   const mediaKey = yearConfig.subTabs ? `${year}:${subTab}` : year;
   const media = MEDIA[mediaKey] || [];
+
+  const stepLightbox = (delta) => {
+    setLightboxIndex((current) => (current === null ? null : (current + delta + media.length) % media.length));
+  };
 
   return (
     <PageWrap
@@ -143,12 +213,26 @@ export function Gallery() {
               {item.type === 'video' ? (
                 <video src={item.src} controls className="h-[210px] w-full bg-black/20 object-contain sm:h-[260px]" />
               ) : (
-                <img src={item.src} alt={item.caption || `${year} gallery`} className="h-[210px] w-full bg-black/20 object-contain sm:h-[260px]" />
+                <img
+                  src={item.src}
+                  alt={item.caption || `${year} gallery`}
+                  onClick={() => setLightboxIndex(i)}
+                  className="h-[210px] w-full cursor-pointer bg-black/20 object-contain sm:h-[260px]"
+                />
               )}
               {item.caption && <p className="p-2 text-xs text-white/60">{item.caption}</p>}
             </div>
           ))}
         </div>
+      )}
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          media={media}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onStep={stepLightbox}
+        />
       )}
     </PageWrap>
   );
