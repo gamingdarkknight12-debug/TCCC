@@ -17,7 +17,7 @@ const GALLERY = {
   2026: { subTabs: ['Blood Donation Drive', 'Game Pictures'] },
   2025: { subTabs: null },
   2024: { subTabs: ['Ireland Tour', 'Game Pictures'] },
-  2023: { subTabs: null },
+  2023: { subTabs: ['Blood Donation Drive', 'Game Pictures'] },
   2022: { subTabs: null },
 };
 
