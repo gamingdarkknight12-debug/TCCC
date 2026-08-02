@@ -19,7 +19,11 @@ const GALLERY = {
   2022: { subTabs: null },
 };
 
-const PHOTOS = {}; // e.g. { '2026:Blood Donation Drive': [{ src: '/gallery/2026/bd-1.jpg', caption: '...' }] }
+const PHOTOS = {
+  '2026:Blood Donation Drive': Array.from({ length: 25 }, (_, i) => ({
+    src: `/gallery/2026/blood-donation/${i + 1}.jpg`,
+  })),
+}; // e.g. { '2026:Blood Donation Drive': [{ src: '/gallery/2026/bd-1.jpg', caption: '...' }] }
 
 function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
