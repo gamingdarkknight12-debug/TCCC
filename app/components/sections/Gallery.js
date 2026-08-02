@@ -73,6 +73,10 @@ const MEDIA = {
       src: `/gallery/2023/game-pictures/${i + 1}.mp4`,
     })),
   ],
+  2022: [
+    { type: 'image', src: '/gallery/2022/1.jpg' },
+    { type: 'image', src: '/gallery/2022/2.jpg' },
+  ],
 };
 
 function slugify(name) {
