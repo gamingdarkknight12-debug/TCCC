@@ -41,6 +41,15 @@ const MEDIA = {
     { type: 'video', src: '/gallery/2025/2.mp4' },
     { type: 'video', src: '/gallery/2025/3.mp4' },
   ],
+  '2024:Ireland Tour': [
+    ...Array.from({ length: 27 }, (_, i) => ({
+      type: 'image',
+      src: `/gallery/2024/ireland-tour/${i + 1}.jpg`,
+    })),
+    { type: 'video', src: '/gallery/2024/ireland-tour/1.mp4' },
+    { type: 'video', src: '/gallery/2024/ireland-tour/2.mp4' },
+    { type: 'video', src: '/gallery/2024/ireland-tour/3.mp4' },
+  ],
 };
 
 function slugify(name) {
