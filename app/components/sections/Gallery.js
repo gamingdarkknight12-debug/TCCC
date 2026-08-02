@@ -31,6 +31,16 @@ const MEDIA = {
     { type: 'video', src: '/gallery/2026/game-pictures/1.mp4' },
     { type: 'video', src: '/gallery/2026/game-pictures/2.mp4' },
   ],
+  2025: [
+    { type: 'image', src: '/gallery/2025/1.jpg' },
+    { type: 'image', src: '/gallery/2025/2.jpg' },
+    { type: 'image', src: '/gallery/2025/3.jpg' },
+    { type: 'image', src: '/gallery/2025/4.jpg' },
+    { type: 'image', src: '/gallery/2025/5.jpg' },
+    { type: 'video', src: '/gallery/2025/1.mp4' },
+    { type: 'video', src: '/gallery/2025/2.mp4' },
+    { type: 'video', src: '/gallery/2025/3.mp4' },
+  ],
 };
 
 function slugify(name) {
