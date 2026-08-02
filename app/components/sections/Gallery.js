@@ -59,6 +59,10 @@ const MEDIA = {
     { type: 'video', src: '/gallery/2024/game-pictures/2.mp4' },
     { type: 'video', src: '/gallery/2024/game-pictures/3.mp4' },
   ],
+  '2023:Blood Donation Drive': Array.from({ length: 18 }, (_, i) => ({
+    type: 'image',
+    src: `/gallery/2023/blood-donation/${i + 1}.jpg`,
+  })),
 };
 
 function slugify(name) {
