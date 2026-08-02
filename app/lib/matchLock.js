@@ -35,18 +35,45 @@ export async function isFantasyLocked() {
   return { locked: false, reason: null };
 }
 
-// The next few scheduled real matches, so the squad-picking UI can say what
-// the picks actually apply to (one match, or a whole weekend of them).
-export async function getUpcomingMatches(limit = 3) {
+// The Saturday/Sunday of the next upcoming weekend, as YYYY-MM-DD strings.
+// If today itself is Saturday, "next" skips ahead 7 days rather than
+// reusing today — a fantasy squad is for a match that hasn't happened yet,
+// not the one currently underway.
+function nextWeekendDates() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun..6=Sat
+  const daysUntilSaturday = (6 - day + 7) % 7 || 7;
+
+  const saturday = new Date(now);
+  saturday.setDate(now.getDate() + daysUntilSaturday);
+  const sunday = new Date(saturday);
+  sunday.setDate(saturday.getDate() + 1);
+
+  const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return [fmt(saturday), fmt(sunday)];
+}
+
+// Fantasy picks are scoped to whatever's on next weekend — one match if
+// that's all there is, both if there's a Saturday and Sunday fixture,
+// rather than a running list of the next several fixtures regardless of
+// how far out they are. Falls back to just the single nearest scheduled
+// match if the schedule doesn't happen to land on a Sat/Sun (e.g. a
+// midweek MCPL fixture), so the squad builder still has something to
+// point at instead of coming up empty.
+export async function getUpcomingMatches() {
   const { data, error } = await supabaseServer
     .from('tccc_matches')
     .select('opponent, match_date')
     .eq('team', 'TT')
     .eq('status', 'scheduled')
     .neq('league', 'SEASON')
-    .order('match_date', { ascending: true })
-    .limit(limit);
+    .order('match_date', { ascending: true });
   if (error) throw error;
+  if (!data || data.length === 0) return [];
 
-  return (data || []).map((m) => ({ opponent: m.opponent, matchDate: m.match_date }));
+  const [saturday, sunday] = nextWeekendDates();
+  const weekendMatches = data.filter((m) => m.match_date === saturday || m.match_date === sunday);
+  const relevant = weekendMatches.length > 0 ? weekendMatches : data.slice(0, 1);
+
+  return relevant.map((m) => ({ opponent: m.opponent, matchDate: m.match_date }));
 }
