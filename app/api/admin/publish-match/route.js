@@ -490,8 +490,11 @@ export async function POST(req) {
     if (error) return NextResponse.json({ error: `Match saved, but bowling rows failed: ${error.message}`, matchId: match.id }, { status: 500 });
   }
 
+  // The carousel only ever features a player the admin explicitly picked
+  // as MVP during review — no auto-picked "standout" fallback. An unpicked
+  // match simply doesn't get a carousel card rather than guessing.
   let mvpPlayer = null;
-  let resolvedMvpPlayerId = mvpPlayerId || null;
+  const resolvedMvpPlayerId = mvpPlayerId || null;
   if (mvpPlayerId) {
     const { data } = await supabaseServer
       .from('tccc_players')
@@ -499,27 +502,6 @@ export async function POST(req) {
       .eq('id', mvpPlayerId)
       .single();
     mvpPlayer = data || null;
-  }
-
-  // No MVP explicitly chosen during review — auto-pick this match's standout
-  // performer (best knock vs best bowling spell, weighting a wicket roughly
-  // like 20 runs of impact) so the carousel still gets a highlight every
-  // match instead of silently doing nothing.
-  if (!mvpPlayer) {
-    const bestBat = [...battingRows].filter((r) => r.playerId).sort((a, b) => (b.runs || 0) - (a.runs || 0))[0];
-    const bestBowl = [...bowlingRows].filter((r) => r.playerId).sort((a, b) => (b.wickets || 0) - (a.wickets || 0))[0];
-    const batScore = bestBat?.runs || 0;
-    const bowlScore = (bestBowl?.wickets || 0) * 20;
-    const standoutId = bowlScore > batScore ? bestBowl?.playerId : (bestBat?.playerId || bestBowl?.playerId);
-    if (standoutId) {
-      const { data } = await supabaseServer
-        .from('tccc_players')
-        .select('canonical_name, image_path')
-        .eq('id', standoutId)
-        .single();
-      mvpPlayer = data || null;
-      resolvedMvpPlayerId = standoutId;
-    }
   }
 
   if (createNews && matchStatus === 'published' && summaryText) {
