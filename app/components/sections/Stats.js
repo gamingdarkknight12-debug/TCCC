@@ -154,12 +154,11 @@ export function Stats() {
       );
   }, [season]);
 
-  // Matches-played is only reliable for seasons with real per-match rows
-  // (2026) or a hand-reconstructed-and-cross-checked scorecard scan (2022,
-  // 2023). 2024/2025 are single SEASON aggregate rows with no match count,
-  // and All-Time would mix in those unknowns, so the M column is hidden
-  // there rather than showing a misleading total.
-  const hasReliableMatchCount = ['2026', '2023', '2022'].includes(season);
+  // Matches-played is reliable for every season now: real per-match rows
+  // for 2026, hand-reconstructed-and-cross-checked scorecard scans for
+  // 2022/2023, and a corrected BEDCL+HDCL combined spreadsheet for
+  // 2024/2025 - so All-Time (which sums across all of them) is safe too.
+  const hasReliableMatchCount = ['All-Time', '2026', '2025', '2024', '2023', '2022'].includes(season);
   const matchesColumn = { key: 'matches', label: 'M', type: 'number' };
 
   const battingColumns =
