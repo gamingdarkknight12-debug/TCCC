@@ -45,15 +45,21 @@ export async function GET(req) {
   if (battingError) return NextResponse.json({ error: battingError.message }, { status: 500 });
   if (bowlingError) return NextResponse.json({ error: bowlingError.message }, { status: 500 });
 
-  // Best batter/bowler per match = our own player with the most runs / most wickets
-  // in that match's scorecard (ties broken by whoever appears first).
+  // Best batter/bowler per match = our own player with the most runs / most
+  // wickets in that match's scorecard. Ties on the primary stat are broken
+  // by whoever did it more efficiently (fewer balls for batting, fewer runs
+  // conceded for bowling) rather than whichever row the query happened to
+  // return first — that's how a 1-wicket-for-46 spell once outranked a
+  // 1-wicket-for-22 spell here.
   const bestBatterByMatch = new Map();
   for (const row of battingRows || []) {
     const name = row.tccc_players?.canonical_name || row.unmatched_name;
     if (!name) continue;
     const current = bestBatterByMatch.get(row.match_id);
-    if (!current || row.runs > current.runs) {
-      bestBatterByMatch.set(row.match_id, { name, runs: row.runs || 0, balls: row.balls || 0 });
+    const runs = row.runs || 0;
+    const balls = row.balls || 0;
+    if (!current || runs > current.runs || (runs === current.runs && balls < current.balls)) {
+      bestBatterByMatch.set(row.match_id, { name, runs, balls });
     }
   }
 
@@ -62,8 +68,10 @@ export async function GET(req) {
     const name = row.tccc_players?.canonical_name || row.unmatched_name;
     if (!name) continue;
     const current = bestBowlerByMatch.get(row.match_id);
-    if (!current || row.wickets > current.wickets) {
-      bestBowlerByMatch.set(row.match_id, { name, wickets: row.wickets || 0, runs: row.runs || 0 });
+    const wickets = row.wickets || 0;
+    const runs = row.runs || 0;
+    if (!current || wickets > current.wickets || (wickets === current.wickets && runs < current.runs)) {
+      bestBowlerByMatch.set(row.match_id, { name, wickets, runs });
     }
   }
 
