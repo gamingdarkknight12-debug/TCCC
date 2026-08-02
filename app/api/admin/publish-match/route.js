@@ -45,20 +45,30 @@ async function upsertEvergreenCard({ tag, title, body, publishedAt }) {
   }
 }
 
-// There is only ever one "Latest Match" slot in the flow grid — each publish
-// replaces it in place (matched by kind, regardless of league/tag, since the
-// display tag changes match to match) rather than piling up a new recap
-// card every week alongside the evergreen stat cards.
-async function upsertLatestMatchCard(fields) {
-  const { data: existing } = await supabaseServer
+// One "Latest Match" slot per league (MCPL and BEDCL each keep their own)
+// — each publish replaces its league's card in place rather than piling up
+// a new recap every week, and rather than MCPL and BEDCL overwriting each
+// other the way a single shared slot used to. `kind` has a fixed check
+// constraint (match_recap/manual/player_highlight), so a league-specific
+// kind isn't an option without a migration — the right existing card is
+// found instead by joining match_id back to the match's league.
+async function upsertLatestMatchCard(league, fields) {
+  const { data: existingRows } = await supabaseServer
     .from('tccc_news_items')
-    .select('id')
+    .select('id, match_id')
     .eq('team', 'TT')
-    .eq('kind', 'match_recap')
-    .limit(1);
+    .eq('kind', 'match_recap');
 
-  if (existing && existing.length > 0) {
-    await supabaseServer.from('tccc_news_items').update(fields).eq('id', existing[0].id);
+  let existingId = null;
+  const matchIds = (existingRows || []).map((r) => r.match_id).filter(Boolean);
+  if (matchIds.length > 0) {
+    const { data: matches } = await supabaseServer.from('tccc_matches').select('id, league').in('id', matchIds);
+    const leagueByMatchId = new Map((matches || []).map((m) => [m.id, m.league]));
+    existingId = existingRows.find((r) => leagueByMatchId.get(r.match_id) === league)?.id || null;
+  }
+
+  if (existingId) {
+    await supabaseServer.from('tccc_news_items').update(fields).eq('id', existingId);
   } else {
     await supabaseServer.from('tccc_news_items').insert({ team: 'TT', kind: 'match_recap', ...fields });
   }
@@ -511,7 +521,7 @@ export async function POST(req) {
     // therefore the "main" hero card — regardless of insert/update order.
     const evergreenTimestamp = new Date(now.getTime() - 60000).toISOString();
 
-    await upsertLatestMatchCard({
+    await upsertLatestMatchCard(league, {
       match_id: match.id,
       placement: 'main',
       tag: newsTag || `${league} Match`,

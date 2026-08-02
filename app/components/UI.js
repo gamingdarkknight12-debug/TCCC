@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function Header() {
   const [active, setActive] = useState('Home');
@@ -261,6 +261,60 @@ useEffect(() => {
 // row of tabs is pure redundancy on a small screen — hide title+subtitle
 // below sm and let the tabs be the first thing visible, same as it stays
 // on desktop where there's room for the context.
+// A horizontally-scrollable tab strip for mobile (wraps normally on wider
+// screens) with a fade hint on the right edge whenever a tab is scrolled
+// out of view — without it, a tab past the fold (e.g. the last of 5) is
+// invisible with nothing telling a first-time user to swipe for it.
+export function TabStrip({ tabs, active, onChange }) {
+  const stripRef = useRef(null);
+  const [hasMore, setHasMore] = useState(false);
+
+  useEffect(() => {
+    const el = stripRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      setHasMore(el.scrollWidth - el.scrollLeft - el.clientWidth > 8);
+    };
+
+    // Checked once immediately, then again next frame — on first mount the
+    // strip can still be at its pre-webfont-swap width, which would measure
+    // as "no overflow" and leave the hint stuck off.
+    checkOverflow();
+    const raf = requestAnimationFrame(checkOverflow);
+    el.addEventListener('scroll', checkOverflow);
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('scroll', checkOverflow);
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, []);
+
+  return (
+    <div className="relative mb-6 sm:mb-8">
+      <div
+        ref={stripRef}
+        className="teamhub-tabs no-scrollbar flex gap-2 overflow-x-auto sm:flex-wrap sm:gap-3 sm:overflow-visible"
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => onChange(tab)}
+            className={`btn shrink-0 whitespace-nowrap ${active === tab ? 'btn-gold' : 'btn-ghost'}`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {hasMore && (
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[#090b10] to-transparent sm:hidden" />
+      )}
+    </div>
+  );
+}
+
 export function PageWrap({ id, title, subtitle, children, compactHeader = false }) {
   return (
     <section id={id} className="mx-auto max-w-7xl px-4 py-12 md:py-16">

@@ -16,7 +16,7 @@ export async function GET(request) {
   const base = () =>
     supabaseServer
       .from('tccc_news_items')
-      .select('id, kind, placement, tag, title, body, image_path, published_at')
+      .select('id, match_id, kind, placement, tag, title, body, image_path, published_at')
       .eq('team', 'TT')
       .eq('status', 'published')
       .order('published_at', { ascending: false });
@@ -35,9 +35,20 @@ export async function GET(request) {
 
   const data = [...carouselData, ...flowData].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
 
+  // The News page needs to tell MCPL's "latest match" card apart from
+  // BEDCL's — both share the same kind ('match_recap'), so the distinguisher
+  // is which match each card is linked to, resolved here via one lookup.
+  const matchRecapIds = data.filter((n) => n.kind === 'match_recap' && n.match_id).map((n) => n.match_id);
+  const leagueByMatchId = new Map();
+  if (matchRecapIds.length > 0) {
+    const { data: matches } = await supabaseServer.from('tccc_matches').select('id, league').in('id', matchRecapIds);
+    for (const m of matches || []) leagueByMatchId.set(m.id, m.league);
+  }
+
   const items = data.map((n) => ({
     id: n.id,
     kind: n.kind,
+    league: n.match_id ? leagueByMatchId.get(n.match_id) || null : null,
     placement: n.placement,
     tag: n.tag,
     title: n.title,
