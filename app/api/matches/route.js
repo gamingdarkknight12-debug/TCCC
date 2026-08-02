@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '../../lib/supabaseServer';
+import { oversToBalls, ballsToDecimalOvers } from '../../lib/oversMath';
 
 const PUBLIC_STATUSES = ['scheduled', 'published', 'cancelled'];
 
@@ -38,7 +39,7 @@ export async function GET(req) {
     matchIds.length
       ? supabaseServer
           .from('tccc_bowling_innings')
-          .select('match_id, wickets, runs, unmatched_name, tccc_players(canonical_name)')
+          .select('match_id, overs, wickets, runs, unmatched_name, tccc_players(canonical_name)')
           .in('match_id', matchIds)
       : Promise.resolve({ data: [] }),
   ]);
@@ -47,10 +48,11 @@ export async function GET(req) {
 
   // Best batter/bowler per match = our own player with the most runs / most
   // wickets in that match's scorecard. Ties on the primary stat are broken
-  // by whoever did it more efficiently (fewer balls for batting, fewer runs
-  // conceded for bowling) rather than whichever row the query happened to
-  // return first — that's how a 1-wicket-for-46 spell once outranked a
-  // 1-wicket-for-22 spell here.
+  // by whoever did it more efficiently — fewer balls (higher strike rate)
+  // for batting, lower true economy (runs per decimal over, not just fewer
+  // runs conceded — a 2-over spell naturally concedes less than a 4-over
+  // one) for bowling — rather than whichever row the query happened to
+  // return first.
   const bestBatterByMatch = new Map();
   for (const row of battingRows || []) {
     const name = row.tccc_players?.canonical_name || row.unmatched_name;
@@ -70,8 +72,10 @@ export async function GET(req) {
     const current = bestBowlerByMatch.get(row.match_id);
     const wickets = row.wickets || 0;
     const runs = row.runs || 0;
-    if (!current || wickets > current.wickets || (wickets === current.wickets && runs < current.runs)) {
-      bestBowlerByMatch.set(row.match_id, { name, wickets, runs });
+    const decimalOvers = ballsToDecimalOvers(oversToBalls(row.overs || 0));
+    const economy = decimalOvers > 0 ? runs / decimalOvers : Infinity;
+    if (!current || wickets > current.wickets || (wickets === current.wickets && economy < current.economy)) {
+      bestBowlerByMatch.set(row.match_id, { name, wickets, runs, economy });
     }
   }
 
