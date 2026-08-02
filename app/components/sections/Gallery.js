@@ -50,6 +50,15 @@ const MEDIA = {
     { type: 'video', src: '/gallery/2024/ireland-tour/2.mp4' },
     { type: 'video', src: '/gallery/2024/ireland-tour/3.mp4' },
   ],
+  '2024:Game Pictures': [
+    ...Array.from({ length: 6 }, (_, i) => ({
+      type: 'image',
+      src: `/gallery/2024/game-pictures/${i + 1}.jpg`,
+    })),
+    { type: 'video', src: '/gallery/2024/game-pictures/1.mp4' },
+    { type: 'video', src: '/gallery/2024/game-pictures/2.mp4' },
+    { type: 'video', src: '/gallery/2024/game-pictures/3.mp4' },
+  ],
 };
 
 function slugify(name) {
