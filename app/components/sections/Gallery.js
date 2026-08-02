@@ -94,9 +94,9 @@ export function Gallery() {
           {media.map((item, i) => (
             <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-black/30">
               {item.type === 'video' ? (
-                <video src={item.src} controls className="h-full w-full object-cover" />
+                <video src={item.src} controls className="h-[210px] w-full bg-black/20 object-contain sm:h-[260px]" />
               ) : (
-                <img src={item.src} alt={item.caption || `${year} gallery`} className="h-full w-full object-cover" />
+                <img src={item.src} alt={item.caption || `${year} gallery`} className="h-[210px] w-full bg-black/20 object-contain sm:h-[260px]" />
               )}
               {item.caption && <p className="p-2 text-xs text-white/60">{item.caption}</p>}
             </div>
