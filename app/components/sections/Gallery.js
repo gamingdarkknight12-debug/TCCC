@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import { PageWrap, TabStrip } from '../UI';
 
-// Photos get added here as they come in — each entry is just the file path
-// under /public plus an optional caption. No admin upload flow exists yet;
-// new photos are dropped into /public/gallery/<year>/ and listed here.
-// Keep uploaded files reasonably compressed (resized to ~1600px max
-// dimension, saved as .jpg) before adding — this page has no server-side
-// resizing, so a folder of unoptimized phone photos would load slowly.
+// Media gets added here as it comes in — each entry is just the file path
+// under /public, a type ('image' | 'video'), and an optional caption. No
+// admin upload flow exists yet; new files are dropped into
+// /public/gallery/<year>/ and listed here. Keep photos reasonably
+// compressed (resized to ~1280px max dimension) before adding — this page
+// does no server-side resizing, so a folder of unoptimized phone photos
+// would load slowly. Videos are added as-is (no compression tool available
+// here) — keep an eye on file size if a clip runs long.
 const YEARS = ['2026', '2025', '2024', '2023', '2022'];
 
 const GALLERY = {
@@ -19,11 +21,16 @@ const GALLERY = {
   2022: { subTabs: null },
 };
 
-const PHOTOS = {
+const MEDIA = {
   '2026:Blood Donation Drive': Array.from({ length: 25 }, (_, i) => ({
+    type: 'image',
     src: `/gallery/2026/blood-donation/${i + 1}.jpg`,
   })),
-}; // e.g. { '2026:Blood Donation Drive': [{ src: '/gallery/2026/bd-1.jpg', caption: '...' }] }
+  '2026:Game Pictures': [
+    { type: 'video', src: '/gallery/2026/game-pictures/1.mp4' },
+    { type: 'video', src: '/gallery/2026/game-pictures/2.mp4' },
+  ],
+};
 
 function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -56,8 +63,8 @@ export function Gallery() {
   }, []);
 
   const yearConfig = GALLERY[year];
-  const photoKey = yearConfig.subTabs ? `${year}:${subTab}` : year;
-  const photos = PHOTOS[photoKey] || [];
+  const mediaKey = yearConfig.subTabs ? `${year}:${subTab}` : year;
+  const media = MEDIA[mediaKey] || [];
 
   return (
     <PageWrap
@@ -78,16 +85,20 @@ export function Gallery() {
         <TabStrip tabs={yearConfig.subTabs} active={subTab} onChange={setSubTab} />
       )}
 
-      {photos.length === 0 ? (
+      {media.length === 0 ? (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-white/60">
           Photos coming soon.
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-          {photos.map((photo, i) => (
+          {media.map((item, i) => (
             <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-black/30">
-              <img src={photo.src} alt={photo.caption || `${year} gallery`} className="h-full w-full object-cover" />
-              {photo.caption && <p className="p-2 text-xs text-white/60">{photo.caption}</p>}
+              {item.type === 'video' ? (
+                <video src={item.src} controls className="h-full w-full object-cover" />
+              ) : (
+                <img src={item.src} alt={item.caption || `${year} gallery`} className="h-full w-full object-cover" />
+              )}
+              {item.caption && <p className="p-2 text-xs text-white/60">{item.caption}</p>}
             </div>
           ))}
         </div>
