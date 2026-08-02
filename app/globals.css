@@ -4,10 +4,19 @@
 
 :root { color-scheme: dark; }
 
+/* Without this, mobile Safari's default rubber-band bounce lets a hard
+   scroll past the footer reveal blank space below the actual page content
+   before it springs back — this pins the page so it can't scroll past its
+   own content in the first place. */
+html {
+  overscroll-behavior-y: none;
+}
+
 body {
   margin: 0;
   background: #090b10;
   color: white;
+  overscroll-behavior-y: none;
 }
 
 .card {
