@@ -27,6 +27,7 @@ const MEDIA = {
     src: `/gallery/2026/blood-donation/${i + 1}.jpg`,
   })),
   '2026:Game Pictures': [
+    { type: 'image', src: '/gallery/2026/game-pictures/1.jpg' },
     { type: 'video', src: '/gallery/2026/game-pictures/1.mp4' },
     { type: 'video', src: '/gallery/2026/game-pictures/2.mp4' },
   ],
