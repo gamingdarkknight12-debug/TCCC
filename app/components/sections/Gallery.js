@@ -64,7 +64,7 @@ const MEDIA = {
     src: `/gallery/2023/blood-donation/${i + 1}.jpg`,
   })),
   '2023:Game Pictures': [
-    ...Array.from({ length: 6 }, (_, i) => ({
+    ...Array.from({ length: 7 }, (_, i) => ({
       type: 'image',
       src: `/gallery/2023/game-pictures/${i + 1}.jpg`,
     })),
