@@ -1,18 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PageWrap, TabStrip } from '../UI';
 
-// Media gets added here as it comes in — each entry is just the file path
-// under /public, a type ('image' | 'video'), and an optional caption. No
-// admin upload flow exists yet; new files are dropped into
-// /public/gallery/<year>/ and listed here. Keep photos reasonably
-// compressed (resized to ~1280px max dimension) before adding — this page
-// does no server-side resizing, so a folder of unoptimized phone photos
-// would load slowly. Videos are added as-is (no compression tool available
-// here) — keep an eye on file size if a clip runs long.
-const YEARS = ['2026', '2025', '2024', '2023', '2022'];
-
+// This is the original, hand-maintained gallery content — 121 static files
+// under /public/gallery/<year>/, listed here by hand. It's intentionally
+// left untouched: new uploads (admin "Gallery Photos" tab) go to Supabase
+// Storage + the tccc_gallery_media table instead, and get merged with this
+// hardcoded data at render time below (see dynamicFolders/dynamicMedia).
 const GALLERY = {
   2026: { subTabs: ['Blood Donation Drive', 'Game Pictures'] },
   2025: { subTabs: null },
@@ -85,14 +80,16 @@ function slugify(name) {
 
 // Deep-links from elsewhere on the site (e.g. the News page's Blood
 // Donation card) land here via a compound hash like
-// "gallery/2026/blood-donation" — parsed once on mount to preselect the
-// right year and sub-tab instead of always opening on the default.
-function parseHash() {
+// "gallery/2026/blood-donation" — parsed to preselect the right year and
+// sub-tab instead of always opening on the default. Takes the merged
+// gallery config (hardcoded ∪ admin-created folders) since a deep link may
+// point at a folder that only exists in the DB.
+function parseHash(mergedGallery) {
   const parts = window.location.hash.replace('#', '').split('/');
   const [, yearPart, subPart] = parts;
-  if (!yearPart || !GALLERY[yearPart]) return null;
+  if (!yearPart || !mergedGallery[yearPart]) return null;
 
-  const subTabs = GALLERY[yearPart].subTabs;
+  const subTabs = mergedGallery[yearPart].subTabs;
   const subTab = subPart && subTabs ? subTabs.find((t) => slugify(t) === subPart) : null;
   return { year: yearPart, subTab: subTab || subTabs?.[0] || null };
 }
@@ -166,18 +163,58 @@ export function Gallery() {
   const [year, setYear] = useState('2026');
   const [subTab, setSubTab] = useState(GALLERY['2026'].subTabs[0]);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [dynamicFolders, setDynamicFolders] = useState([]);
+  const [dynamicMedia, setDynamicMedia] = useState([]);
 
   useEffect(() => {
-    const deepLink = parseHash();
+    fetch('/api/gallery/folders')
+      .then((r) => r.json())
+      .then((d) => setDynamicFolders(d.folders || []))
+      .catch(() => setDynamicFolders([]));
+  }, []);
+
+  // Hardcoded GALLERY ∪ any year/sub-tab combos an admin has created via
+  // uploads that don't exist in the hardcoded config at all.
+  const mergedGallery = useMemo(() => {
+    const merged = {};
+    for (const [y, cfg] of Object.entries(GALLERY)) {
+      merged[y] = { subTabs: cfg.subTabs ? [...cfg.subTabs] : null };
+    }
+    for (const { year: y, subTab: st } of dynamicFolders) {
+      if (!merged[y]) merged[y] = { subTabs: st ? [st] : null };
+      else if (st && !(merged[y].subTabs || []).includes(st)) {
+        merged[y].subTabs = [...(merged[y].subTabs || []), st];
+      }
+    }
+    return merged;
+  }, [dynamicFolders]);
+
+  const mergedYears = useMemo(
+    () => Object.keys(mergedGallery).sort((a, b) => Number(b) - Number(a)),
+    [mergedGallery]
+  );
+
+  useEffect(() => {
+    const deepLink = parseHash(mergedGallery);
     if (deepLink) {
       setYear(deepLink.year);
       setSubTab(deepLink.subTab);
     }
-  }, []);
+  }, [mergedGallery]);
 
-  const yearConfig = GALLERY[year];
+  const yearConfig = mergedGallery[year] || { subTabs: null };
   const mediaKey = yearConfig.subTabs ? `${year}:${subTab}` : year;
-  const media = MEDIA[mediaKey] || [];
+
+  useEffect(() => {
+    const params = new URLSearchParams({ year });
+    if (yearConfig.subTabs && subTab) params.set('subTab', subTab);
+    fetch(`/api/gallery/media?${params.toString()}`)
+      .then((r) => r.json())
+      .then((d) => setDynamicMedia(d.media || []))
+      .catch(() => setDynamicMedia([]));
+  }, [year, subTab, yearConfig.subTabs]);
+
+  const media = [...(MEDIA[mediaKey] || []), ...dynamicMedia];
 
   const stepLightbox = (delta) => {
     setLightboxIndex((current) => (current === null ? null : (current + delta + media.length) % media.length));
@@ -190,11 +227,11 @@ export function Gallery() {
       subtitle="Match days, tours, and community events — season by season."
     >
       <TabStrip
-        tabs={YEARS}
+        tabs={mergedYears}
         active={year}
         onChange={(y) => {
           setYear(y);
-          setSubTab(GALLERY[y].subTabs?.[0] || null);
+          setSubTab(mergedGallery[y]?.subTabs?.[0] || null);
         }}
       />
 
