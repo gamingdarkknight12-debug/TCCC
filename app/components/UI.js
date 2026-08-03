@@ -8,15 +8,20 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
 const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Gallery', 'About Us'];
+  // Always an absolute path + hash ("/#home"), never a bare hash ("#home").
+  // A bare hash only changes the fragment of whatever route is currently
+  // loaded — harmless on "/" itself, but from "/admin" (or any other
+  // route) it just rewrites the URL to "/admin#home" and does nothing,
+  // since the actual sections these hashes select only exist on "/".
   const hrefs = {
-    Home: '#home',
-    News: '#news',
-    'Team Hub': '#teamhub',
-    'Player Stats': '#stats',
-    Seasons: '#seasons',
-    Players: '#players',
-    Gallery: '#gallery',
-    'About Us': '#about',
+    Home: '/#home',
+    News: '/#news',
+    'Team Hub': '/#teamhub',
+    'Player Stats': '/#stats',
+    Seasons: '/#seasons',
+    Players: '/#players',
+    Gallery: '/#gallery',
+    'About Us': '/#about',
   };
 
   useEffect(() => {
@@ -86,15 +91,15 @@ useEffect(() => {
   {pages.map((p) =>
     p === "Seasons" ? (
       <div key={p} className="relative group flex items-center">
-        <a href="#seasons" className={`btn ${active === "Seasons" ? "btn-gold" : "btn-ghost"}`}>
+        <a href="/#seasons" className={`btn ${active === "Seasons" ? "btn-gold" : "btn-ghost"}`}>
           Seasons
         </a>
 
         <div className="absolute left-0 top-full z-50 hidden min-w-[260px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
-          <a href="#seasons" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+          <a href="/#seasons" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             Seasons Overview
           </a>
-          <a href="#schedule2026" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+          <a href="/#schedule2026" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             2026 Season
           </a>
         </div>
@@ -102,7 +107,7 @@ useEffect(() => {
     ) : p === "Players" ? (
       <div key={p} className="relative group flex items-center">
         <a
-          href="#stats"
+          href="/#stats"
           className={`btn ${
             active === "Player Stats" || active === "Players" ? "btn-gold" : "btn-ghost"
           }`}
@@ -111,10 +116,10 @@ useEffect(() => {
         </a>
 
         <div className="absolute left-0 top-full z-50 hidden min-w-[230px] rounded-2xl border border-white/10 bg-[#15171d] p-3 shadow-2xl group-hover:block">
-          <a href="#stats" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+          <a href="/#stats" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             Player Stats
           </a>
-          <a href="#players" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
+          <a href="/#players" className="block rounded-xl px-4 py-3 font-semibold text-white/80 hover:bg-amber-300 hover:text-black">
             Player Info
           </a>
         </div>
@@ -181,7 +186,7 @@ useEffect(() => {
     p === "Seasons" ? (
       <div key={p} className="grid gap-3">
         <a
-          href="#seasons"
+          href="/#seasons"
           onClick={() => setMenuOpen(false)}
           className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
             active === "Seasons"
@@ -193,7 +198,7 @@ useEffect(() => {
         </a>
 
         <a
-          href="#schedule2026"
+          href="/#schedule2026"
           onClick={() => setMenuOpen(false)}
           className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
             active === "Seasons"
@@ -207,7 +212,7 @@ useEffect(() => {
     ) : p === "Players" ? (
       <div key={p} className="grid gap-3">
         <a
-          href="#stats"
+          href="/#stats"
           onClick={() => setMenuOpen(false)}
           className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
             active === "Player Stats"
@@ -219,7 +224,7 @@ useEffect(() => {
         </a>
 
         <a
-          href="#players"
+          href="/#players"
           onClick={() => setMenuOpen(false)}
           className={`rounded-2xl px-5 py-4 text-xl font-black transition ${
             active === "Players"

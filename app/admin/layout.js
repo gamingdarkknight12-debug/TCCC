@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header, PageWrap } from '../components/UI';
 
 export default function AdminLayout({ children }) {
@@ -8,6 +8,20 @@ export default function AdminLayout({ children }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  // The login cookie is httpOnly (invisible to JS) and lasts 8 hours, but
+  // `loggedIn` above is plain React state that resets on every mount — so
+  // without this check, navigating away from /admin and back always showed
+  // the password form again even though the still-valid cookie meant the
+  // server would have accepted any admin request anyway.
+  useEffect(() => {
+    fetch('/api/admin/check-auth')
+      .then((res) => {
+        if (res.ok) setLoggedIn(true);
+      })
+      .finally(() => setCheckingSession(false));
+  }, []);
 
   async function login(e) {
     e.preventDefault();
@@ -35,7 +49,9 @@ export default function AdminLayout({ children }) {
         title="Admin: Match Score Management"
         subtitle="Private page for Telugu Titans admins only. This page is not shown in public navigation."
       >
-        {!loggedIn ? (
+        {checkingSession ? (
+          <div className="card max-w-lg p-6 text-white/60">Checking session…</div>
+        ) : !loggedIn ? (
           <form onSubmit={login} className="card max-w-lg p-6">
             <h3 className="text-2xl font-bold text-amber-300">Admin Login</h3>
 
