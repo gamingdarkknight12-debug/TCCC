@@ -11,7 +11,7 @@ export const schedule2026 = [
   { league: "BEDCL", opponent: "Avengers B", date: "2026-07-11", day: "Saturday", time: "7:30 AM", ground: "Creditview - A", homeAway: "Away" },
   { league: "BEDCL", opponent: "Northern Warriors", date: "2026-07-19", day: "Sunday", time: "7:30 AM", ground: "Keele West", homeAway: "Home" },
   { league: "BEDCL", opponent: "6ixers", date: "2026-08-02", day: "Sunday", time: "7:30 AM", ground: "Creditview - A", homeAway: "Home" },
-  { league: "BEDCL", opponent: "Meadowvale Mustangs", date: "2026-08-09", day: "Sunday", time: "3:40 PM", ground: "Humber College Ground", homeAway: "Home" },
+  { league: "BEDCL", opponent: "Meadowvale Mustangs", date: "2026-08-09", day: "Sunday", time: "11:35 AM", ground: "Torbram Ground", homeAway: "Home" },
   { league: "BEDCL", opponent: "Avengers B", date: "2026-08-22", day: "Saturday", time: "7:30 AM", ground: "Humber College Ground", homeAway: "Home" },
   { league: "BEDCL", opponent: "Brampton Browns", date: "2026-08-30", day: "Sunday", time: "7:30 AM", ground: "BSP - Artificial", homeAway: "Away" },
   { league: "BEDCL", opponent: "Golden United", date: "2026-09-06", day: "Sunday", time: "7:30 AM", ground: "Dixie-407 - C (North-West)", homeAway: "Away" },
