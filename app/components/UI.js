@@ -7,7 +7,7 @@ export function Header() {
   const [active, setActive] = useState('Home');
   const [menuOpen, setMenuOpen] = useState(false);
 
-const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Gallery', 'About Us'];
+const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Play', 'Gallery', 'About Us'];
   // Always an absolute path + hash ("/#home"), never a bare hash ("#home").
   // A bare hash only changes the fragment of whatever route is currently
   // loaded — harmless on "/" itself, but from "/admin" (or any other
@@ -20,6 +20,7 @@ const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Gallery', 'Abo
     'Player Stats': '/#stats',
     Seasons: '/#seasons',
     Players: '/#players',
+    Play: '/play',
     Gallery: '/#gallery',
     'About Us': '/#about',
   };
@@ -33,6 +34,14 @@ const pages = ['Home', 'News', 'Team Hub', 'Seasons', 'Players', 'Gallery', 'Abo
 
 useEffect(() => {
   const updateActive = () => {
+    // /play is a real route (not a homepage hash section), so it never
+    // shows up in window.location.hash — check the path first or it would
+    // wrongly fall through to "Home" below.
+    if (window.location.pathname.startsWith("/play")) {
+      setActive("Play");
+      return;
+    }
+
     // Gallery uses a compound hash (e.g. "gallery/2026/blood-donation") to
     // deep-link into a specific year/sub-tab — only the first segment is
     // the section name, the rest is Gallery's own state to parse.
